@@ -1,3 +1,5 @@
+import { Switch } from "@/components/ui/switch";
+
 
 export interface DevPageProps {
     a: undefined;
@@ -10,6 +12,9 @@ const DevPage: React.FC<DevPageProps> = ({ }) => {
 
     return <div>
         Dev Page
+        <Switch>
+            
+        </Switch>
     </div>;
 }
 
