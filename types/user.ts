@@ -13,7 +13,7 @@ export const createMockUser = (num: number = 0): UserType => ({
   googleUserId: "mock-google-user-id",
   name: `モックユーザー${num}`,
   email: `mock-mail${num}@gmail.com`,
-  picture: "/user.png",
+  picture: "/mock/img/user.png",
   createdAt: "2025-11-09T12:00:00.000Z",
   updatedAt: "2025-11-09T12:00:00.000Z",
 });
