@@ -13,9 +13,18 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
     <div>
       Dev Page
       <div className="flex gap-2 p-4">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Chip key={i}>Chip</Chip>
-        ))}
+        <Chip color="primary" variant="contain">
+          Chip
+        </Chip>
+        <Chip color="gray" variant="contain">
+          Chip
+        </Chip>
+        <Chip color="gray" variant="outline">
+          Chip
+        </Chip>
+        <Chip color="primary" variant="outline">
+          Chip
+        </Chip>
       </div>
     </div>
   );
