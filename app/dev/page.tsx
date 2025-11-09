@@ -12,7 +12,11 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   return (
     <div>
       Dev Page
-      <Chip>hhhhhh</Chip>
+      <div className="flex gap-2 p-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <Chip key={i}>Chip</Chip>
+        ))}
+      </div>
     </div>
   );
 };
