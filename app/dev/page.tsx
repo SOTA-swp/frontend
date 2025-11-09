@@ -1,4 +1,5 @@
 import { Switch } from "@/components/ui/switch";
+import { UserInfoBlock } from "@/components/UserInfoBlock";
 
 
 export interface DevPageProps {
@@ -15,6 +16,8 @@ const DevPage: React.FC<DevPageProps> = ({ }) => {
         <Switch>
             
         </Switch>
+        
+        <UserInfoBlock title="タイトル" sum={999} />
     </div>;
 }
 
