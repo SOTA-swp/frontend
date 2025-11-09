@@ -16,8 +16,10 @@ const DevPage: React.FC<DevPageProps> = ({ }) => {
         <Switch>
             
         </Switch>
-        
-        <UserInfoBlock title="タイトル" sum={999} />
+
+        <div className="flex">
+            <UserInfoBlock title="タイトル" sum={999} />
+        </div>
     </div>;
 }
 
