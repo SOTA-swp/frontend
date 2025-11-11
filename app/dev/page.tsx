@@ -1,5 +1,8 @@
+"use client";
 import Chip from "@/components/Chip";
+import FavoriteCounter from "@/components/FavoriteCounter";
 import Tab from "@/components/Tab";
+import React from "react";
 
 export interface DevPageProps {
   a: undefined;
@@ -9,6 +12,9 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   if (process.env.NODE_ENV !== "development") {
     return <div>Not Found</div>;
   }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [favoriteCount, setFavoriteCount] = React.useState(0);
 
   return (
     <div>
@@ -47,6 +53,13 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
             { label: "4", itemContent: "タブ4" },
             { label: "5", itemContent: "タブ5" },
           ]}
+        />
+      </div>
+      <div className="flex gap-2 p-4">
+        <FavoriteCounter
+          clicked={favoriteCount % 2 === 1}
+          count={favoriteCount}
+          onClick={() => setFavoriteCount(favoriteCount + 1)}
         />
       </div>
     </div>
