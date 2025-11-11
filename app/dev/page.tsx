@@ -11,6 +11,7 @@ export interface DevPageProps {
 
 const DevPage: React.FC<DevPageProps> = ({}) => {
   const [favoriteCount, setFavoriteCount] = React.useState(0);
+  const [text, setText] = React.useState("");
 
   if (process.env.NODE_ENV !== "development") {
     return <div>Not Found</div>;
@@ -63,7 +64,15 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
         />
       </div>
       <div className="flex gap-2 p-4">
-        <TextField label="テキスト" itemType="text" />
+        <TextField
+          label="テキスト"
+          value={text}
+          textarea
+          onChange={(e) => setText(e.target.value)}
+          placeholder="プレースホルダー"
+          helperText={"ヘルパーテキスト"}
+          autoComplete="off"
+        />
       </div>
     </div>
   );
