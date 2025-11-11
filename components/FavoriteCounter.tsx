@@ -15,7 +15,7 @@ function FavoriteCounter({
     <button
       {...props}
       className={clsx(
-        "flex items-center gap-1 text-paper bg-accent px-2 py-1 rounded-full tabular-nums hover:brightness-90 active:brightness-80 active:scale-90 transition-all",
+        "flex items-center gap-1 text-paper bg-accent pl-2 pr-3 py-1 rounded-full tabular-nums hover:brightness-90 active:brightness-80 active:scale-90 transition-all",
         props.className
       )}>
       {clicked ? <MdFavorite /> : <MdFavoriteBorder />}
