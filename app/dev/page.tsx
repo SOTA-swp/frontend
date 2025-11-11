@@ -1,5 +1,6 @@
 "use client";
 import Chip from "@/components/Chip";
+import EmojiIcon from "@/components/EmojiIcon";
 import FavoriteCounter from "@/components/FavoriteCounter";
 import Tab from "@/components/Tab";
 import TextField from "@/components/TextField";
@@ -73,6 +74,13 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
           helperText={"ヘルパーテキスト"}
           autoComplete="off"
         />
+      </div>
+      <div className="flex gap-2 p-4">
+        <EmojiIcon>🤓</EmojiIcon>
+        <EmojiIcon>👉</EmojiIcon>
+        <EmojiIcon>🌜</EmojiIcon>
+        <EmojiIcon>🤡</EmojiIcon>
+        <EmojiIcon>🌛</EmojiIcon>
       </div>
     </div>
   );
