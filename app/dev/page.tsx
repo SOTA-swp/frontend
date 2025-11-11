@@ -77,10 +77,10 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
       </div>
       <div className="flex gap-2 p-4">
         <EmojiIcon>🤓</EmojiIcon>
-        <EmojiIcon>👉</EmojiIcon>
-        <EmojiIcon>🌜</EmojiIcon>
-        <EmojiIcon>🤡</EmojiIcon>
-        <EmojiIcon>🌛</EmojiIcon>
+        <EmojiIcon color="gray">👉</EmojiIcon>
+        <EmojiIcon color="accent">🌜</EmojiIcon>
+        <EmojiIcon color="error">🤡</EmojiIcon>
+        <EmojiIcon color="primary">🌛</EmojiIcon>
       </div>
     </div>
   );
