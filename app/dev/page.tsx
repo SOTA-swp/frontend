@@ -2,6 +2,7 @@
 import Chip from "@/components/Chip";
 import FavoriteCounter from "@/components/FavoriteCounter";
 import Tab from "@/components/Tab";
+import TextField from "@/components/TextField";
 import React from "react";
 
 export interface DevPageProps {
@@ -9,12 +10,11 @@ export interface DevPageProps {
 }
 
 const DevPage: React.FC<DevPageProps> = ({}) => {
+  const [favoriteCount, setFavoriteCount] = React.useState(0);
+
   if (process.env.NODE_ENV !== "development") {
     return <div>Not Found</div>;
   }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [favoriteCount, setFavoriteCount] = React.useState(0);
 
   return (
     <div>
@@ -61,6 +61,9 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
           count={favoriteCount}
           onClick={() => setFavoriteCount(favoriteCount + 1)}
         />
+      </div>
+      <div className="flex gap-2 p-4">
+        <TextField label="テキスト" itemType="text" />
       </div>
     </div>
   );
