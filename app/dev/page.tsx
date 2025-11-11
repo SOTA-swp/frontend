@@ -2,6 +2,8 @@
 import Chip from "@/components/Chip";
 import EmojiIcon from "@/components/EmojiIcon";
 import FavoriteCounter from "@/components/FavoriteCounter";
+import Selector from "@/components/Selector";
+import SelectorItem from "@/components/SelectorItem";
 import Tab from "@/components/Tab";
 import TextField from "@/components/TextField";
 import React from "react";
@@ -81,6 +83,20 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
         <EmojiIcon color="accent">🌜</EmojiIcon>
         <EmojiIcon color="error">🤡</EmojiIcon>
         <EmojiIcon color="primary">🌛</EmojiIcon>
+      </div>
+      <div className="flex gap-2 p-4">
+        <Selector
+          id="select"
+          label="セレクター"
+          error
+          helperText="ヘルパーテキスト">
+          <SelectorItem value={0}>ほげほげ0</SelectorItem>
+          <SelectorItem value={1}>ふがふが1</SelectorItem>
+          <SelectorItem value={2}>ほげほげ2</SelectorItem>
+          <SelectorItem value={3}>ふがふが3</SelectorItem>
+          <SelectorItem value={4}>ほげほげ4</SelectorItem>
+          <SelectorItem value={5}>ふがふが5</SelectorItem>
+        </Selector>
       </div>
     </div>
   );
