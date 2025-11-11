@@ -85,7 +85,11 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
         <EmojiIcon color="primary">🌛</EmojiIcon>
       </div>
       <div className="flex gap-2 p-4">
-        <Selector id="select" label="セレクター">
+        <Selector
+          id="select"
+          label="セレクター"
+          error
+          helperText="ヘルパーテキスト">
           <SelectorItem value={0}>ほげほげ0</SelectorItem>
           <SelectorItem value={1}>ふがふが1</SelectorItem>
           <SelectorItem value={2}>ほげほげ2</SelectorItem>
