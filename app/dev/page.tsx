@@ -22,7 +22,8 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
       <div className="flex margin-top-20">
         <CommonButton
           size="md"
-          variant="primary"
+          variant="contain"
+          color = "primary"
           icon={
             <span>
               <SlArrowRight />
