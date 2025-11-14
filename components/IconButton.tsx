@@ -10,8 +10,6 @@ const iconButtonStyles = cva(
       variant: {
         contain: "text-paper",
         outline: "border bg-paper",
-        disable:
-          "bg-shadow text-paper hover:scale-100! hover:brightness-100 active:scale-100! active:brightness-100! transition-none! cursor-not-allowed",
         iconOnly: "text-text-secondary",
       },
       size: {
@@ -27,6 +25,10 @@ const iconButtonStyles = cva(
         accent: "",
         error: "",
       } satisfies Record<ComponentColor, string>,
+      disable: {
+        false: null,
+        true: "bg-shadow! text-paper! hover:scale-100! hover:brightness-100 active:scale-100! active:brightness-100! transition-none! cursor-not-allowed",
+      },
     },
 
     compoundVariants: [
@@ -90,13 +92,17 @@ function IconButton({
   variant,
   colors,
   icon,
+  disable,
   className,
   ...props
 }: IconButtonProps) {
   return (
     <button
       {...props}
-      className={cn(iconButtonStyles({ variant, size, colors }), className)}>
+      className={cn(
+        iconButtonStyles({ variant, size, colors, disable }),
+        className
+      )}>
       {icon}
     </button>
   );

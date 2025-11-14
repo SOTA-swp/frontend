@@ -101,11 +101,11 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
         </Selector>
       </div>
       <div className="flex gap-2 p-4">
-        <IconButton icon={<MdHome />} variant={"disable"} />
+        <IconButton icon={<MdHome />} disable />
         <IconButton icon={<MdHome />} variant={"iconOnly"} />
         <IconButton icon={<MdHome />} variant={"outline"} />
         <IconButton icon={<MdHome />} variant={"contain"} />
-        <IconButton icon={<MdHome />} variant={"disable"} size={"xs"} />
+        <IconButton icon={<MdHome />} disable size={"xs"} />
         <IconButton icon={<MdHome />} variant={"iconOnly"} size={"xs"} />
         <IconButton icon={<MdHome />} variant={"outline"} size={"xs"} />
         <IconButton icon={<MdHome />} variant={"contain"} size={"xs"} />
