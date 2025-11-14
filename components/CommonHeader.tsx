@@ -117,13 +117,13 @@ function CommonHeader() {
           pr-4
           ">
           <li>
-            <IconButton icon={<MdAdd />} variant="icon-only" />
+            <IconButton icon={<MdAdd />} variant="iconOnly" />
           </li>
           <li>
-            <IconButton icon={<MdSearch />} variant="icon-only" />
+            <IconButton icon={<MdSearch />} variant="iconOnly" />
           </li>
           <li>
-            <IconButton icon={<MdNotifications />} variant="icon-only" />
+            <IconButton icon={<MdNotifications />} variant="iconOnly" />
           </li>
           <li className="flex items-center">
             <UserIcon userData={userData} />
