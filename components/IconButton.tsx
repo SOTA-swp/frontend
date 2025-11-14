@@ -19,7 +19,7 @@ const iconButtonStyles = cva(
         lg: "h-12 text-[1.75rem]",
         xl: "h-14 text-[2rem]",
       } satisfies Record<ComponentSizeType, string>,
-      colors: {
+      color: {
         primary: "",
         gray: "",
         accent: "",
@@ -34,55 +34,55 @@ const iconButtonStyles = cva(
     compoundVariants: [
       {
         variant: "contain",
-        colors: "primary",
+        color: "primary",
         class: "bg-primary ",
       },
       {
         variant: "contain",
-        colors: "gray",
+        color: "gray",
         class: "bg-text-secondary",
       },
       {
         variant: "contain",
-        colors: "accent",
+        color: "accent",
         class: "bg-accent",
       },
       {
         variant: "contain",
-        colors: "error",
+        color: "error",
         class: "bg-error",
       },
       {
         variant: "outline",
-        colors: "primary",
+        color: "primary",
         class: "border-primary text-primary",
       },
       {
         variant: "outline",
-        colors: "gray",
+        color: "gray",
         class: "border-text-secondary text-text-secondary",
       },
       {
         variant: "outline",
-        colors: "accent",
+        color: "accent",
         class: "border-accent text-accent",
       },
       {
         variant: "outline",
-        colors: "error",
+        color: "error",
         class: "border-error text-error",
       },
     ],
     defaultVariants: {
       variant: "contain",
       size: "md",
-      colors: "primary",
+      color: "primary",
     },
   }
 );
 
 interface IconButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
     VariantProps<typeof iconButtonStyles> {
   icon?: React.ReactNode;
 }
@@ -90,7 +90,7 @@ interface IconButtonProps
 function IconButton({
   size,
   variant,
-  colors,
+  color,
   icon,
   disable,
   className,
@@ -100,7 +100,7 @@ function IconButton({
     <button
       {...props}
       className={cn(
-        iconButtonStyles({ variant, size, colors, disable }),
+        iconButtonStyles({ variant, size, color, disable }),
         className
       )}>
       {icon}
