@@ -2,11 +2,13 @@
 import Chip from "@/components/Chip";
 import EmojiIcon from "@/components/EmojiIcon";
 import FavoriteCounter from "@/components/FavoriteCounter";
+import IconButton from "@/components/IconButton";
 import Selector from "@/components/Selector";
 import SelectorItem from "@/components/SelectorItem";
 import Tab from "@/components/Tab";
 import TextField from "@/components/TextField";
 import React from "react";
+import { MdHome } from "react-icons/md";
 
 export interface DevPageProps {
   a: undefined;
@@ -97,6 +99,16 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
           <SelectorItem value={4}>ほげほげ4</SelectorItem>
           <SelectorItem value={5}>ふがふが5</SelectorItem>
         </Selector>
+      </div>
+      <div className="flex gap-2 p-4">
+        <IconButton icon={<MdHome />} variant={"disable"} />
+        <IconButton icon={<MdHome />} variant={"iconOnly"} />
+        <IconButton icon={<MdHome />} variant={"outline"} />
+        <IconButton icon={<MdHome />} variant={"contain"} />
+        <IconButton icon={<MdHome />} variant={"disable"} size={"xs"} />
+        <IconButton icon={<MdHome />} variant={"iconOnly"} size={"xs"} />
+        <IconButton icon={<MdHome />} variant={"outline"} size={"xs"} />
+        <IconButton icon={<MdHome />} variant={"contain"} size={"xs"} />
       </div>
     </div>
   );
