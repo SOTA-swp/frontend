@@ -2,12 +2,14 @@
 import Chip from "@/components/Chip";
 import EmojiIcon from "@/components/EmojiIcon";
 import FavoriteCounter from "@/components/FavoriteCounter";
+import GrowIconButton from "@/components/GrowIconButton";
 import IconButton from "@/components/IconButton";
 import SectionTitle from "@/components/SectionTitle";
 import Selector from "@/components/Selector";
 import SelectorItem from "@/components/SelectorItem";
 import Tab from "@/components/Tab";
 import TextField from "@/components/TextField";
+import { color } from "motion";
 import React from "react";
 import { MdHome } from "react-icons/md";
 
@@ -123,6 +125,20 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
       <SectionTitle icon={<MdHome />} color="error">
         タイトル
       </SectionTitle>
+      <div className="flex gap-2 p-4">
+        <GrowIconButton icon={<MdHome />} color="primary">
+          タイトル
+        </GrowIconButton>
+        <GrowIconButton icon={<MdHome />} color="gray">
+          タイトル
+        </GrowIconButton>
+        <GrowIconButton icon={<MdHome />} color="accent">
+          タイトル
+        </GrowIconButton>
+        <GrowIconButton icon={<MdHome />} color="error">
+          タイトル
+        </GrowIconButton>
+      </div>
     </div>
   );
 };
