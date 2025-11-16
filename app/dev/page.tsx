@@ -3,6 +3,7 @@ import Chip from "@/components/Chip";
 import EmojiIcon from "@/components/EmojiIcon";
 import FavoriteCounter from "@/components/FavoriteCounter";
 import IconButton from "@/components/IconButton";
+import SectionTitle from "@/components/SectionTitle";
 import Selector from "@/components/Selector";
 import SelectorItem from "@/components/SelectorItem";
 import Tab from "@/components/Tab";
@@ -23,7 +24,7 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   }
 
   return (
-    <div>
+    <div className="mb-[100px]">
       Dev Page
       <div className="flex gap-2 p-4">
         <Chip color="primary" variant="contain">
@@ -110,6 +111,18 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
         <IconButton icon={<MdHome />} variant={"outline"} size={"xs"} />
         <IconButton icon={<MdHome />} variant={"contain"} size={"xs"} />
       </div>
+      <SectionTitle icon={<MdHome />} color="gray">
+        タイトル
+      </SectionTitle>
+      <SectionTitle icon={<MdHome />} color="primary">
+        タイトル
+      </SectionTitle>
+      <SectionTitle icon={<MdHome />} color="accent">
+        タイトル
+      </SectionTitle>
+      <SectionTitle icon={<MdHome />} color="error">
+        タイトル
+      </SectionTitle>
     </div>
   );
 };
