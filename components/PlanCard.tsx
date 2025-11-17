@@ -111,12 +111,12 @@ function PlanCard({
                   // TODO: サムネイルの仕様が決まったら修正
                   backgroundImage: `url(${"/mock/img/thumbnail.jpg"})`,
                 }}
-                className="absolute inset-0 bg-cover bg-center rounded-lg"
+                className="absolute inset-0 bg-cover bg-center rounded-lg border border-primary"
               />
               <motion.div
                 onClick={(e) => e.stopPropagation()}
                 layoutId={getId(MOTION_ELEMENTS.INFO)}
-                className="absolute bottom-0 w-full bg-paper p-4 rounded-lg border border-primary">
+                className="absolute bottom-3 inset-x-3 bg-paper/80 backdrop-blur-md p-4 rounded-lg border border-primary shadow-lg ">
                 <div className="flex justify-between">
                   <div className="flex items-end gap-2">
                     <p className="text-[14px] text-text-secondary truncate">
