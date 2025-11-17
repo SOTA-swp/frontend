@@ -12,6 +12,7 @@ import Tab from "@/components/Tab";
 import TextField from "@/components/TextField";
 import { createMockPlan } from "@/types/plan";
 import { createMockUser } from "@/types/user";
+import { motion } from "motion/react";
 import React from "react";
 import { MdHome } from "react-icons/md";
 
@@ -22,7 +23,7 @@ export interface DevPageProps {
 const DevPage: React.FC<DevPageProps> = ({}) => {
   const [favoriteCount, setFavoriteCount] = React.useState(0);
   const [text, setText] = React.useState("");
-  const [planOpen, setPlanOpen] = React.useState(0);
+  const [planOpen, setPlanOpen] = React.useState(-1);
 
   if (process.env.NODE_ENV !== "development") {
     return <div>Not Found</div>;
@@ -142,18 +143,18 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
           タイトル
         </GrowIconButton>
       </div>
-      <div className="flex gap-4 p-4">
+      <motion.div layout className="flex gap-4 p-4">
         {Array.from({ length: 5 }).map((_, i) => (
           <PlanCard
             open={planOpen === i}
             key={i}
-            planData={{ likes: 100, ...createMockPlan(i) }}
+            planData={{ favorites: 100, ...createMockPlan(i) }}
             userData={createMockUser(i)}
             onOpen={() => setPlanOpen(i)}
             onClose={() => setPlanOpen(-1)}
           />
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };
