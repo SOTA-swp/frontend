@@ -1,36 +1,70 @@
-import clsx from "clsx";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
+import ComponentSizeType from "@/types/componentSize";
+import ComponentColor from "@/types/componentColor";
 import CommonText from "./CommonText";
 
-type VariantType = "outline" | "contain";
-type color = "primary" | "gray";
+const chipStyles = cva(
+  "rounded-md px-2 py-1 text-xs flex",
+{
+  variants: {
+   variant: {
+      outline: "border bg-paper",
+      contain: ""
+   },
+   color: {
+      primary: "",
+      gray: "",
+   },
+  },
+
+  compoundVariants: [
+    {
+      variant: "contain",
+      color: "primary",
+      class: "text-paper bg-primary",
+    },
+    {
+      variant: "contain",
+      color: "gray",
+      class: "text-paper bg-text-secondary",
+    },
+    {
+      variant: "outline",
+      color: "primary",
+      class: "text-primary border-primary",
+    },
+    {
+      variant: "outline",
+      color: "gray",
+      class: "text-text-secondary border-text-secondary",
+    },
+  ]
+
+  }
+);
+
+
+
+interface ChipProps 
+  extends VariantProps<typeof chipStyles>{
+    children?: React.ReactNode
+  }
 
 function Chip({
   children,
   variant,
   color,
   ...props
-}: {
-  children?: React.ReactNode;
-  variant?: VariantType;
-  color?: color;
-}) {
+}: ChipProps) {
   return (
     <div
       {...props}
-      className={clsx(
-        "rounded-md px-2 py-1 text-xs",
-        variant === "outline" &&
-          color === "primary" &&
-          "border text-primary bg-paper border-primary",
-        variant === "outline" &&
-          color === "gray" &&
-          "border text-text-secondary bg-paper border-text-secondary",
-        variant === "contain" && color === "primary" && "text-paper bg-primary",
-        variant === "contain" &&
-          color === "gray" &&
-          "text-paper bg-text-secondary"
+      className={cn(
+        chipStyles({variant, color})
       )}
     >
+      <button></button>
       <CommonText>{children}</CommonText>
     </div>
   );
