@@ -1,36 +1,58 @@
-import clsx from "clsx";
+import { cva, type VariantProps } from "class-variance-authority";
+import ComponentColor from "@/types/componentColor";
 import CommonText from "./CommonText";
 
-type VariantType = "outline" | "contain";
-type color = "primary" | "gray";
+const chipStyles = cva("rounded-md px-2 py-1 text-xs flex", {
+  variants: {
+    variant: {
+      outline: "border bg-paper",
+      contain: "",
+    },
+    color: {
+      primary: "",
+      gray: "",
+      accent: "",
+      error: "",
+    } satisfies Record<ComponentColor, string>,
+  },
 
-function Chip({
-  children,
-  variant,
-  color,
-  ...props
-}: {
+  compoundVariants: [
+    {
+      variant: "contain",
+      color: "primary",
+      class: "text-paper bg-primary",
+    },
+    {
+      variant: "contain",
+      color: "gray",
+      class: "text-paper bg-text-secondary",
+    },
+    {
+      variant: "outline",
+      color: "primary",
+      class: "text-primary border-primary",
+    },
+    {
+      variant: "outline",
+      color: "gray",
+      class: "text-text-secondary border-text-secondary",
+    },
+  ],
+
+  defaultVariants: {
+    variant: "contain",
+    color: "primary",
+  },
+});
+
+interface ChipProps extends VariantProps<typeof chipStyles> {
   children?: React.ReactNode;
-  variant?: VariantType;
-  color?: color;
-}) {
+}
+
+function Chip({ children, variant, color, ...props }: ChipProps) {
   return (
-    <div
-      {...props}
-      className={clsx(
-        "rounded-md px-2 py-1 text-xs",
-        variant === "outline" &&
-          color === "primary" &&
-          "border text-primary bg-paper border-primary",
-        variant === "outline" &&
-          color === "gray" &&
-          "border text-text-secondary bg-paper border-text-secondary",
-        variant === "contain" && color === "primary" && "text-paper bg-primary",
-        variant === "contain" &&
-          color === "gray" &&
-          "text-paper bg-text-secondary"
-      )}
-    >
+    <div {...props} className={chipStyles({ variant, color })}>
+      <button></button>
       <CommonText>{children}</CommonText>
     </div>
   );
