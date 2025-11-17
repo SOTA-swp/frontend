@@ -4,13 +4,13 @@ import ComponentSizeType from "@/types/componentSize";
 import ComponentColor from "@/types/componentColor";
 
 const iconButtonStyles = cva(
-  "relative flex items-center justify-center aspect-square rounded-full hover:brightness-90 hover:scale-105 active:brightness-80 active:scale-95 transition",
+  "relative flex items-center justify-center aspect-square rounded-full hover:scale-105 active:brightness-80 active:scale-95 transition",
   {
     variants: {
       variant: {
         contain: "text-paper",
         outline: "border bg-paper",
-        iconOnly: "text-text-secondary",
+        iconOnly: "text-text-secondary bg-shadow",
       },
       size: {
         xs: "h-6 text-[1rem]",
@@ -102,7 +102,8 @@ function IconButton({
       className={cn(
         iconButtonStyles({ variant, size, color, disable }),
         className
-      )}>
+      )}
+    >
       {icon}
     </button>
   );
