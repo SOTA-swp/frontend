@@ -1,5 +1,4 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
 import ComponentColor from "@/types/componentColor";
 import CommonText from "./CommonText";
 
@@ -52,7 +51,7 @@ interface ChipProps extends VariantProps<typeof chipStyles> {
 
 function Chip({ children, variant, color, ...props }: ChipProps) {
   return (
-    <div {...props} className={cn(chipStyles({ variant, color }))}>
+    <div {...props} className={chipStyles({ variant, color })}>
       <button></button>
       <CommonText>{children}</CommonText>
     </div>
