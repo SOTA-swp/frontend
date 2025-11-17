@@ -7,30 +7,12 @@ const emojiIconStyles = cva(
   {
     variants: {
       color: {
-        primary: "",
-        gray: "",
-        accent: "",
-        error: "",
+        primary: "border-primary",
+        gray: "border-border",
+        accent: "border-accent",
+        error: "border-error",
       } satisfies Record<ComponentColor, string>,
     },
-    compoundVariants: [
-      {
-        color: "primary",
-        class: "border-primary",
-      },
-      {
-        color: "gray",
-        class: "border-border",
-      },
-      {
-        color: "accent",
-        class: "border-accent",
-      },
-      {
-        color: "error",
-        class: "border-error",
-      },
-    ],
     defaultVariants: {
       color: "primary",
     },
