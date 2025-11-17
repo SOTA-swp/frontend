@@ -1,21 +1,20 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import ComponentSizeType from "@/types/componentSize";
 import ComponentColor from "@/types/componentColor";
 import CommonText from "./CommonText";
 
-const chipStyles = cva(
-  "rounded-md px-2 py-1 text-xs flex",
-{
+const chipStyles = cva("rounded-md px-2 py-1 text-xs flex", {
   variants: {
-   variant: {
+    variant: {
       outline: "border bg-paper",
-      contain: ""
-   },
-   color: {
+      contain: "",
+    },
+    color: {
       primary: "",
       gray: "",
-   },
+      accent: "",
+      error: "",
+    } satisfies Record<ComponentColor, string>,
   },
 
   compoundVariants: [
@@ -39,31 +38,21 @@ const chipStyles = cva(
       color: "gray",
       class: "text-text-secondary border-text-secondary",
     },
-  ]
+  ],
 
-  }
-);
+  defaultVariants: {
+    variant: "contain",
+    color: "primary",
+  },
+});
 
+interface ChipProps extends VariantProps<typeof chipStyles> {
+  children?: React.ReactNode;
+}
 
-
-interface ChipProps 
-  extends VariantProps<typeof chipStyles>{
-    children?: React.ReactNode
-  }
-
-function Chip({
-  children,
-  variant,
-  color,
-  ...props
-}: ChipProps) {
+function Chip({ children, variant, color, ...props }: ChipProps) {
   return (
-    <div
-      {...props}
-      className={cn(
-        chipStyles({variant, color})
-      )}
-    >
+    <div {...props} className={cn(chipStyles({ variant, color }))}>
       <button></button>
       <CommonText>{children}</CommonText>
     </div>
