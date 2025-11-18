@@ -28,6 +28,16 @@ const chipStyles = cva("rounded-md px-2 py-1 text-xs flex", {
       class: "text-paper bg-text-secondary",
     },
     {
+      variant: "contain",
+      color: "accent",
+      class: "text-paper bg-accent",
+    },
+    {
+      variant: "contain",
+      color: "error",
+      class: "text-paper bg-error",
+    },
+    {
       variant: "outline",
       color: "primary",
       class: "text-primary border-primary",
@@ -36,6 +46,16 @@ const chipStyles = cva("rounded-md px-2 py-1 text-xs flex", {
       variant: "outline",
       color: "gray",
       class: "text-text-secondary border-text-secondary",
+    },
+    {
+      variant: "outline",
+      color: "accent",
+      class: "text-accent border-accent",
+    },
+    {
+      variant: "outline",
+      color: "error",
+      class: "text-error border-error",
     },
   ],
 
