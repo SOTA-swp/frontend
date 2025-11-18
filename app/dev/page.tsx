@@ -9,6 +9,7 @@ import Selector from "@/components/Selector";
 import SelectorItem from "@/components/SelectorItem";
 import Tab from "@/components/Tab";
 import TextField from "@/components/TextField";
+import Side from "@/components/Side";
 import { color } from "motion";
 import React from "react";
 import { MdHome } from "react-icons/md";
@@ -151,6 +152,7 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
           タイトル
         </GrowIconButton>
       </div>
+      <Side />
     </div>
   );
 };
