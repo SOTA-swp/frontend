@@ -23,7 +23,29 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
         <CommonButton
           size="md"
           variant="contain"
-          color = "primary"
+          color = "error"
+          icon={
+            <span>
+              <SlArrowRight />
+            </span>
+          }
+          text="Button"
+        />
+        <CommonButton
+          size="sm"
+          variant="outline"
+          color = "error"
+          icon={
+            <span>
+              <SlArrowRight />
+            </span>
+          }
+          text="Button"
+        />
+        <CommonButton
+          size="lg"
+          variant="text"
+          color = "error"
           icon={
             <span>
               <SlArrowRight />

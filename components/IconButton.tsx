@@ -29,6 +29,7 @@ function IconButton({
         hover:brightness-90
         active:brightness-80
         transition
+        
         `,
         size === "xs" && "p-0.5 text-[1rem]",
         size === "sm" && "p-1 text-[1.25rem]",
