@@ -4,7 +4,7 @@ import ComponentSizeType from "@/types/componentSize";
 import ComponentColor from "@/types/componentColor";
 
 const iconButtonStyles = cva(
-  "relative flex items-center justify-center aspect-square rounded-full hover:scale-105 active:brightness-80 active:scale-95 transition",
+  "relative flex items-center justify-center aspect-square rounded-full hover:scale-105 active:scale-95 transition",
   {
     variants: {
       variant: {
