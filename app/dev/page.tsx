@@ -35,10 +35,22 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
         <Chip color="gray" variant="contain">
           Chip
         </Chip>
+        <Chip color="accent" variant="contain">
+          Chip
+        </Chip>
+        <Chip color="error" variant="contain">
+          Chip
+        </Chip>
         <Chip color="gray" variant="outline">
           Chip
         </Chip>
         <Chip color="primary" variant="outline">
+          Chip
+        </Chip>
+        <Chip color="accent" variant="outline">
+          Chip
+        </Chip>
+        <Chip color="error" variant="outline">
           Chip
         </Chip>
       </div>
