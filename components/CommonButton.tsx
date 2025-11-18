@@ -2,8 +2,6 @@ import { cn } from "@/lib/utils";
 import ComponentColor from "@/types/componentColor";
 import ComponentSizeType from "@/types/componentSize";
 import { cva, VariantProps } from "class-variance-authority";
-import clsx from "clsx";
-import { Span } from "next/dist/trace";
 import React from "react";
 
 type VariantType = "contain" | "outline" | "text";
@@ -125,25 +123,31 @@ interface CommonButtonProps
   size?: ComponentSizeType;
   variant?: VariantType;
   icon?: React.ReactNode;
-  text?: React.ReactNode;
   color?: ComponentColor;
+  fullWidth?: boolean;
+  children?: React.ReactNode;
 }
 
 function CommonButton({
   size,
   variant,
   color,
+  fullWidth,
   icon,
-  text,
+  children,
   className,
   ...props
 }: CommonButtonProps) {
   return (
     <button
       {...props}
-      className={cn(CommonButtonStyles({ size, variant, color }), className)}
-    >
-      {text}
+      className={cn(
+        CommonButtonStyles({ size, variant, color }),
+        className,
+        icon ? "justify-between" : "justify-center",
+        fullWidth && "w-full"
+      )}>
+      {children}
       {icon}
     </button>
   );
