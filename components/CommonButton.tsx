@@ -16,7 +16,7 @@ const CommonButtonStyles = cva(
     flex
     items-center
     justify-items-center
-    rounded-xl
+    rounded-lg
     group
     active:scale-90
     transition
