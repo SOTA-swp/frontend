@@ -19,6 +19,7 @@ export const useModalStore = create<ModalState>((set) => ({
   isOpen: false,
   payloadQueue: [],
   openModal: (content) => {
+    document.body.style.overflow = "hidden";
     set((state) => ({
       isOpen: true,
       payloadQueue: state.payloadQueue
@@ -27,12 +28,17 @@ export const useModalStore = create<ModalState>((set) => ({
     }));
   },
   closeModal: () => {
+    document.body.style.overflow = "";
     set({ isOpen: false });
   },
   shiftQueue: () => {
-    set((state) => ({
-      isOpen: state.payloadQueue.length > 1,
-      payloadQueue: state.payloadQueue.slice(1),
-    }));
+    set((state) => {
+      const newOpen = state.payloadQueue.length > 1;
+      document.body.style.overflow = "hidden";
+      return {
+        isOpen: newOpen,
+        payloadQueue: state.payloadQueue.slice(1),
+      };
+    });
   },
 }));
