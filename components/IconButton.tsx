@@ -10,7 +10,7 @@ const iconButtonStyles = cva(
       variant: {
         contain: "text-paper",
         outline: "border bg-paper",
-        iconOnly: "text-text-secondary bg-shadow",
+        iconOnly: "text-text-secondary hover:bg-shadow",
       },
       size: {
         xs: "h-6 text-[1rem]",
