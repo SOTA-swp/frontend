@@ -20,9 +20,9 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
       <div className="flex">
         <UserInfoBlock title="タイトル" sum={999} />
       </div>
-      <div className="flex margin-top-20 items-end">
+      <div className="flex items-end">
         <CommonButton
-          size="md"
+          size="xs"
           variant="contain"
           color="error"
           icon={<MdChevronRight />}
@@ -36,9 +36,23 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
           text="Button"
         />
         <CommonButton
+          size="md"
+          variant="text"
+          color="error"
+          icon={<MdChevronRight />}
+          text="Button"
+        />
+        <CommonButton
           size="lg"
           variant="text"
           color="error"
+          icon={<MdChevronRight />}
+          text="Button"
+        />
+        <CommonButton
+          size="xl"
+          variant="text"
+          color="primary"
           icon={<MdChevronRight />}
           text="Button"
         />
