@@ -143,11 +143,12 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
           タイトル
         </GrowIconButton>
       </div>
-      <motion.div layout className="flex gap-4 p-4">
+      <motion.div layout className="flex gap-4 p-4 items-end">
         {Array.from({ length: 5 }).map((_, i) => (
           <PlanCard
             open={planOpen === i}
             key={i}
+            variant={i % 2 === 0 ? "default" : "mini"}
             planData={{ favorites: 100, ...createMockPlan(i) }}
             userData={createMockUser(i)}
             onOpen={() => setPlanOpen(i)}

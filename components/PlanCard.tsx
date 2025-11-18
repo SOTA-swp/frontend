@@ -90,7 +90,29 @@ function PlanCard({
           </motion.div>
         ) : (
           // 小さめのカード
-          <></>
+          <motion.button
+            onClick={onOpen}
+            layoutId={getId(MOTION_ELEMENTS.CONTAINER)}
+            whileHover={{ scale: 1.05 }}
+            className="relative w-[250px] h-20 bg-paper rounded-lg border border-border">
+            <motion.div
+              layoutId={getId(MOTION_ELEMENTS.IMAGE)}
+              style={{ backgroundImage: `url(${"/mock/img/thumbnail.jpg"})` }}
+              className="absolute inset-0 bg-cover bg-center rounded-lg "
+            />
+            <motion.div
+              layoutId={getId(MOTION_ELEMENTS.INFO)}
+              className="absolute top-0 right-0 flex flex-col text-start px-2 justify-center w-[60%] h-full bg-paper rounded-r-lg rounded-l-none">
+              <p className="text-[12px] text-text-secondary truncate">
+                {subTimestamp(planData.createdAt)}
+              </p>
+              <motion.h3
+                layoutId={getId(MOTION_ELEMENTS.TITLE)}
+                className="text-text-primary truncate mt-1">
+                {planData.title}
+              </motion.h3>
+            </motion.div>
+          </motion.button>
         ))}
 
       {/* 開いた時 */}
