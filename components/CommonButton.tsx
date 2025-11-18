@@ -144,7 +144,7 @@ function CommonButton({
       className={cn(CommonButtonStyles({ size, variant, color }), className)}
     >
       {text}
-      {icon}
+      <span className="text-2xl">{icon}</span>
     </button>
   );
 }
