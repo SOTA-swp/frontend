@@ -12,6 +12,7 @@ export interface ModalState {
   payloadQueue: ModalPayload[];
   openModal: (content: ModalPayload) => void;
   closeModal: () => void;
+  shiftQueue: () => void;
 }
 
 export const useModalStore = create<ModalState>((set) => ({
@@ -26,6 +27,9 @@ export const useModalStore = create<ModalState>((set) => ({
     }));
   },
   closeModal: () => {
+    set({ isOpen: false });
+  },
+  shiftQueue: () => {
     set((state) => ({
       isOpen: state.payloadQueue.length > 1,
       payloadQueue: state.payloadQueue.slice(1),
