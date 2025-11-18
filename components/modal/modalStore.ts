@@ -34,7 +34,7 @@ export const useModalStore = create<ModalState>((set) => ({
   shiftQueue: () => {
     set((state) => {
       const newOpen = state.payloadQueue.length > 1;
-      document.body.style.overflow = "hidden";
+      if (newOpen) document.body.style.overflow = "hidden";
       return {
         isOpen: newOpen,
         payloadQueue: state.payloadQueue.slice(1),
