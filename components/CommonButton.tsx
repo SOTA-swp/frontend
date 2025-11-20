@@ -33,7 +33,7 @@ const CommonButtonStyles = cva(
         contain: "bg-primary text-paper",
         outline:
           "border border-primary bg-paper text-primary hover:bg-primary hover:text-paper",
-        text: "bg-background text-text-secondary hover:bg-primary/50 hover:text-primary",
+        text: " text-text-secondary hover:bg-primary/50 hover:text-primary",
       },
       color: {
         primary: "",
