@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import ComponentColor from "@/types/componentColor";
 import ComponentSizeType from "@/types/componentSize";
 import { cva, VariantProps } from "class-variance-authority";
+import Link from "next/link";
 import React from "react";
 
 type VariantType = "contain" | "outline" | "text";
@@ -125,6 +126,7 @@ interface CommonButtonProps
   icon?: React.ReactNode;
   color?: ComponentColor;
   fullWidth?: boolean;
+  href?: string;
   children?: React.ReactNode;
 }
 
@@ -133,22 +135,37 @@ function CommonButton({
   variant,
   color,
   fullWidth,
+  href,
   icon,
   children,
   className,
   ...props
 }: CommonButtonProps) {
-  return (
-    <button
-      {...props}
-      className={cn(
-        CommonButtonStyles({ size, variant, color }),
-        className,
-        icon ? "justify-between" : "justify-center",
-        fullWidth && "w-full"
-      )}>
+  const commonClassName = cn(
+    CommonButtonStyles({ size, variant, color }),
+    className,
+    icon ? "justify-between" : "justify-center",
+    fullWidth && "w-full"
+  );
+
+  const content = (
+    <>
       {children}
       <span className="text-2xl">{icon}</span>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className={commonClassName}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button {...props} className={commonClassName}>
+      {content}
     </button>
   );
 }
