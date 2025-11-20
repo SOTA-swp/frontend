@@ -7,6 +7,7 @@ import GrowIconButton from "@/components/GrowIconButton";
 import IconButton from "@/components/IconButton";
 import { useModalStore } from "@/components/modal/modalStore";
 import PlanCard from "@/components/PlanCard";
+import Popover from "@/components/Popover";
 import SectionTitle from "@/components/SectionTitle";
 import Selector from "@/components/Selector";
 import SelectorItem from "@/components/SelectorItem";
@@ -27,6 +28,9 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   const [text, setText] = React.useState("");
   const [planOpen, setPlanOpen] = React.useState(-1);
   const { openModal, closeModal } = useModalStore();
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
 
   if (process.env.NODE_ENV !== "development") {
     return <div>Not Found</div>;
@@ -242,6 +246,17 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
           }>
           エラーモーダル
         </CommonButton>
+      </div>
+      <div className="flex gap-2 p-4">
+        <CommonButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+          ポップオーバー
+        </CommonButton>
+        <Popover
+          open={Boolean(anchorEl)}
+          anchorEl={anchorEl}
+          onClose={() => setAnchorEl(null)}>
+          ポップオーバー
+        </Popover>
       </div>
     </div>
   );
