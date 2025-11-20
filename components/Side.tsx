@@ -5,36 +5,26 @@ import {
   MdSearch,
 } from "react-icons/md";
 import CommonButton from "./CommonButton";
-import { hover } from "motion";
 
 function Side() {
   return (
     <div
       className={
         "rounded-md w-[290px] flex flex-col gap-4 py-4 px-4 border border-primary"
-      }
-    >
-      <CommonButton
-        text="ユーザー"
-        variant="text"
-        icon={<MdAccountCircle />}
-      ></CommonButton>
-      <CommonButton
-        text="作った計画"
-        variant="text"
-        icon={<MdAirplanemodeActive />}
-      ></CommonButton>
-      <CommonButton
-        text="お気に入り"
-        variant="text"
-        icon={<MdFavorite />}
-      ></CommonButton>
+      }>
+      <CommonButton variant="text" icon={<MdAccountCircle />}>
+        ユーザー
+      </CommonButton>
+      <CommonButton variant="text" icon={<MdAirplanemodeActive />}>
+        作った計画
+      </CommonButton>
+      <CommonButton variant="text" icon={<MdFavorite />}>
+        お気に入り
+      </CommonButton>
       <div className="h-px border border-border"></div>
-      <CommonButton
-        text="検索する"
-        variant="text"
-        icon={<MdSearch />}
-      ></CommonButton>
+      <CommonButton variant="text" icon={<MdSearch />}>
+        検索
+      </CommonButton>
     </div>
   );
 }
