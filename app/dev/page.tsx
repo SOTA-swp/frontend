@@ -1,9 +1,11 @@
 "use client";
 import Chip from "@/components/Chip";
+import CommonButton from "@/components/CommonButton";
 import EmojiIcon from "@/components/EmojiIcon";
 import FavoriteCounter from "@/components/FavoriteCounter";
 import GrowIconButton from "@/components/GrowIconButton";
 import IconButton from "@/components/IconButton";
+import { useModalStore } from "@/components/modal/modalStore";
 import PlanCard from "@/components/PlanCard";
 import SectionTitle from "@/components/SectionTitle";
 import Selector from "@/components/Selector";
@@ -24,6 +26,7 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   const [favoriteCount, setFavoriteCount] = React.useState(0);
   const [text, setText] = React.useState("");
   const [planOpen, setPlanOpen] = React.useState(-1);
+  const { openModal, closeModal } = useModalStore();
 
   if (process.env.NODE_ENV !== "development") {
     return <div>Not Found</div>;
@@ -180,6 +183,66 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
           />
         ))}
       </motion.div>
+      <div className="flex gap-2 p-4">
+        <CommonButton
+          onClick={() => {
+            openModal({
+              modalType: "default",
+              title: "モーダルテスト",
+              content:
+                "こちらはモーダルテストです。こちらはモーダルテストです。こちらはモーダルテストです。",
+              actions: [
+                <CommonButton
+                  key={"copy"}
+                  color="accent"
+                  variant="outline"
+                  onClick={() =>
+                    openModal({
+                      modalType: "default",
+                      title: "複製テスト",
+                      content: "モーダルが複製されました！",
+                      actions: [
+                        <CommonButton
+                          key={"close"}
+                          variant="outline"
+                          onClick={closeModal}
+                          fullWidth>
+                          閉じる
+                        </CommonButton>,
+                      ],
+                    })
+                  }
+                  fullWidth>
+                  複製
+                </CommonButton>,
+                <CommonButton
+                  key={"no"}
+                  onClick={closeModal}
+                  variant="outline"
+                  fullWidth>
+                  いいえ
+                </CommonButton>,
+                <CommonButton key={"yes"} onClick={closeModal} fullWidth>
+                  はい
+                </CommonButton>,
+              ],
+            });
+          }}>
+          モーダル
+        </CommonButton>
+        <CommonButton
+          color="error"
+          onClick={() =>
+            openModal({
+              modalType: "error",
+              title: "エラーモーダル",
+              content: "エラーモーダルのテストです",
+              actions: [],
+            })
+          }>
+          エラーモーダル
+        </CommonButton>
+      </div>
     </div>
   );
 };
