@@ -154,6 +154,18 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
         <GrowIconButton icon={<MdHome />} color="error">
           タイトル
         </GrowIconButton>
+        <GrowIconButton icon={<MdHome />} color="primary" absolute>
+          タイトル
+        </GrowIconButton>
+        <GrowIconButton icon={<MdHome />} color="gray" absolute>
+          タイトル
+        </GrowIconButton>
+        <GrowIconButton icon={<MdHome />} color="accent" absolute>
+          タイトル
+        </GrowIconButton>
+        <GrowIconButton icon={<MdHome />} color="error" absolute>
+          タイトル
+        </GrowIconButton>
       </div>
       <motion.div layout className="flex gap-4 p-4 items-end">
         {Array.from({ length: 5 }).map((_, i) => (
