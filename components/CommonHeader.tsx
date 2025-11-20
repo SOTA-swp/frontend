@@ -10,7 +10,7 @@ import { motion, Variants } from "motion/react";
 import LAYER from "@/consts/LAYER";
 import clsx from "clsx";
 
-export const HEADER_HEIGHT = "110px";
+export const HEADER_HEIGHT = 110;
 
 const curtainVariants: Variants = {
   hover: {
