@@ -9,8 +9,7 @@ import { createMockUser } from "@/types/user";
 import { motion, Variants } from "motion/react";
 import LAYER from "@/consts/LAYER";
 import clsx from "clsx";
-
-export const HEADER_HEIGHT = 110;
+import HEADER_HEIGHT from "../_consts/HEADER_HIGHT";
 
 const curtainVariants: Variants = {
   hover: {
