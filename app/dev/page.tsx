@@ -7,7 +7,8 @@ import GrowIconButton from "@/components/GrowIconButton";
 import IconButton from "@/components/IconButton";
 import { useModalStore } from "@/components/modal/modalStore";
 import PlanCard from "@/components/PlanCard";
-import Popover from "@/components/Popover";
+import Popover from "@/components/popover/Popover";
+import usePopover from "@/components/popover/usePopover";
 import SectionTitle from "@/components/SectionTitle";
 import Selector from "@/components/Selector";
 import SelectorItem from "@/components/SelectorItem";
@@ -28,9 +29,7 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   const [text, setText] = React.useState("");
   const [planOpen, setPlanOpen] = React.useState(-1);
   const { openModal, closeModal } = useModalStore();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
-  );
+  const { open, anchorEl, handleOpen, handleClose } = usePopover();
 
   if (process.env.NODE_ENV !== "development") {
     return <div>Not Found</div>;
@@ -248,13 +247,10 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
         </CommonButton>
       </div>
       <div className="flex gap-2 p-4">
-        <CommonButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+        <CommonButton onClick={(e) => handleOpen(e.currentTarget)}>
           ポップオーバー
         </CommonButton>
-        <Popover
-          open={Boolean(anchorEl)}
-          anchorEl={anchorEl}
-          onClose={() => setAnchorEl(null)}>
+        <Popover open={open} anchorEl={anchorEl} onClose={handleClose}>
           ポップオーバー
         </Popover>
       </div>
