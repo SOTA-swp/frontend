@@ -9,7 +9,7 @@ import Selector from "@/components/Selector";
 import SelectorItem from "@/components/SelectorItem";
 import Tab from "@/components/Tab";
 import TextField from "@/components/TextField";
-import Side from "@/components/side/Side";
+import Side from "@/app/(main)/_components/side/Side";
 import React from "react";
 import { MdHome } from "react-icons/md";
 

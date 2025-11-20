@@ -5,7 +5,7 @@ import {
   MdFavorite,
   MdSearch,
 } from "react-icons/md";
-import CommonButton from "../CommonButton";
+import CommonButton from "../../../../components/CommonButton";
 import { HEADER_HEIGHT } from "../CommonHeader";
 import PATH from "@/consts/PATH";
 import { SIDE_VIEWS, SIDE_VIEWS_TYPE, useSideStore } from "./sideStore";
