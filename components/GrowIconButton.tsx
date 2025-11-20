@@ -19,14 +19,14 @@ const iconButtonStyles = cva("", {
 });
 
 const labelStyle = cva(
-  "absolute ml-2 px-0 h-full overflow-hidden left-full flex items-center whitespace-nowrap text-paper rounded-l-lg rounded-r-4xl opacity-0 max-w-0 z-20 pointer-events-none",
+  "absolute ml-2 px-0 h-full overflow-hidden left-full flex items-center whitespace-nowrap text-paper rounded-l-lg rounded-r-4xl opacity-0 max-w-0 z-20 border pointer-events-none",
   {
     variants: {
       color: {
-        primary: "bg-primary",
-        gray: "bg-text-secondary",
-        accent: "bg-accent",
-        error: "bg-error",
+        primary: "bg-primary border-primary",
+        gray: "bg-text-secondary border-border",
+        accent: "bg-accent border-accent",
+        error: "bg-error border-error",
       },
     },
   }
