@@ -167,18 +167,18 @@ function PlanCard({
                   />
                   {/* TODO: 削除・編集ができるようになったらモーダルの表示につなげる */}
                   <div className="flex gap-8">
-                    <GrowIconButton icon={<MdDelete />} color="error">
+                    <GrowIconButton icon={<MdDelete />} color="error" absolute>
                       計画を削除
                     </GrowIconButton>
                     <div className="flex gap-2">
                       {/* TODO: 権限の仕様が決まったら権限に応じて閲覧を追加、編集を削除する */}
-                      <GrowIconButton icon={<MdDownload />}>
+                      <GrowIconButton icon={<MdDownload />} absolute>
                         計画をインポート
                       </GrowIconButton>
-                      <GrowIconButton icon={<MdEditNote />}>
+                      <GrowIconButton icon={<MdEditNote />} absolute>
                         基本情報を編集
                       </GrowIconButton>
-                      <GrowIconButton icon={<MdEdit />}>
+                      <GrowIconButton icon={<MdEdit />} absolute>
                         計画を編集
                       </GrowIconButton>
                     </div>
