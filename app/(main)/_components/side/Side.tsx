@@ -10,7 +10,7 @@ import PATH from "@/consts/PATH";
 import { SIDE_VIEWS, SIDE_VIEWS_TYPE, useSideStore } from "./sideStore";
 import { MAIN_PAGE_IDs } from "../../_consts/MAIN_PAGE_IDs";
 import React from "react";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import clsx from "clsx";
 import HEADER_HEIGHT from "../../_consts/HEADER_HIGHT";
@@ -52,6 +52,7 @@ const ITEM_DATA: {
 ];
 
 function Side() {
+  const pathName = usePathname();
   const { userId } = useParams();
   const { currentView } = useSideStore();
 
@@ -62,6 +63,11 @@ function Side() {
         style={{ top: HEADER_HEIGHT + 20 }}>
         {ITEM_DATA.map((item) => {
           const isCurrentView = (() => {
+            if (
+              pathName === PATH.SEARCH &&
+              item.sideViewType === SIDE_VIEWS.SEARCH
+            )
+              return true;
             return currentView === item.sideViewType;
           })();
           return (
@@ -73,11 +79,13 @@ function Side() {
                 {isCurrentView && (
                   <motion.div
                     layoutId="sideAccent"
+                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
                     className="absolute bg-primary inset-0 rounded-xl"
                   />
                 )}
                 <CommonButton
                   variant="text"
+                  color={isCurrentView ? "gray" : "primary"}
                   icon={item.icon}
                   href={
                     typeof item.path === "string"
