@@ -1,10 +1,10 @@
 import CommonText from "@/components/CommonText";
 
-export interface HomePageProps {
+export interface TopPageProps {
   a: undefined;
 }
 
-const HomePage: React.FC<HomePageProps> = ({}) => {
+const TopPage: React.FC<TopPageProps> = ({}) => {
   return (
     <CommonText level="h1">
       Home Page
@@ -13,4 +13,4 @@ const HomePage: React.FC<HomePageProps> = ({}) => {
   );
 };
 
-export default HomePage;
+export default TopPage;

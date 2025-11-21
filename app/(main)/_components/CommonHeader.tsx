@@ -1,16 +1,15 @@
 "use client";
 import React from "react";
-import CommonText from "./CommonText";
+import CommonText from "../../../components/CommonText";
 import PROJECT_NAME from "@/consts/PROJECT_NAME";
 import { MdAdd, MdNotifications, MdSearch } from "react-icons/md";
-import IconButton from "./IconButton";
-import UserIcon from "./UserIcon";
+import IconButton from "../../../components/IconButton";
+import UserIcon from "../../../components/UserIcon";
 import { createMockUser } from "@/types/user";
 import { motion, Variants } from "motion/react";
 import LAYER from "@/consts/LAYER";
 import clsx from "clsx";
-
-export const HEADER_HEIGHT = "110px";
+import HEADER_HEIGHT from "../_consts/HEADER_HIGHT";
 
 const curtainVariants: Variants = {
   hover: {
