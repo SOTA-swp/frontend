@@ -19,6 +19,7 @@ import { createMockUser } from "@/types/user";
 import { motion } from "motion/react";
 import React from "react";
 import { MdHome } from "react-icons/md";
+import Side from "../(main)/_components/side/Side";
 
 export interface DevPageProps {
   a: undefined;
@@ -162,6 +163,87 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
             <GrowIconButton icon={<MdHome />} color="error">
               タイトル
             </GrowIconButton>
+          </div>
+          <motion.div layout className="flex gap-4 p-4 items-end">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <PlanCard
+                open={planOpen === i}
+                key={i}
+                variant={i % 2 === 0 ? "default" : "mini"}
+                planData={{ favorites: 100, ...createMockPlan(i) }}
+                userData={createMockUser(i)}
+                onOpen={() => setPlanOpen(i)}
+                onClose={() => setPlanOpen(-1)}
+              />
+            ))}
+          </motion.div>
+          <div className="flex gap-2 p-4">
+            <CommonButton
+              onClick={() => {
+                openModal({
+                  modalType: "default",
+                  title: "モーダルテスト",
+                  content:
+                    "こちらはモーダルテストです。こちらはモーダルテストです。こちらはモーダルテストです。",
+                  actions: [
+                    <CommonButton
+                      key={"copy"}
+                      color="accent"
+                      variant="outline"
+                      onClick={() =>
+                        openModal({
+                          modalType: "default",
+                          title: "複製テスト",
+                          content: "モーダルが複製されました！",
+                          actions: [
+                            <CommonButton
+                              key={"close"}
+                              variant="outline"
+                              onClick={closeModal}
+                              fullWidth>
+                              閉じる
+                            </CommonButton>,
+                          ],
+                        })
+                      }
+                      fullWidth>
+                      複製
+                    </CommonButton>,
+                    <CommonButton
+                      key={"no"}
+                      onClick={closeModal}
+                      variant="outline"
+                      fullWidth>
+                      いいえ
+                    </CommonButton>,
+                    <CommonButton key={"yes"} onClick={closeModal} fullWidth>
+                      はい
+                    </CommonButton>,
+                  ],
+                });
+              }}>
+              モーダル
+            </CommonButton>
+            <CommonButton
+              color="error"
+              onClick={() =>
+                openModal({
+                  modalType: "error",
+                  title: "エラーモーダル",
+                  content: "エラーモーダルのテストです",
+                  actions: [],
+                })
+              }>
+              エラーモーダル
+            </CommonButton>
+          </div>
+          <div className="flex gap-2 p-4">
+            <CommonButton onClick={(e) => handleOpen(e.currentTarget)}>
+              ポップオーバー
+            </CommonButton>
+            <Popover open={open} anchorEl={anchorEl} onClose={handleClose}>
+              ポップオーバー
+            </Popover>
           </div>
         </div>
       </div>
