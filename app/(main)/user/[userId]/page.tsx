@@ -10,6 +10,7 @@ export interface UserPageProps {
 async function createUserViewMockData(userId: string): Promise<
   UserType & {
     favoritesCount: number;
+    favoredCount: number;
     createdCount: number;
   }
 > {
@@ -24,6 +25,7 @@ async function createUserViewMockData(userId: string): Promise<
     createdAt: "2025-11-23T12:00:00.000Z",
     updatedAt: "2025-11-23T12:00:00.000Z",
     favoritesCount: 999,
+    favoredCount: 999,
     createdCount: 999,
   };
 }
@@ -32,7 +34,7 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
   const { userId } = await params;
 
   return (
-    <div>
+    <main className="relative flex-1">
       {/* TODO: 実際のAPIが完成したら置き換える */}
       <UserView userData={await createUserViewMockData(await userId)} />
       <PlanView viewId={MAIN_PAGE_IDs.PLANS} plans={[]} />
@@ -48,7 +50,7 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
           Section: {id} {userId}
         </section>
       ))} */}
-    </div>
+    </main>
   );
 };
 
