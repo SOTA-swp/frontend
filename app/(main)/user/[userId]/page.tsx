@@ -1,6 +1,6 @@
-import CommonText from "@/components/CommonText";
 import { MAIN_PAGE_IDs } from "../../_consts/MAIN_PAGE_IDs";
-import HEADER_HEIGHT from "../../_consts/HEADER_HIGHT";
+import UserView from "../../_components/UserView";
+import PlanView from "../../_components/PlanView";
 
 export interface UserPageProps {
   params: { userId: Promise<string> };
@@ -11,8 +11,10 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
 
   return (
     <div>
-      <CommonText level="h1">Home Page</CommonText>
-      {Object.values(MAIN_PAGE_IDs).map((id) => (
+      <UserView userData={undefined} />
+      <PlanView viewId={MAIN_PAGE_IDs.PLANS} plans={[]} />
+      <PlanView viewId={MAIN_PAGE_IDs.FAVORITES} plans={[]} />
+      {/* {Object.values(MAIN_PAGE_IDs).map((id) => (
         <section
           key={id}
           id={id}
@@ -22,7 +24,7 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
           }}>
           Section: {id} {userId}
         </section>
-      ))}
+      ))} */}
     </div>
   );
 };
