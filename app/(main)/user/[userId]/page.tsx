@@ -3,10 +3,12 @@ import { MAIN_PAGE_IDs } from "../../_consts/MAIN_PAGE_IDs";
 import HEADER_HEIGHT from "../../_consts/HEADER_HIGHT";
 
 export interface UserPageProps {
-  a: undefined;
+  params: { userId: Promise<string> };
 }
 
-const UserPage: React.FC<UserPageProps> = ({}) => {
+const UserPage: React.FC<UserPageProps> = async ({ params }) => {
+  const { userId } = await params;
+
   return (
     <div>
       <CommonText level="h1">Home Page</CommonText>
@@ -18,7 +20,7 @@ const UserPage: React.FC<UserPageProps> = ({}) => {
           style={{
             scrollMarginTop: HEADER_HEIGHT + 20,
           }}>
-          Section: {id}
+          Section: {id} {userId}
         </section>
       ))}
     </div>
