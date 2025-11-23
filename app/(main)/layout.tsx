@@ -9,7 +9,7 @@ export default function RootLayout({
   return (
     <div>
       <CommonHeader />
-      <div className="flex p-4 gap-4">
+      <div className="flex p-4 pr-0 gap-4">
         <Side />
         {children}
       </div>

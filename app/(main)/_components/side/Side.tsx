@@ -60,7 +60,7 @@ function Side() {
     <div className="shrink-0">
       <ul
         className="sticky rounded-md w-[290px] flex flex-col gap-4 py-4 px-4 border border-primary bg-paper"
-        style={{ top: HEADER_HEIGHT + 20 }}>
+        style={{ top: HEADER_HEIGHT + 16 }}>
         {ITEM_DATA.map((item) => {
           const isCurrentView = (() => {
             if (
