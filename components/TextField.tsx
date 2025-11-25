@@ -5,6 +5,7 @@ import CommonText from "./CommonText";
 
 function TextField<T extends boolean = false>({
   label = "",
+  labelName,
   fullWidth = false,
   textarea,
   error,
@@ -12,6 +13,7 @@ function TextField<T extends boolean = false>({
   ...props
 }: {
   label?: string;
+  labelName?: string;
   fullWidth?: boolean;
   textarea?: T;
   error?: boolean;
@@ -57,7 +59,7 @@ function TextField<T extends boolean = false>({
             error && "border-error! text-error! ",
             error && isFocus && "bg-error!"
           )}>
-          {label}
+          {labelName || label}
         </label>
       )}
       {textarea ? (
