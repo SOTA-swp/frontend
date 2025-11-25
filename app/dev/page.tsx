@@ -12,6 +12,8 @@ import TextField from "@/components/TextField";
 import { color } from "motion";
 import React from "react";
 import { MdHome } from "react-icons/md";
+import LocationCard from "@/components/LocationCard";
+import LocationType, { createMockLocation } from "@/types/location";
 
 export interface DevPageProps {
   a: undefined;
@@ -20,6 +22,8 @@ export interface DevPageProps {
 const DevPage: React.FC<DevPageProps> = ({}) => {
   const [favoriteCount, setFavoriteCount] = React.useState(0);
   const [text, setText] = React.useState("");
+
+  const mockLocation = createMockLocation(1);
 
   if (process.env.NODE_ENV !== "development") {
     return <div>Not Found</div>;
@@ -139,6 +143,11 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
         <GrowIconButton icon={<MdHome />} color="error">
           タイトル
         </GrowIconButton>
+      </div>
+
+      <div className="p-4">
+        <LocationCard location={mockLocation} />
+
       </div>
     </div>
   );
