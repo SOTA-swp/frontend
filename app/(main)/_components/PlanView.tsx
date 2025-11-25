@@ -9,6 +9,7 @@ import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
 import { useRef } from "react";
 import MainViewController from "./MainViewController";
 import PlanBlock from "./PlanBlock";
+import { useOpenPlanCard } from "../_store/openPlanCardStore";
 
 export interface PlanViewProps {
   viewId: (typeof MAIN_PAGE_IDs)["PLANS"] | (typeof MAIN_PAGE_IDs)["FAVORITES"];
@@ -16,6 +17,7 @@ export interface PlanViewProps {
 }
 
 function PlanView({ viewId, plans }: PlanViewProps) {
+  const { openPlanCardId, setOpenPlanCardId } = useOpenPlanCard();
   const ref = useRef<HTMLElement>(null);
 
   return (
@@ -43,9 +45,21 @@ function PlanView({ viewId, plans }: PlanViewProps) {
         {viewId === MAIN_PAGE_IDs.PLANS && (
           <AddButton className="aspect-video">新規作成</AddButton>
         )}
-        {plans.map((plan) => (
-          <PlanCard key={plan.planData.id} data={plan} layoutId={viewId} />
-        ))}
+        {plans.map((plan) => {
+          const wrapId = `${viewId}-${plan.planData.id}`;
+          const handleOpen = () => setOpenPlanCardId(wrapId);
+          const handleClose = () => setOpenPlanCardId(null);
+          return (
+            <PlanCard
+              key={plan.planData.id}
+              data={plan}
+              layoutId={viewId}
+              onOpen={handleOpen}
+              onClose={handleClose}
+              open={openPlanCardId === wrapId}
+            />
+          );
+        })}
       </PlanBlock>
     </motion.section>
   );

@@ -120,8 +120,9 @@ function PlanCard({
       {/* 開いた時 */}
       {open && (
         <>
+          <div></div>
           <div
-            className="fixed inset-0 flex items-center justify-center "
+            className="fixed inset-0 flex items-center justify-center backdrop-blur-xs"
             style={{ zIndex: LAYER.CARD }}
             onClick={onClose}>
             <motion.div
