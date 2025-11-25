@@ -28,6 +28,7 @@ type PlanCardProps = {
   open?: boolean;
   data: PlanWithDetailsType;
   layoutId?: string;
+  onJump?: () => void;
   onClose?: () => void;
   onOpen?: () => void;
 };
@@ -37,6 +38,7 @@ function PlanCard({
   variant = "default",
   data,
   layoutId,
+  onJump,
   onClose,
   onOpen,
 }: PlanCardProps) {
@@ -56,8 +58,7 @@ function PlanCard({
             whileHover={{ scale: 1.02 }}
             className="relative  bg-paper cursor-pointer rounded-lg aspect-video">
             <motion.button
-              // TODO: 編集画面ができたら編集画面に飛ばす処理を渡す
-              onClick={onOpen}
+              onClick={onJump}
               layoutId={getId(MOTION_ELEMENTS.IMAGE)}
               // TODO: サムネイルの仕様が決まったら修正
               style={{ backgroundImage: `url(${"/mock/img/thumbnail.jpg"})` }}
