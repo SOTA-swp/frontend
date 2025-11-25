@@ -10,6 +10,7 @@ import { motion } from "motion/react";
 import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
 import { useRef } from "react";
 import MainViewController from "./MainViewController";
+import PlanBlock from "./PlanBlock";
 
 export interface PlanViewProps {
   viewId: (typeof MAIN_PAGE_IDs)["PLANS"] | (typeof MAIN_PAGE_IDs)["FAVORITES"];
@@ -33,8 +34,10 @@ function PlanView({ viewId, plans }: PlanViewProps) {
         viewId={viewId}
         rootMargin="-20% 0px -90% 0px"
       />
-      <SectionTitle
-        color="gray"
+      <PlanBlock
+        title={
+          viewId === MAIN_PAGE_IDs.PLANS ? "作成した計画" : "お気に入りの計画"
+        }
         icon={
           viewId === MAIN_PAGE_IDs.PLANS ? (
             <MdAirplanemodeActive />
@@ -42,9 +45,6 @@ function PlanView({ viewId, plans }: PlanViewProps) {
             <MdFavorite />
           )
         }>
-        {viewId === MAIN_PAGE_IDs.PLANS ? "作成した計画" : "お気に入りの計画"}
-      </SectionTitle>
-      <div className="grid  grid-cols-[repeat(auto-fill,minmax(330px,1fr))] mt-8 gap-4">
         {viewId === MAIN_PAGE_IDs.PLANS && (
           <AddButton className="aspect-video">新規作成</AddButton>
         )}
@@ -55,7 +55,7 @@ function PlanView({ viewId, plans }: PlanViewProps) {
             userData={plan.userData}
           />
         ))}
-      </div>
+      </PlanBlock>
     </motion.section>
   );
 }
