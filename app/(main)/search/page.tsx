@@ -9,13 +9,22 @@ export interface SearchPageProps {
 const SearchPage: React.FC<SearchPageProps> = async ({ searchPrams }) => {
   const q = searchPrams?.q || "";
 
+  const popularPlans = await getPlans(q, 0);
+  const newPlans = await getPlans(q, 0);
+
   return (
     <main className="flex-1">
       <SearchField />
       <SearchPlanView
         initialPlans={{
-          popularPlans: await getPlans(q, 0),
-          newPlans: await getPlans(q, 0),
+          popularPlans: {
+            size: popularPlans.size,
+            planData: popularPlans.planData,
+          },
+          newPlans: {
+            size: newPlans.size,
+            planData: newPlans.planData,
+          },
         }}
       />
     </main>
