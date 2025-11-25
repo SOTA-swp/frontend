@@ -1,5 +1,4 @@
-import PlanType from "@/types/plan";
-import UserType from "@/types/user";
+import { PlanWithDetailsType } from "@/types/plan";
 import { motion } from "motion/react";
 import FavoriteCounter from "./FavoriteCounter";
 import subTimestamp from "@/utils/subTimestamp";
@@ -27,8 +26,8 @@ const MOTION_ELEMENTS = {
 type PlanCardProps = {
   variant?: "default" | "mini";
   open?: boolean;
-  planData: PlanType & { favorites: number };
-  userData: UserType;
+  data: PlanWithDetailsType;
+  layoutId?: string;
   onClose?: () => void;
   onOpen?: () => void;
 };
@@ -36,13 +35,15 @@ type PlanCardProps = {
 function PlanCard({
   open = false,
   variant = "default",
-  planData,
-  userData,
+  data,
+  layoutId,
   onClose,
   onOpen,
 }: PlanCardProps) {
+  const { planData, creatorData } = data;
+
   const getId = (key: string | number) => {
-    return `plan-card-${planData.id}-${key}`;
+    return `plan-card-${layoutId}-${planData.id}-${key}`;
   };
 
   return (
@@ -163,7 +164,7 @@ function PlanCard({
                   <UserIcon
                     enableEmail={false}
                     rightIcon={false}
-                    userData={userData}
+                    userData={creatorData}
                   />
                   {/* TODO: 削除・編集ができるようになったらモーダルの表示につなげる */}
                   <div className="flex gap-8">

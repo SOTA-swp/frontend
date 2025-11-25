@@ -1,3 +1,5 @@
+import UserType from "./user";
+
 // TODO: サムネは？
 export default interface PlanType {
   id: string;
@@ -7,6 +9,11 @@ export default interface PlanType {
   isPublic: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface PlanWithDetailsType {
+  planData: PlanType & { favorites: number };
+  creatorData: UserType;
 }
 
 export const createMockPlan = (num: number = 0): PlanType => ({

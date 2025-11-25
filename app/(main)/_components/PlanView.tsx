@@ -1,8 +1,6 @@
 "use client";
-import PlanType from "@/types/plan";
-import UserType from "@/types/user";
+import { PlanWithDetailsType } from "@/types/plan";
 import { MAIN_PAGE_IDs } from "../_consts/MAIN_PAGE_IDs";
-import SectionTitle from "@/components/SectionTitle";
 import { MdAirplanemodeActive, MdFavorite } from "react-icons/md";
 import AddButton from "@/components/AddButton";
 import PlanCard from "@/components/PlanCard";
@@ -14,10 +12,7 @@ import PlanBlock from "./PlanBlock";
 
 export interface PlanViewProps {
   viewId: (typeof MAIN_PAGE_IDs)["PLANS"] | (typeof MAIN_PAGE_IDs)["FAVORITES"];
-  plans: {
-    planData: PlanType & { favorites: number };
-    userData: UserType;
-  }[];
+  plans: PlanWithDetailsType[];
 }
 
 function PlanView({ viewId, plans }: PlanViewProps) {
@@ -27,7 +22,7 @@ function PlanView({ viewId, plans }: PlanViewProps) {
     <motion.section
       ref={ref}
       id={viewId}
-      className="mt-16 min-h-[500px]"
+      className="mt-16"
       style={{ scrollMarginTop: VIEW_TOP_MARGIN }}>
       <MainViewController
         ref={ref}
@@ -49,11 +44,7 @@ function PlanView({ viewId, plans }: PlanViewProps) {
           <AddButton className="aspect-video">新規作成</AddButton>
         )}
         {plans.map((plan) => (
-          <PlanCard
-            key={plan.planData.id}
-            planData={plan.planData}
-            userData={plan.userData}
-          />
+          <PlanCard key={plan.planData.id} data={plan} layoutId={viewId} />
         ))}
       </PlanBlock>
     </motion.section>
