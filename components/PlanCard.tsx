@@ -53,7 +53,7 @@ function PlanCard({
           <motion.div
             layoutId={getId(MOTION_ELEMENTS.CONTAINER)}
             whileHover={{ scale: 1.02 }}
-            className="relative min-w-[330px] min-h-[200px] bg-paper cursor-pointer rounded-lg ">
+            className="relative  bg-paper cursor-pointer rounded-lg aspect-video">
             <motion.button
               // TODO: 編集画面ができたら編集画面に飛ばす処理を渡す
               onClick={onOpen}

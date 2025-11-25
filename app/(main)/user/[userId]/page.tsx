@@ -1,7 +1,8 @@
 import { MAIN_PAGE_IDs } from "../../_consts/MAIN_PAGE_IDs";
 import UserView from "../../_components/UserView";
 import PlanView from "../../_components/PlanView";
-import UserType from "@/types/user";
+import UserType, { createMockUser } from "@/types/user";
+import { createMockPlan } from "@/types/plan";
 
 export interface UserPageProps {
   params: { userId: Promise<string> };
@@ -30,6 +31,14 @@ async function createUserViewMockData(userId: string): Promise<
   };
 }
 
+async function createPlanViewMockData() {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  return Array.from({ length: 2 }).map((_, i) => ({
+    planData: { favorites: 999, ...createMockPlan(i + 1) },
+    userData: createMockUser(i + 1),
+  }));
+}
+
 const UserPage: React.FC<UserPageProps> = async ({ params }) => {
   const { userId } = await params;
 
@@ -37,19 +46,17 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
     <main className="relative flex-1 ">
       {/* TODO: 実際のAPIが完成したら置き換える */}
       <UserView userData={await createUserViewMockData(await userId)} />
-      <PlanView viewId={MAIN_PAGE_IDs.PLANS} plans={[]} />
-      <PlanView viewId={MAIN_PAGE_IDs.FAVORITES} plans={[]} />
-      {/* {Object.values(MAIN_PAGE_IDs).map((id) => (
-        <section
-          key={id}
-          id={id}
-          className="h-[200vh]"
-          style={{
-            scrollMarginTop: HEADER_HEIGHT + 20,
-          }}>
-          Section: {id} {userId}
-        </section>
-      ))} */}
+      <PlanView
+        viewId={MAIN_PAGE_IDs.PLANS}
+        plans={await createPlanViewMockData()}
+      />
+      <PlanView
+        viewId={MAIN_PAGE_IDs.FAVORITES}
+        plans={await createPlanViewMockData()}
+      />
+
+      {/* お気に入りの下の余白を作る */}
+      <div className="min-h-[50dvh]" />
     </main>
   );
 };

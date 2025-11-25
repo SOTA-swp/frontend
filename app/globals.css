@@ -14,6 +14,8 @@
   --border: #00000033;
   --shadow: #00000033;
   --paper: #ffffff;
+
+  scroll-behavior: smooth;
 }
 
 @theme inline {
