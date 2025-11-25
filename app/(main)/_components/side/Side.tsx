@@ -62,14 +62,7 @@ function Side() {
         className="sticky rounded-md w-[290px] flex flex-col gap-4 py-4 px-4 border border-primary bg-paper"
         style={{ top: HEADER_HEIGHT + 16 }}>
         {ITEM_DATA.map((item) => {
-          const isCurrentView = (() => {
-            if (
-              pathName === PATH.SEARCH &&
-              item.sideViewType === SIDE_VIEWS.SEARCH
-            )
-              return true;
-            return currentView === item.sideViewType;
-          })();
+          const isCurrentView = currentView === item.sideViewType;
           return (
             <React.Fragment key={item.sideViewType}>
               {item.sideViewType === "search" && (
