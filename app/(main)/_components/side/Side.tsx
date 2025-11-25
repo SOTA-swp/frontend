@@ -10,7 +10,7 @@ import PATH from "@/consts/PATH";
 import { SIDE_VIEWS, SIDE_VIEWS_TYPE, useSideStore } from "./sideStore";
 import { MAIN_PAGE_IDs } from "../../_consts/MAIN_PAGE_IDs";
 import React from "react";
-import { useParams, usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import { motion } from "motion/react";
 import clsx from "clsx";
 import HEADER_HEIGHT from "../../_consts/HEADER_HIGHT";
