@@ -52,7 +52,6 @@ const ITEM_DATA: {
 ];
 
 function Side() {
-  const pathName = usePathname();
   const { userId } = useParams();
   const { currentView } = useSideStore();
 
