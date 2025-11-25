@@ -7,9 +7,9 @@ import { MdAirplanemodeActive, MdFavorite } from "react-icons/md";
 import AddButton from "@/components/AddButton";
 import PlanCard from "@/components/PlanCard";
 import { motion } from "motion/react";
-import { useSideStore } from "./side/sideStore";
 import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import MainViewController from "./MainViewController";
 
 export interface PlanViewProps {
   viewId: (typeof MAIN_PAGE_IDs)["PLANS"] | (typeof MAIN_PAGE_IDs)["FAVORITES"];
@@ -20,34 +20,7 @@ export interface PlanViewProps {
 }
 
 function PlanView({ viewId, plans }: PlanViewProps) {
-  const { setCurrentView } = useSideStore();
   const ref = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const currentRef = ref.current;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setCurrentView(viewId);
-        }
-      },
-      {
-        root: null,
-        rootMargin: "-20% 0px -90% 0px",
-        threshold: 0,
-      }
-    );
-
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, [viewId, setCurrentView]);
 
   return (
     <motion.section
@@ -55,6 +28,11 @@ function PlanView({ viewId, plans }: PlanViewProps) {
       id={viewId}
       className="mt-16 min-h-[500px]"
       style={{ scrollMarginTop: VIEW_TOP_MARGIN }}>
+      <MainViewController
+        ref={ref}
+        viewId={viewId}
+        rootMargin="-20% 0px -90% 0px"
+      />
       <SectionTitle
         color="gray"
         icon={

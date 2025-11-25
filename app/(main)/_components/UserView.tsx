@@ -6,8 +6,8 @@ import PROJECT_NAME from "@/consts/PROJECT_NAME";
 import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
 import GrowIconButton from "@/components/GrowIconButton";
 import { MdAdd, MdLogout, MdNotifications, MdSearch } from "react-icons/md";
-import { useSideStore } from "./side/sideStore";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
+import MainViewController from "./MainViewController";
 
 export interface UserViewProps {
   userData: UserType & {
@@ -19,35 +19,7 @@ export interface UserViewProps {
 
 function UserView({ userData }: UserViewProps) {
   const createDate = new Date(userData.createdAt);
-
-  const { setCurrentView } = useSideStore();
   const ref = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const refCurrent = ref.current;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setCurrentView(MAIN_PAGE_IDs.USER);
-        }
-      },
-      {
-        root: null,
-        rootMargin: "-30% 0px -90% 0px",
-        threshold: 0,
-      }
-    );
-
-    if (refCurrent) {
-      observer.observe(refCurrent);
-    }
-
-    return () => {
-      if (refCurrent) {
-        observer.unobserve(refCurrent);
-      }
-    };
-  }, [setCurrentView]);
 
   return (
     <section
@@ -55,8 +27,12 @@ function UserView({ userData }: UserViewProps) {
       id={MAIN_PAGE_IDs.USER}
       className="relative "
       style={{ scrollMarginTop: VIEW_TOP_MARGIN }}>
+      <MainViewController
+        ref={ref}
+        viewId={MAIN_PAGE_IDs.USER}
+        rootMargin="-30% 0px -90% 0px"
+      />
       <div className="absolute -z-10 w-[200dvw] h-full bg-paper inset-shadow-2 rounded-lg inset-shadow-sm border border-primary" />
-
       <div className="relative flex flex-col gap-6 w-full p-8">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
