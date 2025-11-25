@@ -34,7 +34,7 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
   const { userId } = await params;
 
   return (
-    <main className="relative flex-1 overflow-hidden">
+    <main className="relative flex-1 ">
       {/* TODO: 実際のAPIが完成したら置き換える */}
       <UserView userData={await createUserViewMockData(await userId)} />
       <PlanView viewId={MAIN_PAGE_IDs.PLANS} plans={[]} />
