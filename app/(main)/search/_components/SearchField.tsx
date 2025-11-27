@@ -3,12 +3,14 @@ import TextField from "@/components/TextField";
 import { useRef, useState } from "react";
 import MainViewController from "../../_components/MainViewController";
 import { SIDE_VIEWS } from "../../_components/side/sideStore";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import IconButton from "@/components/IconButton";
 import { MdSearch } from "react-icons/md";
+import PATH from "@/consts/PATH";
 
 function SearchField() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const ref = useRef(null);
   const [term, setTerm] = useState(searchParams.get("q") || "");
 
@@ -16,8 +18,20 @@ function SearchField() {
     setTerm(e.target.value);
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const query = new URLSearchParams();
+    if (term) {
+      query.append("q", term);
+    }
+    router.push(`${PATH.SEARCH}?${query.toString()}`);
+  };
+
   return (
-    <form ref={ref} className="w-full max-w-[700px] flex items-center gap-2">
+    <form
+      onSubmit={handleSubmit}
+      ref={ref}
+      className="w-full max-w-[700px] flex items-center gap-2">
       <MainViewController
         ref={ref}
         viewId={SIDE_VIEWS.SEARCH}

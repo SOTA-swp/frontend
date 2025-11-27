@@ -8,6 +8,8 @@ import GrowIconButton from "@/components/GrowIconButton";
 import { MdAdd, MdLogout, MdNotifications, MdSearch } from "react-icons/md";
 import { useRef } from "react";
 import MainViewController from "./MainViewController";
+import { useRouter } from "next/navigation";
+import PATH from "@/consts/PATH";
 
 export interface UserViewProps {
   userData: UserType & {
@@ -18,8 +20,13 @@ export interface UserViewProps {
 }
 
 function UserView({ userData }: UserViewProps) {
+  const router = useRouter();
   const createDate = new Date(userData.createdAt);
   const ref = useRef<HTMLElement>(null);
+
+  const handleSearch = () => {
+    router.push(PATH.SEARCH);
+  };
 
   return (
     <section
@@ -53,7 +60,10 @@ function UserView({ userData }: UserViewProps) {
             <GrowIconButton icon={<MdAdd />} title="新規作成">
               新規作成
             </GrowIconButton>
-            <GrowIconButton icon={<MdSearch />} title="検索">
+            <GrowIconButton
+              onClick={handleSearch}
+              icon={<MdSearch />}
+              title="検索">
               検索
             </GrowIconButton>
             <GrowIconButton icon={<MdNotifications />} title="通知">
