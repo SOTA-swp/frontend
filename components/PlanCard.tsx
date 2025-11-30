@@ -1,3 +1,4 @@
+"use client";
 import { PlanWithDetailsType } from "@/types/plan";
 import { AnimatePresence, motion } from "motion/react";
 import FavoriteCounter from "./FavoriteCounter";
