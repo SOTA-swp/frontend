@@ -2,7 +2,7 @@ export default interface NodeType {
   id: string;
   planId: string;
   parentId: string;
-  nodeType: string; // TODO: ノード種別が決まったら型を考える
+  nodeType: "process" | "location" | "move";
   name: string;
   displayOrder: number;
   timeType: string;
@@ -21,7 +21,7 @@ export const createMockNode = (
   id: `mock-node-id${num}`,
   planId: `mock-plan-id${num}`,
   parentId: `mock-parent-id${num}`,
-  nodeType: "mock-node-type",
+  nodeType: "process",
   name: `モックノード名前${num}`,
   displayOrder: 0,
   timeType: "mock-time-type",
