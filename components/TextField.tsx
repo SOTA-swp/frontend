@@ -46,7 +46,7 @@ function TextField<T extends boolean = false>({
   return (
     <div className={clsx("relative", fullWidth && "w-full")}>
       {label && (
-        <label  
+        <label
           htmlFor={label}
           className={clsx(
             "absolute left-2 text-[14px] bg-paper rounded-md border  select-none transition-all duration-200",

@@ -7,15 +7,8 @@ import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { motion, AnimatePresence } from "motion/react";
 import { div } from "motion/react-client";
 
-function LocationCard({
-  location,
-  ...props
-}: {
-  location: LocationType;
-} & React.HTMLAttributes<HTMLDivElement>) {
-  const [title, setTitle] = React.useState(location.title);
-  const [address, setAddress] = React.useState(location.address);
-  const [description, setDiscription] = React.useState(location.discription);
+
+function LocationCard({ location }: { location: LocationType }) {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const toggleExpand = () => {
@@ -25,14 +18,12 @@ function LocationCard({
   return (
     <motion.div
       layout
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      {...props}
+      transition={{duration: 0.3, ease: "easeInOut"}}
       className={clsx(
-        "relative max-w-sm flex flex-col rounded-lg overflow-hidden bg-paper p-4 gap-[25px]",
-        props.className
+        "relative max-w-sm flex flex-col rounded-lg overflow-hidden bg-paper p-4 gap-[25px]"
       )}
     >
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={false} mode="wait">
         {isExpanded && (
           <motion.div
             key="accordion"
@@ -47,8 +38,7 @@ function LocationCard({
               <div className=" flex-2">
                 <TextField
                   label="ロケーション名"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  value={location.title}
                   placeholder="プレースホルダー"
                   autoComplete="off"
                   fullWidth
@@ -59,8 +49,7 @@ function LocationCard({
             <div>
               <TextField
                 label="住所"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
+                value={location.address}
                 placeholder="プレースホルダー"
                 autoComplete="off"
                 fullWidth
@@ -70,8 +59,7 @@ function LocationCard({
             <div>
               <TextField
                 label="メモ"
-                value={description}
-                onChange={(e) => setDiscription(e.target.value)}
+                value={location.discription}
                 placeholder="プレースホルダー"
                 textarea
                 autoComplete="off"
@@ -90,7 +78,7 @@ function LocationCard({
               onClick={toggleExpand}
               className="w-full h-4 flex justify-center"
             >
-              <MdArrowDropDown className="text-lg text-text-secondary" />
+              <MdArrowDropUp className="text-lg text-text-secondary" />
             </button>
           </motion.div>
         )}
@@ -107,7 +95,7 @@ function LocationCard({
           >
             <div className="flex items-center gap-4">
               <EmojiIcon color="primary">📍</EmojiIcon>
-              <h3>{title}</h3>
+              <h3>{location.title}</h3>
             </div>
             <MdArrowDropDown className="text-lg text-text-secondary" />
           </motion.button>
