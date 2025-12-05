@@ -17,9 +17,12 @@ import TextField from "@/components/TextField";
 import { createMockPlan } from "@/types/plan";
 import { createMockUser } from "@/types/user";
 import { motion } from "motion/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { MdHome } from "react-icons/md";
 import Side from "../(main)/_components/side/Side";
+import Node from "../plans/_components/ProcessNode/Node";
+import { createMockNode } from "@/types/node";
+import { useNodeStore } from "../plans/_store/nodeStore";
 
 export interface DevPageProps {
   a: undefined;
@@ -31,6 +34,15 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   const [planOpen, setPlanOpen] = React.useState(-1);
   const { openModal, closeModal } = useModalStore();
   const { open, anchorEl, handleOpen, handleClose } = usePopover();
+  const { setNodes } = useNodeStore();
+
+  useEffect(() => {
+    setNodes([
+      createMockNode(0, { id: "0" }),
+      createMockNode(1, { id: "1", parentId: "0" }),
+      createMockNode(2, { id: "2", parentId: "0" }),
+    ]);
+  }, [setNodes]);
 
   if (process.env.NODE_ENV !== "development") {
     return <div>Not Found</div>;
@@ -246,6 +258,9 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
             <Popover open={open} anchorEl={anchorEl} onClose={handleClose}>
               ポップオーバー
             </Popover>
+          </div>
+          <div className="flex gap-2 p-4">
+            <Node id="0" />
           </div>
         </div>
       </div>
