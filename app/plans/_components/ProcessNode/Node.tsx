@@ -1,5 +1,6 @@
 "use client";
 import { useNodeStore } from "../../_store/nodeStore";
+import MoveNode from "./MoveNode";
 import ProcessNode from "./ProcessNode";
 
 export interface NodeProps {
@@ -14,9 +15,17 @@ function Node({ id }: NodeProps) {
     return null;
   }
 
-  if (node.nodeType === "process") {
-    return <ProcessNode {...node} />;
-  }
+  const content = (() => {
+    if (node.nodeType === "process") {
+      return <ProcessNode {...node} />;
+    } else if (node.nodeType === "move") {
+      return <MoveNode {...node} />;
+    } else {
+      return null;
+    }
+  })();
+
+  return <div className="min-w-[700px]">{content}</div>;
 }
 
 export default Node;

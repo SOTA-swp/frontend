@@ -43,6 +43,9 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
       createMockNode(0, { id: "0" }),
       createMockNode(1, { id: "1", parentId: "0" }),
       createMockNode(2, { id: "2", parentId: "0" }),
+      createMockNode(3, { nodeType: "move", id: "3", parentId: "0" }),
+      createMockNode(4, { nodeType: "move", id: "4", parentId: "0" }),
+      createMockNode(5, { nodeType: "move", id: "5", parentId: "0" }),
     ]);
   }, [setNodes]);
 
@@ -270,14 +273,18 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
       </div>
 
       <div className="p-4">
-        <LocationCard location={mockLocation} onTitleChange={function (value: string): void {
-          throw new Error("Function not implemented.");
-        } } onAddressChange={function (value: string): void {
-          throw new Error("Function not implemented.");
-        } } onDescriptionChange={function (value: string): void {
-          throw new Error("Function not implemented.");
-        } } />
-
+        <LocationCard
+          location={mockLocation}
+          onTitleChange={function (value: string): void {
+            throw new Error("Function not implemented.");
+          }}
+          onAddressChange={function (value: string): void {
+            throw new Error("Function not implemented.");
+          }}
+          onDescriptionChange={function (value: string): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </div>
     </div>
   );
