@@ -4,21 +4,16 @@ import FIELD_NAMES from "./FIELD_NAMES";
 import TextField from "@/components/TextField";
 import { useNodeStore } from "../../_store/nodeStore";
 
-type TimeContentProps = Pick<
-  NodeType,
-  "id" | "startTime" | "endTime" | "durationMinutes"
->;
+type TimeContentProps = Pick<NodeType, "id">;
 
-function TimeContent({
-  id,
-  startTime,
-  endTime,
-  durationMinutes,
-}: TimeContentProps) {
+function TimeContent({ id }: TimeContentProps) {
   const { updateNode } = useNodeStore();
+  const { startTime, endTime, durationMinutes } = useNodeStore(
+    (state) => state.nodes[id]
+  );
 
   const handleChange = (
-    field: keyof TimeContentProps,
+    field: keyof Pick<NodeType, "startTime" | "endTime" | "durationMinutes">,
     value: string | number
   ) => {
     updateNode(id, { [field]: value });
