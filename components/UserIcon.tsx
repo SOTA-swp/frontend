@@ -6,10 +6,12 @@ import clsx from "clsx";
 
 function UserIcon({
   userData,
+  enableEmail = true,
   rightIcon = true,
   ...props
 }: {
   userData: UserType;
+  enableEmail?: boolean;
   rightIcon?: boolean;
 } & React.HTMLAttributes<HTMLButtonElement>) {
   return (
@@ -46,9 +48,11 @@ function UserIcon({
       </div>
       <div className="min-w-0">
         <CommonText className="truncate">{userData.name}</CommonText>
-        <CommonText className="text-xs text-text-secondary text-nowrap truncate">
-          {userData.email}
-        </CommonText>
+        {enableEmail && (
+          <CommonText className="text-xs text-text-secondary text-nowrap truncate">
+            {userData.email}
+          </CommonText>
+        )}
       </div>
 
       {rightIcon && (

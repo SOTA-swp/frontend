@@ -1,4 +1,3 @@
-
 export interface SearchPageProps {
     a: undefined;
 }
