@@ -20,6 +20,8 @@ import { motion } from "motion/react";
 import React, { useEffect } from "react";
 import { MdHome } from "react-icons/md";
 import Side from "../(main)/_components/side/Side";
+import { createMockLocation } from "@/types/location";
+import LocationCard from "@/components/LocationCard";
 import Node from "../plans/_components/ProcessNode/Node";
 import { createMockNode } from "@/types/node";
 import { useNodeStore } from "../plans/_store/nodeStore";
@@ -268,7 +270,13 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
       </div>
 
       <div className="p-4">
-        <LocationCard location={mockLocation} />
+        <LocationCard location={mockLocation} onTitleChange={function (value: string): void {
+          throw new Error("Function not implemented.");
+        } } onAddressChange={function (value: string): void {
+          throw new Error("Function not implemented.");
+        } } onDescriptionChange={function (value: string): void {
+          throw new Error("Function not implemented.");
+        } } />
 
       </div>
     </div>
