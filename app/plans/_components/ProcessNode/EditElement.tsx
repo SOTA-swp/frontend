@@ -3,6 +3,7 @@
 import NodeType from "@/types/node";
 import FIELD_NAMES from "./FIELD_NAMES";
 import { useNodeStore } from "../../_store/nodeStore";
+import clsx from "clsx";
 
 interface ToggleElementProps {
   id: NodeType["id"];
@@ -32,7 +33,9 @@ function EditElement({
     return editElement;
   } else {
     return (
-      <button className={className} onClick={handleEdited}>
+      <button
+        className={clsx("text-start", className)}
+        onDoubleClick={handleEdited}>
         {readElement}
       </button>
     );

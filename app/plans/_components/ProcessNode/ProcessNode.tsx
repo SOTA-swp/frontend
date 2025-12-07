@@ -8,6 +8,8 @@ import FIELD_NAMES from "./FIELD_NAMES";
 import TextField from "@/components/TextField";
 import Node from "./Node";
 import TimeContent from "./TimeContent";
+import IconButton from "@/components/IconButton";
+import { MdArrowDropDown } from "react-icons/md";
 
 type ProcessNodeProps = NodeType;
 
@@ -30,24 +32,36 @@ function ProcessNode({ id, name, ...props }: ProcessNodeProps) {
   return (
     <div>
       <div className="flex gap-8 items-center">
-        <div className="min-w-[300px]">
-          <EditElement
-            id={id}
-            fieldName={FIELD_NAMES.NAME}
-            editElement={
-              <TextField
-                label="プロセス名"
-                value={name}
-                fullWidth
-                onChange={(e) => handleNameChange(e.target.value)}
-              />
-            }
-            readElement={name}
+        <div className="w-[300px] flex items-center gap-1 self-end">
+          <IconButton
+            icon={<MdArrowDropDown />}
+            variant={"iconOnly"}
+            color={"gray"}
+            size={"sm"}
           />
+          <div className="flex items-center bg-primary px-4 py-2 rounded-t-lg ">
+            <EditElement
+              id={id}
+              fieldName={FIELD_NAMES.NAME}
+              editElement={
+                <TextField
+                  label="プロセス名"
+                  value={name}
+                  fullWidth
+                  onChange={(e) => handleNameChange(e.target.value)}
+                />
+              }
+              readElement={
+                <p className="min-h-4 min-w-4 max-w-[250px] text-paper truncate">
+                  {name}
+                </p>
+              }
+            />
+          </div>
         </div>
         <TimeContent id={id} {...props} />
       </div>
-      <div>
+      <div className="flex flex-col gap-2 p-4 border border-primary bg-paper rounded-xl">
         {childrenNodes?.map((childId) => (
           <Node key={childId} id={childId} />
         ))}
