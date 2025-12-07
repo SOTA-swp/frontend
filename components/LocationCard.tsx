@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import LocationType from "@/types/location";
 import TextField from "@/components/TextField";
@@ -7,8 +9,19 @@ import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { motion, AnimatePresence } from "motion/react";
 import { div } from "motion/react-client";
 
+type LocationCardProps = {
+  location: LocationType;
+  onTitleChange: (value: string) => void;
+  onAddressChange: (value: string) => void;
+  onDescriptionChange: (value: string) => void;
+};
 
-function LocationCard({ location }: { location: LocationType }) {
+function LocationCard({
+  location,
+  onTitleChange,
+  onAddressChange,
+  onDescriptionChange,
+}: LocationCardProps) {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const toggleExpand = () => {
@@ -18,7 +31,7 @@ function LocationCard({ location }: { location: LocationType }) {
   return (
     <motion.div
       layout
-      transition={{duration: 0.3, ease: "easeInOut"}}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
       className={clsx(
         "relative max-w-sm flex flex-col rounded-lg overflow-hidden bg-paper p-4 gap-[25px]"
       )}
@@ -29,8 +42,7 @@ function LocationCard({ location }: { location: LocationType }) {
             key="accordion"
             initial={{ opacity: 0, height: 0 }} // 開始時: 透明で高さ0>
             animate={{ opacity: 1, height: "auto" }} // 表示時: 不透明で高さが自動
-            exit={{ opacity: 0, height: 0 }} // 終了時: 透明で高さ0
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.2 }}
             className="overflow-hidden space-y-6" // overflow-hiddenが重要
           >
             <div className="flex items-center gap-4 pt-3">
@@ -39,6 +51,7 @@ function LocationCard({ location }: { location: LocationType }) {
                 <TextField
                   label="ロケーション名"
                   value={location.title}
+                  onChange={(e) => onTitleChange(e.target.value)}
                   placeholder="プレースホルダー"
                   autoComplete="off"
                   fullWidth
@@ -50,6 +63,7 @@ function LocationCard({ location }: { location: LocationType }) {
               <TextField
                 label="住所"
                 value={location.address}
+                onChange={(e) => onAddressChange(e.target.value)}
                 placeholder="プレースホルダー"
                 autoComplete="off"
                 fullWidth
@@ -59,7 +73,8 @@ function LocationCard({ location }: { location: LocationType }) {
             <div>
               <TextField
                 label="メモ"
-                value={location.discription}
+                value={location.description}
+                onChange={(e) => onDescriptionChange(e.target.value)}
                 placeholder="プレースホルダー"
                 textarea
                 autoComplete="off"
@@ -70,7 +85,7 @@ function LocationCard({ location }: { location: LocationType }) {
             <div>
               <div
                 className="w-full h-[150px] bg-cover bg-center rounded-lg"
-                style={{ backgroundImage: `url(${location.sumnail})` }}
+                style={{ backgroundImage: `url(${location.thumbnail})` }}
               ></div>
             </div>
 
@@ -89,7 +104,7 @@ function LocationCard({ location }: { location: LocationType }) {
             initial={{ opacity: 0 }} // 開始時: 透明
             animate={{ opacity: 1 }} // 表示時: 不透明
             exit={{ opacity: 0 }} // 終了時: 透明
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.2 }}
             className="flex items-center justify-between"
             onClick={toggleExpand}
           >
