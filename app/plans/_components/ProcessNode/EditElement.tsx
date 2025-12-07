@@ -33,9 +33,7 @@ function EditElement({
     return editElement;
   } else {
     return (
-      <button
-        className={clsx("text-start", className)}
-        onDoubleClick={handleEdited}>
+      <button className={clsx("text-start", className)} onClick={handleEdited}>
         {readElement}
       </button>
     );
