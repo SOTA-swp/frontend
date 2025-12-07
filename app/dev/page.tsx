@@ -44,6 +44,8 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
     ]);
   }, [setNodes]);
 
+  const mockLocation = createMockLocation(1);
+
   if (process.env.NODE_ENV !== "development") {
     return <div>Not Found</div>;
   }
@@ -263,6 +265,11 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
             <Node id="0" />
           </div>
         </div>
+      </div>
+
+      <div className="p-4">
+        <LocationCard location={mockLocation} />
+
       </div>
     </div>
   );
