@@ -20,7 +20,7 @@ function TimeContent({ id }: TimeContentProps) {
   };
 
   return (
-    <div className="flex gap-8 items-center">
+    <div className="flex gap-8 items-center min-w-[250px] justify-end text-lg">
       <div className="flex gap-2 items-center">
         <EditElement
           id={id}
@@ -50,7 +50,7 @@ function TimeContent({ id }: TimeContentProps) {
           readElement={endTime}
         />
       </div>
-      <div className="flex items-center gap-2 max-w-[150px]">
+      <div className="flex items-center gap-2 max-w-[100px]">
         <EditElement
           id={id}
           fieldName={FIELD_NAMES.DURATION_MINUTES}

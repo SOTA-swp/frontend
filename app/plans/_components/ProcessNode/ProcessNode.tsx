@@ -31,8 +31,10 @@ function ProcessNode({ id, name, ...props }: ProcessNodeProps) {
 
   return (
     <div>
-      <div className="flex gap-8 items-center">
-        <div className="w-[300px] flex items-center gap-1 self-end">
+      <div className="flex gap-8 items-center justify-between">
+        <div
+          className="w-[300px] flex items-center gap-1 self-end"
+          title={name}>
           <IconButton
             icon={<MdArrowDropDown />}
             variant={"iconOnly"}
@@ -52,7 +54,7 @@ function ProcessNode({ id, name, ...props }: ProcessNodeProps) {
                 />
               }
               readElement={
-                <p className="min-h-4 min-w-4 max-w-[250px] text-paper truncate">
+                <p className="min-h-4 min-w-4 max-w-[300px] text-paper truncate">
                   {name}
                 </p>
               }
