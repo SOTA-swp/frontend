@@ -12,13 +12,15 @@ import IconButton from "@/components/IconButton";
 import { MdArrowDropDown } from "react-icons/md";
 import clsx from "clsx";
 import styles from "./styles.module.css";
+import { motion } from "motion/react";
 
 interface ProcessNodeProps extends NodeType {
   depth?: number;
 }
 
 function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
-  const { updateNode } = useNodeStore();
+  const { updateNode, openNode, closeNode } = useNodeStore();
+  const open = !useNodeStore((state) => state.closeNodeIds.includes(id));
 
   const childrenNodes = useNodeStore(
     useShallow((state) =>
@@ -33,6 +35,14 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
     updateNode(id, { name: value });
   };
 
+  const handleClose = () => {
+    closeNode(id);
+  };
+
+  const handleOpen = () => {
+    openNode(id);
+  };
+
   return (
     <div>
       <div className={"flex gap-4 items-center justify-between"}>
@@ -40,12 +50,22 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
           className={clsx("flex items-center gap-1 self-end", styles.content)}
           title={name}>
           <IconButton
-            icon={<MdArrowDropDown />}
+            onClick={open ? handleClose : handleOpen}
+            icon={
+              <span
+                className={clsx("transition-transform", !open && "-rotate-90")}>
+                <MdArrowDropDown />
+              </span>
+            }
             variant={"iconOnly"}
             color={"gray"}
             size={"sm"}
           />
-          <div className="flex min-w-0 items-center bg-primary px-4 py-2 rounded-t-lg ">
+          <div
+            className={clsx(
+              "flex min-w-0 items-center bg-primary px-4 py-2 rounded-t-lg",
+              !open && "rounded-b-lg"
+            )}>
             <EditElement
               id={id}
               fieldName={FIELD_NAMES.NAME}
@@ -66,15 +86,23 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
         </div>
         <TimeContent id={id} {...props} />
       </div>
-      <div
+      <motion.div
+        initial={false}
+        animate={{
+          height: open ? "" : 0,
+          opacity: open ? 1 : 0,
+          overflow: open ? "visible" : "hidden",
+        }}
         className={clsx(
-          "flex flex-col gap-2 p-4 pr-0 border border-primary bg-paper rounded-xl",
+          "border border-primary bg-paper rounded-xl",
           depth !== 0 && "rounded-r-none border-r-0"
         )}>
-        {childrenNodes?.map((childId) => (
-          <Node key={childId} id={childId} depth={depth + 1} />
-        ))}
-      </div>
+        <div className="flex flex-col gap-2 p-4 pr-0">
+          {childrenNodes?.map((childId) => (
+            <Node key={childId} id={childId} depth={depth + 1} />
+          ))}
+        </div>
+      </motion.div>
     </div>
   );
 }

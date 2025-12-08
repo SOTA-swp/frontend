@@ -16,6 +16,10 @@ interface NodeStore {
   // ホバー中のノードIDを管理するストア
   hoveredNodeId: string | null;
   setHoveredNodeId: (nodeId: string | null) => void;
+
+  closeNodeIds: NodeType["id"][];
+  closeNode: (nodeId: NodeType["id"]) => void;
+  openNode: (nodeId: NodeType["id"]) => void;
 }
 
 export const useNodeStore = create<NodeStore>((set) => ({
@@ -64,4 +68,13 @@ export const useNodeStore = create<NodeStore>((set) => ({
 
   hoveredNodeId: null,
   setHoveredNodeId: (nodeId) => set({ hoveredNodeId: nodeId }),
+
+  closeNodeIds: [],
+  closeNode: (nodeId) =>
+    set((state) => ({ closeNodeIds: [...state.closeNodeIds, nodeId] })),
+  openNode: (nodeId) => {
+    set((state) => ({
+      closeNodeIds: state.closeNodeIds.filter((id) => id !== nodeId),
+    }));
+  },
 }));
