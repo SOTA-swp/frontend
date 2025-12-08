@@ -26,7 +26,9 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
       <div
         className={clsx("flex items-center gap-2 min-w-0", styles.content)}
         title={name}>
-        <EmojiIcon>{getFirstChar(name || location.title)}</EmojiIcon>
+        <EmojiIcon size={"lg"}>
+          {getFirstChar(name || location.title)}
+        </EmojiIcon>
         <div className="flex flex-col flex-1 min-w-0">
           <EditElement
             id={id}
@@ -49,7 +51,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
             position="absolute"
             className="min-w-0"
           />
-          <p className="text-text-secondary text-[14px] truncate">
+          <p className="text-text-secondary text-[14px] truncate leading-none">
             {location.title}
           </p>
         </div>
