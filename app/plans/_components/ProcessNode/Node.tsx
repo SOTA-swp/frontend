@@ -6,10 +6,11 @@ import ProcessNode from "./ProcessNode";
 
 export interface NodeProps {
   id: string;
+  depth?: number;
   readOnly?: boolean;
 }
 
-function Node({ id }: NodeProps) {
+function Node({ id, depth = 0 }: NodeProps) {
   const node = useNodeStore((state) => state.nodes[id]);
 
   if (!node) {
@@ -18,7 +19,7 @@ function Node({ id }: NodeProps) {
 
   const content = (() => {
     if (node.nodeType === "process") {
-      return <ProcessNode {...node} />;
+      return <ProcessNode {...node} depth={depth} />;
     } else if (node.nodeType === "move") {
       return <MoveNode {...node} />;
     } else if (node.nodeType === "location") {

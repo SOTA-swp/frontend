@@ -20,7 +20,7 @@ function TimeContent({ id }: TimeContentProps) {
   };
 
   return (
-    <div className="flex gap-8 items-center min-w-[250px] justify-end text-lg">
+    <div className="flex gap-8 items-center min-w-[250px] justify-end text-lg pr-4">
       <div className="flex gap-2 items-center">
         <EditElement
           id={id}

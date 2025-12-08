@@ -13,9 +13,11 @@ import { MdArrowDropDown } from "react-icons/md";
 import clsx from "clsx";
 import styles from "./styles.module.css";
 
-type ProcessNodeProps = NodeType;
+interface ProcessNodeProps extends NodeType {
+  depth?: number;
+}
 
-function ProcessNode({ id, name, ...props }: ProcessNodeProps) {
+function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
   const { updateNode } = useNodeStore();
 
   const childrenNodes = useNodeStore(
@@ -33,7 +35,7 @@ function ProcessNode({ id, name, ...props }: ProcessNodeProps) {
 
   return (
     <div>
-      <div className={"flex gap-8 items-center"}>
+      <div className={"flex gap-4 items-center justify-between"}>
         <div
           className={clsx("flex items-center gap-1 self-end", styles.content)}
           title={name}>
@@ -64,9 +66,13 @@ function ProcessNode({ id, name, ...props }: ProcessNodeProps) {
         </div>
         <TimeContent id={id} {...props} />
       </div>
-      <div className="flex flex-col gap-2 p-4 border border-primary bg-paper rounded-xl">
+      <div
+        className={clsx(
+          "flex flex-col gap-2 p-4 pr-0 border border-primary bg-paper rounded-xl",
+          depth !== 0 && "rounded-r-none border-r-0"
+        )}>
         {childrenNodes?.map((childId) => (
-          <Node key={childId} id={childId} />
+          <Node key={childId} id={childId} depth={depth + 1} />
         ))}
       </div>
     </div>

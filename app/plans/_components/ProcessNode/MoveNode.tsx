@@ -7,7 +7,7 @@ type MoveNodeProps = NodeType;
 
 function MoveNode({ id }: MoveNodeProps) {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center justify-between gap-4">
       <div
         className={clsx(
           "flex gap-2 items-center text-text-secondary",
