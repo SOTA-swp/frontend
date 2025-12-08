@@ -42,7 +42,11 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
 
   useEffect(() => {
     setLocations([
-      createMockLocation(0, { id: "0" }),
+      createMockLocation(0, {
+        id: "0",
+        title:
+          "👨🏿‍🦱ああああああああああああああああああああああああああああああああああああああああああああ",
+      }),
       createMockLocation(1, { id: "1" }),
       createMockLocation(2, { id: "2" }),
     ]);

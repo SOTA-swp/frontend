@@ -23,7 +23,9 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
 
   return (
     <div className="flex items-center justify-between">
-      <div className={clsx("flex items-center gap-2 min-w-0", styles.content)}>
+      <div
+        className={clsx("flex items-center gap-2 min-w-0", styles.content)}
+        title={name}>
         <EmojiIcon>{getFirstChar(name || location.title)}</EmojiIcon>
         <div className="flex flex-col flex-1 min-w-0">
           <EditElement
@@ -33,6 +35,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
               <TextField
                 label="プロセス名"
                 value={name}
+                placeholder={location.title}
                 onChange={(e) => handleNameChange(e.target.value)}
                 fullWidth
                 className="field-sizing-fixed"
@@ -43,9 +46,12 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
                 {removeEmoji(name || location.title)}
               </p>
             }
+            position="absolute"
             className="min-w-0"
           />
-          <p className="text-text-secondary text-[14px]">{location.title}</p>
+          <p className="text-text-secondary text-[14px] truncate">
+            {location.title}
+          </p>
         </div>
       </div>
       <TimeContent id={id} />
