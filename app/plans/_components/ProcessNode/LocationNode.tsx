@@ -1,0 +1,48 @@
+"use client";
+import EmojiIcon from "@/components/EmojiIcon";
+import NodeType from "@/types/node";
+import { useLocationStore } from "../../_store/locationStore";
+import TimeContent from "./TimeContent";
+import EditElement from "./EditElement";
+import FIELD_NAMES from "./FIELD_NAMES";
+import TextField from "@/components/TextField";
+import { useNodeStore } from "../../_store/nodeStore";
+import { getFirstChar, removeEmoji } from "@/utils/removeEmoji";
+
+type LocationNodeProps = NodeType;
+
+function LocationNode({ id, locationId, name }: LocationNodeProps) {
+  const { updateNode } = useNodeStore();
+  const location = useLocationStore((state) => state.locations[locationId]);
+
+  const handleNameChange = (value: string) => {
+    updateNode(id, { name: value });
+  };
+
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-2">
+        <EmojiIcon>{getFirstChar(name || location.title)}</EmojiIcon>
+        <div>
+          <EditElement
+            id={id}
+            fieldName={FIELD_NAMES.NAME}
+            editElement={
+              <TextField
+                label="プロセス名"
+                value={name}
+                onChange={(e) => handleNameChange(e.target.value)}
+                className="field-sizing-fixed"
+              />
+            }
+            readElement={<p>{removeEmoji(name || location.title)}</p>}
+          />
+          <p className="text-text-secondary text-[14px]">{location.title}</p>
+        </div>
+      </div>
+      <TimeContent id={id} />
+    </div>
+  );
+}
+
+export default LocationNode;

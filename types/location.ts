@@ -8,7 +8,10 @@ export default interface LocationType {
   updated_at: string;
 }
 
-export const createMockLocation = (num: number = 0): LocationType => ({
+export const createMockLocation = (
+  num: number = 0,
+  props?: Partial<LocationType>
+): LocationType => ({
   id: `location-${num}`,
   title: `モック施設名${num}`,
   address: `モック住所${num}`,
@@ -16,4 +19,5 @@ export const createMockLocation = (num: number = 0): LocationType => ({
   thumbnail: `/mock/img/mock_Location.jpg`,
   created_at: "2025-11-09T12:00:00.000Z",
   updated_at: "2025-11-09T12:00:00.000Z",
+  ...props,
 });

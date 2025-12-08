@@ -1,5 +1,6 @@
 "use client";
 import { useNodeStore } from "../../_store/nodeStore";
+import LocationNode from "./LocationNode";
 import MoveNode from "./MoveNode";
 import ProcessNode from "./ProcessNode";
 
@@ -20,6 +21,8 @@ function Node({ id }: NodeProps) {
       return <ProcessNode {...node} />;
     } else if (node.nodeType === "move") {
       return <MoveNode {...node} />;
+    } else if (node.nodeType === "location") {
+      return <LocationNode {...node} />;
     } else {
       return null;
     }

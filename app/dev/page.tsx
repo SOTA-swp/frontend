@@ -25,6 +25,7 @@ import LocationCard from "@/components/LocationCard";
 import Node from "../plans/_components/ProcessNode/Node";
 import { createMockNode } from "@/types/node";
 import { useNodeStore } from "../plans/_store/nodeStore";
+import { useLocationStore } from "../plans/_store/locationStore";
 
 export interface DevPageProps {
   a: undefined;
@@ -37,17 +38,39 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   const { openModal, closeModal } = useModalStore();
   const { open, anchorEl, handleOpen, handleClose } = usePopover();
   const { setNodes } = useNodeStore();
+  const { setLocations } = useLocationStore();
 
   useEffect(() => {
+    setLocations([
+      createMockLocation(0, { id: "0" }),
+      createMockLocation(1, { id: "1" }),
+      createMockLocation(2, { id: "2" }),
+    ]);
+
     setNodes([
       createMockNode(0, { id: "0" }),
       createMockNode(1, { id: "1", parentId: "0" }),
       createMockNode(2, { id: "2", parentId: "0" }),
       createMockNode(3, { nodeType: "move", id: "3", parentId: "0" }),
       createMockNode(4, { nodeType: "move", id: "4", parentId: "0" }),
-      createMockNode(5, { nodeType: "move", id: "5", parentId: "0" }),
+      createMockNode(5, { nodeType: "move", id: "5", parentId: "1" }),
+      createMockNode(6, { nodeType: "move", id: "6", parentId: "1" }),
+      createMockNode(7, { nodeType: "move", id: "7", parentId: "2" }),
+      createMockNode(8, { nodeType: "move", id: "8", parentId: "2" }),
+      createMockNode(9, {
+        nodeType: "location",
+        id: "9",
+        parentId: "0",
+        locationId: "0",
+      }),
+      createMockNode(10, {
+        nodeType: "location",
+        id: "10",
+        parentId: "0",
+        locationId: "1",
+      }),
     ]);
-  }, [setNodes]);
+  }, [setNodes, setLocations]);
 
   const mockLocation = createMockLocation(1);
 
