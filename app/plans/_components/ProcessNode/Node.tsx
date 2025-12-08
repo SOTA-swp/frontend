@@ -1,4 +1,5 @@
 "use client";
+import { MouseEvent as ReactMouseEvent } from "react";
 import { MdDelete, MdDragIndicator } from "react-icons/md";
 import { useNodeStore } from "../../_store/nodeStore";
 import LocationNode from "./LocationNode";
@@ -20,8 +21,11 @@ function Node({ id, depth = 0 }: NodeProps) {
 
   const isHovered = hoveredNodeId === id;
 
-  const handleMouseEnter = () => {
-    setHoveredNodeId(id);
+  const handleMouseOver = (e: ReactMouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    if (hoveredNodeId !== id) {
+      setHoveredNodeId(id);
+    }
   };
 
   const handleMouseLeave = () => {
@@ -53,7 +57,7 @@ function Node({ id, depth = 0 }: NodeProps) {
 
   return (
     <div
-      onMouseEnter={handleMouseEnter}
+      onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseLeave}
       className={clsx(
         "relative flex items-center gap-2",
