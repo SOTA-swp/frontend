@@ -10,7 +10,7 @@ function MoveNode({ id }: MoveNodeProps) {
     <div className="flex items-center justify-between gap-4">
       <div
         className={clsx(
-          "flex gap-2 items-center text-text-secondary",
+          "flex gap-2 items-center py-2 pl-3 pr-0 text-text-secondary",
           styles.content
         )}>
         <hr className="flex-1 border-border" />
