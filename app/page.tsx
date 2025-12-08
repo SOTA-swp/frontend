@@ -8,18 +8,18 @@ export interface TopPageProps {
 const TopPage: React.FC<TopPageProps> = ({}) => {
   return (
     <div className="h-screen flex flex-col">
-      <div className="flex-1 items-center justify-center">
-        <CommonText className="text-8xl">
+      <div className="flex flex-1 items-center justify-center">
+        <CommonText level="h1" className="items-center">
           Planning Tool
         </CommonText>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center">
+      <div className="flex-1 flex flex-col items-center gap-12">
         <CommonButton variant="contain" color="primary" size="xl">
-          ログイン
+        <div className="px-32">ログイン</div>
         </CommonButton>
-        <CommonButton variant="outline" color="primary" size="lg">
-          アカウント新規作成
+        <CommonButton variant="outline" color="primary" size="md">
+        <div className="px-16">アカウント新規作成</div>
         </CommonButton>
       </div>
 
