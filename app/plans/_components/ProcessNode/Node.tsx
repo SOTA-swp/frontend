@@ -28,7 +28,7 @@ function Node({ id }: NodeProps) {
     }
   })();
 
-  return <div className="min-w-[700px]">{content}</div>;
+  return <div>{content}</div>;
 }
 
 export default Node;

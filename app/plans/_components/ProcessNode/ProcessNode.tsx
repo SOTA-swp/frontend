@@ -10,6 +10,8 @@ import Node from "./Node";
 import TimeContent from "./TimeContent";
 import IconButton from "@/components/IconButton";
 import { MdArrowDropDown } from "react-icons/md";
+import clsx from "clsx";
+import styles from "./styles.module.css";
 
 type ProcessNodeProps = NodeType;
 
@@ -31,9 +33,9 @@ function ProcessNode({ id, name, ...props }: ProcessNodeProps) {
 
   return (
     <div>
-      <div className="flex gap-8 items-center justify-between">
+      <div className={"flex gap-8 items-center"}>
         <div
-          className="w-[300px] flex items-center gap-1 self-end"
+          className={clsx("flex items-center gap-1 self-end", styles.content)}
           title={name}>
           <IconButton
             icon={<MdArrowDropDown />}
@@ -41,7 +43,7 @@ function ProcessNode({ id, name, ...props }: ProcessNodeProps) {
             color={"gray"}
             size={"sm"}
           />
-          <div className="flex items-center bg-primary px-4 py-2 rounded-t-lg ">
+          <div className="flex min-w-0 items-center bg-primary px-4 py-2 rounded-t-lg ">
             <EditElement
               id={id}
               fieldName={FIELD_NAMES.NAME}
@@ -54,10 +56,9 @@ function ProcessNode({ id, name, ...props }: ProcessNodeProps) {
                 />
               }
               readElement={
-                <p className="min-h-4 min-w-4 max-w-[300px] text-paper truncate">
-                  {name}
-                </p>
+                <p className="min-h-4 min-w-4 text-paper truncate">{name}</p>
               }
+              className="min-w-0"
             />
           </div>
         </div>

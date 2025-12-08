@@ -8,6 +8,8 @@ import FIELD_NAMES from "./FIELD_NAMES";
 import TextField from "@/components/TextField";
 import { useNodeStore } from "../../_store/nodeStore";
 import { getFirstChar, removeEmoji } from "@/utils/removeEmoji";
+import clsx from "clsx";
+import styles from "./styles.module.css";
 
 type LocationNodeProps = NodeType;
 
@@ -21,9 +23,9 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center gap-2">
+      <div className={clsx("flex items-center gap-2 min-w-0", styles.content)}>
         <EmojiIcon>{getFirstChar(name || location.title)}</EmojiIcon>
-        <div>
+        <div className="flex flex-col flex-1 min-w-0">
           <EditElement
             id={id}
             fieldName={FIELD_NAMES.NAME}
@@ -32,10 +34,16 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
                 label="プロセス名"
                 value={name}
                 onChange={(e) => handleNameChange(e.target.value)}
+                fullWidth
                 className="field-sizing-fixed"
               />
             }
-            readElement={<p>{removeEmoji(name || location.title)}</p>}
+            readElement={
+              <p className="truncate min-h-4 min-w-4">
+                {removeEmoji(name || location.title)}
+              </p>
+            }
+            className="min-w-0"
           />
           <p className="text-text-secondary text-[14px]">{location.title}</p>
         </div>
