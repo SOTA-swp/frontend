@@ -12,6 +12,10 @@ interface NodeStore {
   //  ノードの中の編集中要素を管理するストア
   editFieldId: string | null;
   setEditFieldId: (nodeId: string | null) => void;
+
+  // ホバー中のノードIDを管理するストア
+  hoveredNodeId: string | null;
+  setHoveredNodeId: (nodeId: string | null) => void;
 }
 
 export const useNodeStore = create<NodeStore>((set) => ({
@@ -57,4 +61,7 @@ export const useNodeStore = create<NodeStore>((set) => ({
 
   editFieldId: null,
   setEditFieldId: (nodeId) => set({ editFieldId: nodeId }),
+
+  hoveredNodeId: null,
+  setHoveredNodeId: (nodeId) => set({ hoveredNodeId: nodeId }),
 }));
