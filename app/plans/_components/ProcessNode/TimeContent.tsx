@@ -21,7 +21,7 @@ function TimeContent({ id }: TimeContentProps) {
 
   return (
     <div className="flex gap-8 items-center min-w-[250px] justify-end text-lg pr-4">
-      <div className="flex gap-2 items-center">
+      <div className="relative flex gap-2 items-center">
         <EditElement
           id={id}
           fieldName={FIELD_NAMES.START_TIME}
@@ -34,6 +34,7 @@ function TimeContent({ id }: TimeContentProps) {
             />
           }
           readElement={startTime}
+          position="absolute"
         />
         ~
         <EditElement
@@ -48,22 +49,28 @@ function TimeContent({ id }: TimeContentProps) {
             />
           }
           readElement={endTime}
+          position="absolute"
         />
       </div>
-      <div className="flex items-center gap-2 max-w-[100px]">
+      <div className="relative flex items-center gap-2 max-w-[100px]">
         <EditElement
           id={id}
           fieldName={FIELD_NAMES.DURATION_MINUTES}
           editElement={
-            <TextField
-              type="number"
-              value={durationMinutes}
-              label="所要時間"
-              fullWidth
-              onChange={(e) => handleChange("durationMinutes", e.target.value)}
-            />
+            <div className="min-w-[100px]">
+              <TextField
+                type="number"
+                value={durationMinutes}
+                label="所要時間"
+                fullWidth
+                onChange={(e) =>
+                  handleChange("durationMinutes", e.target.value)
+                }
+              />
+            </div>
           }
           readElement={<span>{durationMinutes} 分</span>}
+          position="absolute"
         />
       </div>
     </div>

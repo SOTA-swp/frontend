@@ -11,6 +11,7 @@ interface ToggleElementProps {
   editElement: React.ReactNode;
   readElement: React.ReactNode;
   className?: string;
+  position?: "inline" | "absolute";
 }
 
 function EditElement({
@@ -19,6 +20,7 @@ function EditElement({
   editElement,
   readElement,
   className,
+  position = "inline",
 }: ToggleElementProps) {
   const wrapperId = `${id}-${fieldName}`;
   const { editFieldId, setEditFieldId } = useNodeStore();
@@ -30,7 +32,20 @@ function EditElement({
   };
 
   if (edited) {
-    return editElement;
+    return (
+      <div className="relative flex items-center">
+        {position === "absolute" && (
+          <span className="opacity-0">{readElement}</span>
+        )}
+        <span
+          className={clsx(
+            "z-10",
+            position === "absolute" && "absolute left-0"
+          )}>
+          {editElement}
+        </span>
+      </div>
+    );
   } else {
     return (
       <button className={clsx("text-start", className)} onClick={handleEdited}>
