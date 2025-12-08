@@ -3,7 +3,7 @@ import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
 
 const emojiIconStyles = cva(
-  "flex items-center justify-center h-9 w-9 bg-paper border rounded-full select-none",
+  "flex shrink-0 items-center justify-center h-9 w-9 bg-paper border rounded-full select-none",
   {
     variants: {
       color: {
