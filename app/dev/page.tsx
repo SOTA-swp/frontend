@@ -23,7 +23,7 @@ import Side from "../(main)/_components/side/Side";
 import { createMockLocation } from "@/types/location";
 import LocationCard from "@/components/LocationCard";
 import Node from "../plans/_components/ProcessNode/Node";
-import { createMockNode } from "@/types/node";
+import NodeType, { createMockNode } from "@/types/node";
 import { useNodeStore } from "../plans/_store/nodeStore";
 import { useLocationStore } from "../plans/_store/locationStore";
 
@@ -73,6 +73,13 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
         parentId: "0",
         locationId: "1",
       }),
+      createMockNode(11, { id: "11", parentId: "0" }),
+      ...(Array.from({ length: 10 }).map((_, i) =>
+        createMockNode(12 + i, {
+          id: (12 + i).toString(),
+          parentId: (12 + i - 1).toString(),
+        })
+      ) as NodeType[]),
     ]);
   }, [setNodes, setLocations]);
 
