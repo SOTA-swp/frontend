@@ -29,7 +29,7 @@ const TopPage: React.FC<TopPageProps> = ({}) => {
           ></TextField>
         </div>
         <div className="flex justify-center gap-80">
-          <CommonButton variant="text" color="primary" size="xs">
+          <CommonButton variant="text" color="primary" size="xs" type="submit">
             アカウント新規作成
           </CommonButton>
           <CommonButton variant="contain" color="primary" size="lg">
