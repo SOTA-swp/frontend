@@ -7,6 +7,7 @@ interface NodeStore {
   structure: Record<NodeType["id"], NodeType["id"][]>;
   setNodes: (nodeList: NodeType[]) => void;
   setStructure: (structure: Record<NodeType["id"], NodeType["id"][]>) => void;
+  setStructureList: (id: NodeType["id"], childrenIds: NodeType["id"][]) => void;
   updateNode: (id: string, updatedFields: Partial<NodeType>) => void;
   removeNode: (id: string) => void;
   moveNode: (id: string, newParentId: string) => void;
@@ -36,6 +37,13 @@ export const useNodeStore = create<NodeStore>((set) => ({
     set({ nodes: nodesMap });
   },
   setStructure: (structure) => set({ structure }),
+  setStructureList: (id, childrenIds) =>
+    set((state) => ({
+      structure: {
+        ...state.structure,
+        [id]: childrenIds,
+      },
+    })),
   updateNode: (id, updateFields) => {
     console.log("updateNode", id, updateFields);
     set((state) => ({
