@@ -22,7 +22,7 @@ import { MdHome } from "react-icons/md";
 import Side from "../(main)/_components/side/Side";
 import { createMockLocation } from "@/types/location";
 import LocationCard from "@/components/LocationCard";
-import Node from "../plans/_components/ProcessNode/Node";
+import Node from "../plans/_components/Node/Node";
 import NodeType, { createMockNode } from "@/types/node";
 import { useNodeStore } from "../plans/_store/nodeStore";
 import { useLocationStore } from "../plans/_store/locationStore";
