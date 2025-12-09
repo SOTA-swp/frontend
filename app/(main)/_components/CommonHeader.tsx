@@ -10,6 +10,8 @@ import { motion, Variants } from "motion/react";
 import LAYER from "@/consts/LAYER";
 import clsx from "clsx";
 import HEADER_HEIGHT from "../_consts/HEADER_HIGHT";
+import Notification from "../_components/Notification";
+import usePopover from "@/components/popover/usePopover";
 
 const curtainVariants: Variants = {
   hover: {
@@ -22,6 +24,7 @@ function CommonHeader() {
   // TODO: 認証ができたらユーザーデータを受け取るように修正
   const userData = createMockUser();
   const [scrolled, setScrolled] = React.useState(false);
+  const { open, anchorEl, handleOpen, handleClose } = usePopover();
 
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -47,7 +50,8 @@ function CommonHeader() {
       style={{
         zIndex: LAYER.HEADER,
         height: HEADER_HEIGHT,
-      }}>
+      }}
+    >
       <motion.div
         className={clsx(
           `
@@ -68,14 +72,17 @@ function CommonHeader() {
           marginBottom: 0,
           borderRadius: scrolled ? "" : 4,
         }}
-        transition={{ type: "spring", stiffness: 500, damping: 50 }}>
+        transition={{ type: "spring", stiffness: 500, damping: 50 }}
+      >
         <motion.div
           className="relative pl-8 pr-16 cursor-pointer select-none h-full group"
-          whileHover={"hover"}>
+          whileHover={"hover"}
+        >
           <button className="relative h-full flex items-center z-10">
             <CommonText
               level="h2"
-              className={`text-primary group-hover:text-paper transition-colors`}>
+              className={`text-primary group-hover:text-paper transition-colors`}
+            >
               {PROJECT_NAME}
             </CommonText>
           </button>
@@ -89,7 +96,8 @@ function CommonHeader() {
                 transition: { type: "spring", stiffness: 100, damping: 30 },
               },
             }}
-            initial={{ gap: 0 }}>
+            initial={{ gap: 0 }}
+          >
             <motion.div
               className={`bg-primary w-[80%] h-full shrink-0`}
               variants={curtainVariants}
@@ -114,7 +122,8 @@ function CommonHeader() {
           items-center
           gap-8
           pr-4
-          ">
+          "
+        >
           <li>
             <IconButton icon={<MdAdd />} variant="iconOnly" />
           </li>
@@ -122,7 +131,18 @@ function CommonHeader() {
             <IconButton icon={<MdSearch />} variant="iconOnly" />
           </li>
           <li>
-            <IconButton icon={<MdNotifications />} variant="iconOnly" />
+            <IconButton
+              icon={<MdNotifications />}
+              variant="iconOnly"
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                handleOpen(e.currentTarget)
+              }
+            />
+            <Notification
+              open={open}
+              anchorEl={anchorEl}
+              handleClose={handleClose}
+            />
           </li>
           <li className="flex items-center">
             <UserIcon userData={userData} />

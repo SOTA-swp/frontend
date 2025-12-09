@@ -10,6 +10,8 @@ import { useRef } from "react";
 import MainViewController from "./MainViewController";
 import { useRouter } from "next/navigation";
 import PATH from "@/consts/PATH";
+import usePopover from "@/components/popover/usePopover";
+import Notification from "../_components/Notification";
 
 export interface UserViewProps {
   userData: UserType & {
@@ -23,6 +25,7 @@ function UserView({ userData }: UserViewProps) {
   const router = useRouter();
   const createDate = new Date(userData.createdAt);
   const ref = useRef<HTMLElement>(null);
+  const { open, anchorEl, handleOpen, handleClose } = usePopover();
 
   const handleSearch = () => {
     router.push(PATH.SEARCH);
@@ -33,7 +36,8 @@ function UserView({ userData }: UserViewProps) {
       ref={ref}
       id={MAIN_PAGE_IDs.USER}
       className="relative "
-      style={{ scrollMarginTop: VIEW_TOP_MARGIN }}>
+      style={{ scrollMarginTop: VIEW_TOP_MARGIN }}
+    >
       <MainViewController
         ref={ref}
         viewId={MAIN_PAGE_IDs.USER}
@@ -63,16 +67,29 @@ function UserView({ userData }: UserViewProps) {
             <GrowIconButton
               onClick={handleSearch}
               icon={<MdSearch />}
-              title="検索">
+              title="検索"
+            >
               検索
             </GrowIconButton>
-            <GrowIconButton icon={<MdNotifications />} title="通知">
+            <GrowIconButton
+              icon={<MdNotifications />}
+              title="通知"
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
+                handleOpen(e.currentTarget)
+              }
+            >
               通知
             </GrowIconButton>
             <GrowIconButton icon={<MdLogout />} title="ログアウト">
               ログアウト
             </GrowIconButton>
           </div>
+          <Notification
+            open={open}
+            anchorEl={anchorEl}
+            handleClose={handleClose}
+          />
+
         </div>
         <div className="flex gap-4">
           <UserInfoBlock title={"作った計画"} sum={userData.createdCount} />
