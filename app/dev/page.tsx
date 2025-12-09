@@ -37,7 +37,7 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   const [planOpen, setPlanOpen] = React.useState(-1);
   const { openModal, closeModal } = useModalStore();
   const { open, anchorEl, handleOpen, handleClose } = usePopover();
-  const { setNodes } = useNodeStore();
+  const { setNodes, setStructure } = useNodeStore();
   const { setLocations } = useLocationStore();
 
   useEffect(() => {
@@ -53,35 +53,44 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
 
     setNodes([
       createMockNode(0, { id: "0" }),
-      createMockNode(1, { id: "1", parentId: "0" }),
-      createMockNode(2, { id: "2", parentId: "0" }),
-      createMockNode(3, { nodeType: "move", id: "3", parentId: "0" }),
-      createMockNode(4, { nodeType: "move", id: "4", parentId: "0" }),
-      createMockNode(5, { nodeType: "move", id: "5", parentId: "1" }),
-      createMockNode(6, { nodeType: "move", id: "6", parentId: "1" }),
-      createMockNode(7, { nodeType: "move", id: "7", parentId: "2" }),
-      createMockNode(8, { nodeType: "move", id: "8", parentId: "2" }),
-      createMockNode(9, {
-        nodeType: "location",
-        id: "9",
-        parentId: "0",
-        locationId: "0",
-      }),
-      createMockNode(10, {
-        nodeType: "location",
-        id: "10",
-        parentId: "0",
-        locationId: "1",
-      }),
-      createMockNode(11, { id: "11", parentId: "0" }),
-      ...(Array.from({ length: 10 }).map((_, i) =>
-        createMockNode(12 + i, {
-          id: (12 + i).toString(),
-          parentId: (12 + i - 1).toString(),
-        })
-      ) as NodeType[]),
+      createMockNode(1, { id: "1" }),
+      createMockNode(2, { id: "2" }),
+      createMockNode(3, { id: "3", nodeType: "move" }),
+      createMockNode(4, { id: "4", nodeType: "move" }),
+      createMockNode(5, { id: "5", nodeType: "move" }),
+      createMockNode(6, { id: "6", nodeType: "move" }),
+      createMockNode(7, { id: "7", nodeType: "move" }),
+      createMockNode(8, { id: "8", nodeType: "move" }),
+      createMockNode(9, { id: "9", nodeType: "location", locationId: "0" }),
+      createMockNode(10, { id: "10", nodeType: "location", locationId: "1" }),
+      createMockNode(11, { id: "11", nodeType: "location", locationId: "2" }),
+      createMockNode(12, { id: "12", nodeType: "location", locationId: "0" }),
+      createMockNode(13, { id: "13", nodeType: "location", locationId: "1" }),
+      createMockNode(14, { id: "14", nodeType: "location", locationId: "2" }),
+      createMockNode(15, { id: "15" }),
+      createMockNode(16, { id: "16", nodeType: "move" }),
+      createMockNode(17, { id: "17", nodeType: "move" }),
+      createMockNode(18, { id: "18", nodeType: "location", locationId: "0" }),
+      createMockNode(19, { id: "19", nodeType: "location", locationId: "1" }),
     ]);
-  }, [setNodes, setLocations]);
+    setStructure({
+      "0": ["1", "2", "3", "8", "9", "10"],
+      "1": ["4", "5", "11", "12"],
+      "2": ["6", "7", "13", "14", "15"],
+      "3": [],
+      "4": [],
+      "5": [],
+      "6": [],
+      "7": [],
+      "8": [],
+      "9": [],
+      "10": [],
+      "12": [],
+      "13": [],
+      "14": [],
+      "15": ["16", "17", "18", "19"],
+    });
+  }, [setStructure, setNodes, setLocations]);
 
   const mockLocation = createMockLocation(1);
 

@@ -2,7 +2,6 @@
 
 import NodeType from "@/types/node";
 import { useNodeStore } from "../../_store/nodeStore";
-import { useShallow } from "zustand/shallow";
 import EditElement from "./EditElement";
 import FIELD_NAMES from "./FIELD_NAMES";
 import TextField from "@/components/TextField";
@@ -35,14 +34,7 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
   const { updateNode, openNode, closeNode } = useNodeStore();
   const open = !useNodeStore((state) => state.closeNodeIds.includes(id));
 
-  const childrenNodes = useNodeStore(
-    useShallow((state) =>
-      Object.values(state.nodes)
-        .filter((n) => n.parentId === id)
-        .sort((a, b) => a.displayOrder - b.displayOrder)
-        .map((n) => n.id)
-    )
-  );
+  const childrenNodes = useNodeStore((state) => state.structure[id]) || [];
 
   const sensors = useSensors(useSensor(PointerSensor));
 

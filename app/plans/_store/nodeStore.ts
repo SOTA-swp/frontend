@@ -4,7 +4,9 @@ import { create } from "zustand";
 interface NodeStore {
   // ノードデータを管理するストア
   nodes: Record<string, NodeType>;
+  structure: Record<NodeType["id"], NodeType["id"][]>;
   setNodes: (nodeList: NodeType[]) => void;
+  setStructure: (structure: Record<NodeType["id"], NodeType["id"][]>) => void;
   updateNode: (id: string, updatedFields: Partial<NodeType>) => void;
   removeNode: (id: string) => void;
   moveNode: (id: string, newParentId: string) => void;
@@ -24,6 +26,7 @@ interface NodeStore {
 
 export const useNodeStore = create<NodeStore>((set) => ({
   nodes: {},
+  structure: {},
 
   setNodes: (nodeList) => {
     const nodesMap: Record<string, NodeType> = nodeList.reduce((acc, nodes) => {
@@ -32,6 +35,7 @@ export const useNodeStore = create<NodeStore>((set) => ({
     }, {} as Record<string, NodeType>);
     set({ nodes: nodesMap });
   },
+  setStructure: (structure) => set({ structure }),
   updateNode: (id, updateFields) => {
     console.log("updateNode", id, updateFields);
     set((state) => ({
