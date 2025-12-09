@@ -13,6 +13,19 @@ import { MdArrowDropDown } from "react-icons/md";
 import clsx from "clsx";
 import styles from "./styles.module.css";
 import { motion } from "motion/react";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  rectSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
 
 interface ProcessNodeProps extends NodeType {
   depth?: number;
@@ -30,6 +43,21 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
         .map((n) => n.id)
     )
   );
+
+  const sensors = useSensors(useSensor(PointerSensor));
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+    if (active.id === over.id) return;
+    const oldIndex = childrenNodes.indexOf(String(active.id));
+    const newIndex = childrenNodes.indexOf(String(over.id));
+    if (oldIndex === -1 || newIndex === -1) return;
+    const newOrder = arrayMove(childrenNodes, oldIndex, newIndex);
+    newOrder.forEach((nodeId, idx) => {
+      updateNode(nodeId, { displayOrder: idx });
+    });
+  };
 
   const handleNameChange = (value: string) => {
     updateNode(id, { name: value });
@@ -97,11 +125,18 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
           "border border-primary bg-paper rounded-xl",
           depth !== 0 && "rounded-r-none border-r-0"
         )}>
-        <div className="flex flex-col gap-2 p-4 pr-0">
-          {childrenNodes?.map((childId) => (
-            <Node key={childId} id={childId} depth={depth + 1} />
-          ))}
-        </div>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}>
+          <SortableContext items={childrenNodes} strategy={rectSortingStrategy}>
+            <div className="flex flex-col gap-2 p-4 pr-0">
+              {childrenNodes?.map((childId) => (
+                <Node key={childId} id={childId} depth={depth + 1} />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
       </motion.div>
     </div>
   );

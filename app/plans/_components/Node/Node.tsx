@@ -8,6 +8,8 @@ import ProcessNode from "./ProcessNode";
 import clsx from "clsx";
 import IconButton from "@/components/IconButton";
 import { AnimatePresence, motion } from "motion/react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export interface NodeProps {
   id: string;
@@ -18,6 +20,21 @@ export interface NodeProps {
 function Node({ id, depth = 0 }: NodeProps) {
   const node = useNodeStore((state) => state.nodes[id]);
   const { hoveredNodeId, setHoveredNodeId, removeNode } = useNodeStore();
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 9999 : undefined,
+  } as React.CSSProperties;
 
   const isHovered = hoveredNodeId === id;
 
@@ -57,11 +74,14 @@ function Node({ id, depth = 0 }: NodeProps) {
 
   return (
     <div
+      ref={setNodeRef}
+      style={style}
       onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseLeave}
       className={clsx(
         "relative flex items-center gap-2",
-        isProcessNode && "items-start"
+        isProcessNode && "items-start",
+        isDragging && "opacity-80"
       )}>
       <span
         className={clsx(
@@ -69,7 +89,9 @@ function Node({ id, depth = 0 }: NodeProps) {
           isProcessNode && "pt-5",
           !isHovered && "opacity-0"
         )}>
-        <MdDragIndicator />
+        <span {...attributes} {...listeners}>
+          <MdDragIndicator />
+        </span>
       </span>
       <span
         className={clsx(
