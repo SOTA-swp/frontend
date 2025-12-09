@@ -18,12 +18,14 @@ const TopPage: React.FC<TopPageProps> = ({}) => {
       <div className="flex flex-col gap-16 items-center">
         <div className="flex flex-col items-center gap-16 w-[500px]">
           <TextField
-            label="メールアドレス"
+            label="mail_address"
+            labelName="メールアドレス"
             placeholder="メールアドレスを入力"
             fullWidth
           ></TextField>
           <TextField
-            label="パスワード"
+            label="password"
+            labelName="パスワード"
             placeholder="パスワードを入力"
             fullWidth
           ></TextField>
