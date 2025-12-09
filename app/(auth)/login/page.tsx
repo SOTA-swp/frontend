@@ -22,13 +22,13 @@ const TopPage: React.FC<TopPageProps> = ({}) => {
             labelName="メールアドレス"
             placeholder="メールアドレスを入力"
             fullWidth
-          ></TextField>
+          />
           <TextField
             label="password"
             labelName="パスワード"
             placeholder="パスワードを入力"
             fullWidth
-          ></TextField>
+          />
         </div>
         <div className="flex justify-center gap-80">
           <CommonButton variant="text" color="primary" size="xs" type="submit">
