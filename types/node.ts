@@ -3,7 +3,6 @@ export default interface NodeType {
   planId: string;
   nodeType: "process" | "location" | "move";
   name: string;
-  displayOrder: number;
   startTime: string;
   endTime: string;
   durationMinutes: number;
@@ -20,7 +19,6 @@ export const createMockNode = (
   planId: `mock-plan-id${num}`,
   nodeType: "process",
   name: `モックノード名前${num}`,
-  displayOrder: 0,
   startTime: "09:30",
   endTime: "10:00",
   durationMinutes: 60,

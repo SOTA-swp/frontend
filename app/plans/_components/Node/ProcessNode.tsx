@@ -46,9 +46,9 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
     const newIndex = childrenNodes.indexOf(String(over.id));
     if (oldIndex === -1 || newIndex === -1) return;
     const newOrder = arrayMove(childrenNodes, oldIndex, newIndex);
-    newOrder.forEach((nodeId, idx) => {
-      updateNode(nodeId, { displayOrder: idx });
-    });
+    // newOrder.forEach((nodeId, idx) => {
+    //   updateNode(nodeId, { displayOrder: idx });
+    // });
   };
 
   const handleNameChange = (value: string) => {
