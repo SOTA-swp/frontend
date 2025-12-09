@@ -9,11 +9,11 @@ export interface TopPageProps {
 const TopPage: React.FC<TopPageProps> = ({}) => {
   return (
     <div className="flex flex-col h-screen justify-evenly">
-      <div className="flex  items-center justify-center">
+      <form className="flex  items-center justify-center">
         <CommonText className="items-center" level="h1">
           ログイン
         </CommonText>
-      </div>
+      </form>
 
       <div className="flex flex-col gap-16 items-center">
         <div className="flex flex-col items-center gap-16 w-[500px]">
