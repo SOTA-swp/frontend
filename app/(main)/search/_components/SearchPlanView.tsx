@@ -28,7 +28,7 @@ function MoreButton({
     <CommonButton
       onClick={onClick}
       title="もっと見る"
-      variant="text"
+      variant="outline"
       icon={<MdExpandMore />}>
       もっと見る
     </CommonButton>

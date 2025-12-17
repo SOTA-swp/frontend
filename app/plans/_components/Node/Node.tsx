@@ -19,7 +19,9 @@ export interface NodeProps {
 
 function Node({ id, depth = 0 }: NodeProps) {
   const node = useNodeStore((state) => state.nodes[id]);
-  const { hoveredNodeId, setHoveredNodeId, removeNode } = useNodeStore();
+  const hoveredNodeId = useNodeStore((state) => state.hoveredNodeId);
+  const setHoveredNodeId = useNodeStore((state) => state.setHoveredNodeId);
+  const removeNode = useNodeStore((state) => state.removeNode);
 
   const {
     attributes,
@@ -31,7 +33,7 @@ function Node({ id, depth = 0 }: NodeProps) {
   } = useSortable({ id });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
     zIndex: isDragging ? 9999 : undefined,
   } as React.CSSProperties;

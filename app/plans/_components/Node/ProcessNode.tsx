@@ -19,11 +19,12 @@ import {
   useSensors,
   closestCenter,
   type DragEndEvent,
+  DragOverEvent,
 } from "@dnd-kit/core";
 import {
   SortableContext,
-  rectSortingStrategy,
   arrayMove,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
 interface ProcessNodeProps extends NodeType {
@@ -31,22 +32,36 @@ interface ProcessNodeProps extends NodeType {
 }
 
 function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
-  const { setStructureList, updateNode, openNode, closeNode } = useNodeStore();
+  const moveNodeInStructure = useNodeStore(
+    (state) => state.moveNodeInStructure
+  );
+  const updateNode = useNodeStore((state) => state.updateNode);
+  const closeNode = useNodeStore((state) => state.closeNode);
+  const openNode = useNodeStore((state) => state.openNode);
   const open = !useNodeStore((state) => state.closeNodeIds.includes(id));
-
   const childrenNodes = useNodeStore((state) => state.structure[id]) || [];
-
+  
   const sensors = useSensors(useSensor(PointerSensor));
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
     if (!over) return;
     if (active.id === over.id) return;
-    const oldIndex = childrenNodes.indexOf(String(active.id));
-    const newIndex = childrenNodes.indexOf(String(over.id));
-    if (oldIndex === -1 || newIndex === -1) return;
-    const newOrder = arrayMove(childrenNodes, oldIndex, newIndex);
-    setStructureList(id, newOrder);
+    moveNodeInStructure(String(active.id), String(over.id));
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    // if (!over) return;
+    // if (active.id === over.id) return;
+    // const oldIndex = childrenNodes.indexOf(String(active.id));
+    // const newIndex = childrenNodes.indexOf(String(over.id));
+    // if (oldIndex === -1 || newIndex === -1) return;
+    // const newOrder = arrayMove(childrenNodes, oldIndex, newIndex);
+    // setStructureList(id, newOrder);
+    if (!over) return;
+    if (active.id === over.id) return;
+    moveNodeInStructure(String(active.id), String(over.id));
   };
 
   const handleNameChange = (value: string) => {
@@ -118,8 +133,11 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}>
-          <SortableContext items={childrenNodes} strategy={rectSortingStrategy}>
+          <SortableContext
+            items={childrenNodes}
+            strategy={verticalListSortingStrategy}>
             <div className="flex flex-col gap-2 p-4 pr-0">
               {childrenNodes?.map((childId) => (
                 <Node key={childId} id={childId} depth={depth + 1} />

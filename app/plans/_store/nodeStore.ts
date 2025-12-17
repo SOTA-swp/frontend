@@ -1,4 +1,5 @@
 import NodeType from "@/types/node";
+import { arrayMove } from "@dnd-kit/sortable";
 import { create } from "zustand";
 
 interface NodeStore {
@@ -8,6 +9,10 @@ interface NodeStore {
   setNodes: (nodeList: NodeType[]) => void;
   setStructure: (structure: Record<NodeType["id"], NodeType["id"][]>) => void;
   setStructureList: (id: NodeType["id"], childrenIds: NodeType["id"][]) => void;
+  moveNodeInStructure: (
+    activeId: NodeType["id"],
+    overId: NodeType["id"]
+  ) => void;
   updateNode: (id: string, updatedFields: Partial<NodeType>) => void;
   removeNode: (id: string) => void;
   moveNode: (id: string, newParentId: string) => void;
@@ -20,6 +25,7 @@ interface NodeStore {
   hoveredNodeId: string | null;
   setHoveredNodeId: (nodeId: string | null) => void;
 
+  // 折りたたまれたノードIDを管理するストア
   closeNodeIds: NodeType["id"][];
   closeNode: (nodeId: NodeType["id"]) => void;
   openNode: (nodeId: NodeType["id"]) => void;
@@ -44,6 +50,39 @@ export const useNodeStore = create<NodeStore>((set) => ({
         [id]: childrenIds,
       },
     })),
+  moveNodeInStructure: (activeId, overId) => {
+    set((state) => {
+      const structure = { ...state.structure };
+
+      const findParentId = (nodeId: NodeType["id"]) =>
+        Object.keys(structure).find((parentId) =>
+          structure[parentId].includes(nodeId)
+        );
+
+      const activeParentId = findParentId(activeId);
+      const overParentId = findParentId(overId);
+
+      if (!activeParentId || !overParentId) return state;
+
+      if (activeParentId === overParentId) {
+        const children = structure[activeParentId];
+        const oldIndex = children.indexOf(activeId);
+        const newIndex = children.indexOf(overId);
+        structure[activeParentId] = arrayMove(children, oldIndex, newIndex);
+        return { structure: { ...structure } };
+      }
+
+      structure[activeParentId] = structure[activeParentId].filter(
+        (id) => id !== activeId
+      );
+
+      const newChildren = structure[overParentId];
+      const overIndex = newChildren.indexOf(overId);
+      newChildren.splice(overIndex, 0, activeId);
+      structure[overParentId] = newChildren;
+      return { structure: { ...structure } };
+    });
+  },
   updateNode: (id, updateFields) => {
     console.log("updateNode", id, updateFields);
     set((state) => ({
