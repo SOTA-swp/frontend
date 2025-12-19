@@ -22,10 +22,10 @@ import { MdHome } from "react-icons/md";
 import Side from "../(main)/_components/side/Side";
 import { createMockLocation } from "@/types/location";
 import LocationCard from "@/components/LocationCard";
-import Node from "../plans/_components/Node/Node";
-import NodeType, { createMockNode } from "@/types/node";
+import { createMockNode } from "@/types/node";
 import { useNodeStore } from "../plans/_store/nodeStore";
 import { useLocationStore } from "../plans/_store/locationStore";
+import NodeThree from "../plans/_components/Node/NodeThree";
 
 export interface DevPageProps {
   a: undefined;
@@ -94,9 +94,9 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
 
   const mockLocation = createMockLocation(1);
 
-  if (process.env.NODE_ENV !== "development") {
-    return <div>Not Found</div>;
-  }
+  // if (process.env.NODE_ENV !== "development") {
+  //   return <div>Not Found</div>;
+  // }
 
   return (
     <div className="mb-[100px]">
@@ -309,8 +309,8 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
               ポップオーバー
             </Popover>
           </div>
-          <div className="flex gap-2 p-4">
-            <Node id="0" />
+          <div className="flex p-4">
+            <NodeThree />
           </div>
         </div>
       </div>

@@ -30,12 +30,13 @@ function Node({ id, depth = 0 }: NodeProps) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id });
+  } = useSortable({ id, data: { id, type: "node" } });
 
   const style = {
     transform: CSS.Translate.toString(transform),
     transition,
-    zIndex: isDragging ? 9999 : undefined,
+    pointerEvents: isDragging ? "none" : "auto",
+    zIndex: isDragging ? 999 : undefined,
   } as React.CSSProperties;
 
   const isHovered = hoveredNodeId === id;

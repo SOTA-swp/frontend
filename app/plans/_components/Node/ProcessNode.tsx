@@ -13,56 +13,26 @@ import clsx from "clsx";
 import styles from "./styles.module.css";
 import { motion } from "motion/react";
 import {
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  closestCenter,
-  type DragEndEvent,
-  DragOverEvent,
-} from "@dnd-kit/core";
-import {
   SortableContext,
-  arrayMove,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { useDroppable } from "@dnd-kit/core";
 
 interface ProcessNodeProps extends NodeType {
   depth?: number;
 }
 
 function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
-  const moveNodeInStructure = useNodeStore(
-    (state) => state.moveNodeInStructure
-  );
   const updateNode = useNodeStore((state) => state.updateNode);
   const closeNode = useNodeStore((state) => state.closeNode);
   const openNode = useNodeStore((state) => state.openNode);
   const open = !useNodeStore((state) => state.closeNodeIds.includes(id));
   const childrenNodes = useNodeStore((state) => state.structure[id]) || [];
-  
-  const sensors = useSensors(useSensor(PointerSensor));
 
-  const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event;
-    if (!over) return;
-    if (active.id === over.id) return;
-    moveNodeInStructure(String(active.id), String(over.id));
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    // if (!over) return;
-    // if (active.id === over.id) return;
-    // const oldIndex = childrenNodes.indexOf(String(active.id));
-    // const newIndex = childrenNodes.indexOf(String(over.id));
-    // if (oldIndex === -1 || newIndex === -1) return;
-    // const newOrder = arrayMove(childrenNodes, oldIndex, newIndex);
-    // setStructureList(id, newOrder);
-    if (!over) return;
-    if (active.id === over.id) return;
-    moveNodeInStructure(String(active.id), String(over.id));
-  };
+  const { setNodeRef: setDroppableRef, isOver } = useDroppable({
+    id: `container-${id}`,
+    data: { id, type: "process" },
+  });
 
   const handleNameChange = (value: string) => {
     updateNode(id, { name: value });
@@ -119,33 +89,30 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
         </div>
         <TimeContent id={id} {...props} />
       </div>
-      <motion.div
-        initial={false}
-        animate={{
-          height: open ? "" : 0,
-          opacity: open ? 1 : 0,
-          overflow: open ? "visible" : "hidden",
-        }}
-        className={clsx(
-          "border border-primary bg-paper rounded-xl",
-          depth !== 0 && "rounded-r-none border-r-0"
-        )}>
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}>
+      <div ref={setDroppableRef}>
+        <motion.div
+          initial={false}
+          animate={{
+            height: open ? "" : 0,
+            opacity: open ? 1 : 0,
+            overflow: open ? "visible" : "hidden",
+          }}
+          className={clsx(
+            "border border-primary rounded-xl",
+            depth !== 0 && "rounded-r-none border-r-0",
+            isOver ? "bg-accent/10" : "bg-paper"
+          )}>
           <SortableContext
             items={childrenNodes}
             strategy={verticalListSortingStrategy}>
-            <div className="flex flex-col gap-2 p-4 pr-0">
+            <div className="flex flex-col gap-2 p-4 pr-0 ">
               {childrenNodes?.map((childId) => (
                 <Node key={childId} id={childId} depth={depth + 1} />
               ))}
             </div>
           </SortableContext>
-        </DndContext>
-      </motion.div>
+        </motion.div>
+      </div>
     </div>
   );
 }

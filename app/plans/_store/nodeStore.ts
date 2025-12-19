@@ -4,18 +4,15 @@ import { create } from "zustand";
 
 interface NodeStore {
   // ノードデータを管理するストア
-  nodes: Record<string, NodeType>;
+  nodes: Record<NodeType["id"], NodeType>;
   structure: Record<NodeType["id"], NodeType["id"][]>;
   setNodes: (nodeList: NodeType[]) => void;
   setStructure: (structure: Record<NodeType["id"], NodeType["id"][]>) => void;
   setStructureList: (id: NodeType["id"], childrenIds: NodeType["id"][]) => void;
-  moveNodeInStructure: (
-    activeId: NodeType["id"],
-    overId: NodeType["id"]
-  ) => void;
+  moveNode: (activeId: NodeType["id"], overId: NodeType["id"]) => void;
   updateNode: (id: string, updatedFields: Partial<NodeType>) => void;
   removeNode: (id: string) => void;
-  moveNode: (id: string, newParentId: string) => void;
+  setNestNode: (parentId: NodeType["id"], childId: NodeType["id"]) => void;
 
   //  ノードの中の編集中要素を管理するストア
   editFieldId: string | null;
@@ -30,6 +27,16 @@ interface NodeStore {
   closeNode: (nodeId: NodeType["id"]) => void;
   openNode: (nodeId: NodeType["id"]) => void;
 }
+
+const isDescendant = (
+  structure: Record<NodeType["id"], NodeType["id"][]>,
+  ancestorId: NodeType["id"],
+  targetId: NodeType["id"]
+): boolean => {
+  const children = structure[ancestorId] || [];
+  if (children.includes(targetId)) return true;
+  return children.some((childId) => isDescendant(structure, childId, targetId));
+};
 
 export const useNodeStore = create<NodeStore>((set) => ({
   nodes: {},
@@ -50,9 +57,13 @@ export const useNodeStore = create<NodeStore>((set) => ({
         [id]: childrenIds,
       },
     })),
-  moveNodeInStructure: (activeId, overId) => {
+  moveNode: (activeId, overId) => {
     set((state) => {
       const structure = { ...state.structure };
+
+      if (isDescendant(structure, activeId, overId)) {
+        return state;
+      }
 
       const findParentId = (nodeId: NodeType["id"]) =>
         Object.keys(structure).find((parentId) =>
@@ -63,6 +74,8 @@ export const useNodeStore = create<NodeStore>((set) => ({
       const overParentId = findParentId(overId);
 
       if (!activeParentId || !overParentId) return state;
+
+      if (activeParentId === overId) return state;
 
       if (activeParentId === overParentId) {
         const children = structure[activeParentId];
@@ -83,6 +96,29 @@ export const useNodeStore = create<NodeStore>((set) => ({
       return { structure: { ...structure } };
     });
   },
+  setNestNode: (parentId, childId) => {
+    set((state) => {
+      console.log(`setNestNode: ${parentId}, ${childId}`);
+      if (parentId === childId) {
+        return state;
+      }
+      if (isDescendant(state.structure, childId, parentId)) {
+        return state;
+      }
+      if (state.structure[parentId]?.includes(childId)) {
+        return state;
+      }
+      const structure = { ...state.structure };
+      Object.keys(structure).forEach((pid) => {
+        structure[pid] = structure[pid].filter((cid) => cid !== childId);
+      });
+      if (parentId && !structure[parentId]) {
+        structure[parentId] = [];
+      }
+      structure[parentId].push(childId);
+      return { structure };
+    });
+  },
   updateNode: (id, updateFields) => {
     console.log("updateNode", id, updateFields);
     set((state) => ({
@@ -101,17 +137,6 @@ export const useNodeStore = create<NodeStore>((set) => ({
       delete newNodes[id];
       return { nodes: newNodes };
     });
-  },
-  moveNode: (id, newParentId) => {
-    set((state) => ({
-      nodes: {
-        ...state.nodes,
-        [id]: {
-          ...state.nodes[id],
-          parentId: newParentId,
-        },
-      },
-    }));
   },
 
   editFieldId: null,
