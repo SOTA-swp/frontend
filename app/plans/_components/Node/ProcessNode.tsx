@@ -29,6 +29,8 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
   const open = !useNodeStore((state) => state.closeNodeIds.includes(id));
   const childrenNodes = useNodeStore((state) => state.structure[id]) || [];
 
+  const noneChildren = childrenNodes.length === 0;
+
   const { setNodeRef: setDroppableRef, isOver } = useDroppable({
     id: `container-${id}`,
     data: { id, type: "process" },
@@ -89,16 +91,16 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
         </div>
         <TimeContent id={id} {...props} />
       </div>
-      <div ref={setDroppableRef}>
+      <div ref={noneChildren ? setDroppableRef : undefined}>
         <motion.div
           initial={false}
           animate={{
             height: open ? "" : 0,
             opacity: open ? 1 : 0,
-            overflow: open ? "visible" : "hidden",
+            overflow: open ? "visible" : "clip",
           }}
           className={clsx(
-            "border border-primary rounded-xl",
+            "border border-primary rounded-xl transition-colors",
             depth !== 0 && "rounded-r-none border-r-0",
             isOver ? "bg-accent/10" : "bg-paper"
           )}>
@@ -106,6 +108,13 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
             items={childrenNodes}
             strategy={verticalListSortingStrategy}>
             <div className="flex flex-col gap-2 p-4 pr-0 ">
+              {noneChildren && (
+                <div className="p-3 mr-3 border border-dashed border-text-secondary/50 rounded-md text-center">
+                  <p className="text-text-secondary text-sm">
+                    要素を追加しよう！
+                  </p>
+                </div>
+              )}
               {childrenNodes?.map((childId) => (
                 <Node key={childId} id={childId} depth={depth + 1} />
               ))}
