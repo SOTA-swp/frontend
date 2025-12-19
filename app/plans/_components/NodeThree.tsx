@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import { useNodeStore } from "../../_store/nodeStore";
+import { useNodeStore } from "../_store/nodeStore";
 import {
   closestCorners,
   DndContext,
@@ -9,7 +9,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import Node from "./Node";
+import Node from "./Node/Node";
 import { useShallow } from "zustand/shallow";
 import { SortableContext } from "@dnd-kit/sortable";
 

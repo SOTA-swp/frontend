@@ -25,7 +25,7 @@ import LocationCard from "@/components/LocationCard";
 import { createMockNode } from "@/types/node";
 import { useNodeStore } from "../plans/_store/nodeStore";
 import { useLocationStore } from "../plans/_store/locationStore";
-import NodeThree from "../plans/_components/Node/NodeThree";
+import NodeThree from "../plans/_components/NodeThree";
 
 export interface DevPageProps {
   a: undefined;
