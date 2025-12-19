@@ -1,8 +1,10 @@
 import NodeType from "@/types/node";
-import EditElement from "./EditElement";
-import FIELD_NAMES from "./FIELD_NAMES";
+import EditElement from "../EditElement";
+import FIELD_NAMES from "../FIELD_NAMES";
 import TextField from "@/components/TextField";
-import { useNodeStore } from "../../_store/nodeStore";
+import { useNodeStore } from "../../../_store/nodeStore";
+import TimeCell from "./TimeCell";
+import { MdKeyboardArrowRight } from "react-icons/md";
 
 type TimeContentProps = Pick<NodeType, "id">;
 
@@ -21,7 +23,7 @@ function TimeContent({ id }: TimeContentProps) {
 
   return (
     <div className="flex gap-8 items-center min-w-[250px] justify-end text-lg pr-4">
-      <div className="relative flex gap-2 items-center">
+      <div className="relative flex gap-2 items-baseline">
         <EditElement
           id={id}
           fieldName={FIELD_NAMES.START_TIME}
@@ -33,10 +35,10 @@ function TimeContent({ id }: TimeContentProps) {
               onChange={(e) => handleChange("startTime", e.target.value)}
             />
           }
-          readElement={startTime}
+          readElement={<TimeCell type="start">{startTime}</TimeCell>}
           position="absolute"
         />
-        ~
+        <MdKeyboardArrowRight className="text-text-secondary" />
         <EditElement
           id={id}
           fieldName={FIELD_NAMES.END_TIME}
@@ -48,7 +50,7 @@ function TimeContent({ id }: TimeContentProps) {
               onChange={(e) => handleChange("endTime", e.target.value)}
             />
           }
-          readElement={endTime}
+          readElement={<TimeCell type="end">{endTime}</TimeCell>}
           position="absolute"
         />
       </div>
@@ -69,7 +71,11 @@ function TimeContent({ id }: TimeContentProps) {
               />
             </div>
           }
-          readElement={<span>{durationMinutes} 分</span>}
+          readElement={
+            <p className="px-2 bg-border rounded-full text-paper hover:scale-105 transition-all whitespace-nowrap">
+              {durationMinutes} <span className="text-sm">分</span>
+            </p>
+          }
           position="absolute"
         />
       </div>
