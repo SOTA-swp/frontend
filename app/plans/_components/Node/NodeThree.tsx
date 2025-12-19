@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import { useNodeStore } from "../../_store/nodeStore";
 import {
-  closestCenter,
+  closestCorners,
   DndContext,
   DragOverEvent,
   PointerSensor,
@@ -75,7 +75,7 @@ function NodeThree() {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={closestCorners}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}>
       <div className="p-4 flex flex-col gap-2">
