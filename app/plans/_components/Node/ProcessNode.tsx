@@ -100,16 +100,19 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
             overflow: open ? "visible" : "clip",
           }}
           className={clsx(
-            "border border-primary rounded-xl transition-colors",
-            depth !== 0 && "rounded-r-none border-r-0",
-            isOver ? "bg-accent/10" : "bg-paper"
+            "border border-primary rounded-xl bg-paper",
+            depth !== 0 && "rounded-r-none border-r-0"
           )}>
           <SortableContext
             items={childrenNodes}
             strategy={verticalListSortingStrategy}>
             <div className="flex flex-col gap-2 p-4 pr-0 ">
               {noneChildren && (
-                <div className="p-3 mr-3 border border-dashed border-text-secondary/50 rounded-md text-center">
+                <div
+                  className={clsx(
+                    "p-3 mr-3 border border-dashed border-text-secondary/50 rounded-md text-center transition-colors",
+                    isOver ? "bg-accent/10" : "bg-paper"
+                  )}>
                   <p className="text-text-secondary text-sm">
                     要素を追加しよう！
                   </p>
