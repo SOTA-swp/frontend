@@ -1,17 +1,24 @@
 import LocationType from "@/types/location";
-import { create } from "zustand";
+import { StateCreator } from "zustand";
 
-interface LocationStore {
-  // ロケーションデータを管理するストア
+export interface LocationState {
   locations: Record<string, LocationType>;
+}
+
+export interface LocationActions {
   setLocations: (locationList: LocationType[]) => void;
   updateLocation: (id: string, updatedFields: Partial<LocationType>) => void;
   removeLocation: (id: string) => void;
 }
 
-export const useLocationStore = create<LocationStore>((set) => ({
-  locations: {},
+export type LocationStore = LocationState & LocationActions;
 
+export const defaultLocationStore: LocationState = {
+  locations: {},
+};
+
+export const createLocationSlice: StateCreator<LocationStore> = (set) => ({
+  ...defaultLocationStore,
   setLocations: (locationList) => {
     const locationMap: Record<string, LocationType> = locationList.reduce(
       (acc, location) => {
@@ -40,4 +47,4 @@ export const useLocationStore = create<LocationStore>((set) => ({
       return { locations: newLocations };
     });
   },
-}));
+});

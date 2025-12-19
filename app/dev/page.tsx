@@ -23,9 +23,8 @@ import Side from "../(main)/_components/side/Side";
 import { createMockLocation } from "@/types/location";
 import LocationCard from "@/components/LocationCard";
 import { createMockNode } from "@/types/node";
-import { useNodeStore } from "../plans/_store/nodeStore";
-import { useLocationStore } from "../plans/_store/locationStore";
 import NodeThree from "../plans/_components/NodeThree";
+import { usePlanStore } from "../plans/_store/hook";
 
 export interface DevPageProps {
   a: undefined;
@@ -37,8 +36,9 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   const [planOpen, setPlanOpen] = React.useState(-1);
   const { openModal, closeModal } = useModalStore();
   const { open, anchorEl, handleOpen, handleClose } = usePopover();
-  const { setNodes, setStructure } = useNodeStore();
-  const { setLocations } = useLocationStore();
+  const setNodes = usePlanStore((state) => state.setNodes);
+  const setStructure = usePlanStore((state) => state.setStructure);
+  const setLocations = usePlanStore((state) => state.setLocations);
 
   useEffect(() => {
     setLocations([

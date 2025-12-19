@@ -1,7 +1,6 @@
 "use client";
 import { MouseEvent as ReactMouseEvent } from "react";
 import { MdDelete, MdDragIndicator } from "react-icons/md";
-import { useNodeStore } from "../../_store/nodeStore";
 import LocationNode from "./LocationNode";
 import MoveNode from "./MoveNode";
 import ProcessNode from "./ProcessNode";
@@ -10,6 +9,7 @@ import IconButton from "@/components/IconButton";
 import { AnimatePresence, motion } from "motion/react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { usePlanStore } from "../../_store/hook";
 
 export interface NodeProps {
   id: string;
@@ -18,10 +18,10 @@ export interface NodeProps {
 }
 
 function Node({ id, depth = 0 }: NodeProps) {
-  const node = useNodeStore((state) => state.nodes[id]);
-  const hoveredNodeId = useNodeStore((state) => state.hoveredNodeId);
-  const setHoveredNodeId = useNodeStore((state) => state.setHoveredNodeId);
-  const removeNode = useNodeStore((state) => state.removeNode);
+  const node = usePlanStore((state) => state.nodes[id]);
+  const hoveredNodeId = usePlanStore((state) => state.hoveredNodeId);
+  const setHoveredNodeId = usePlanStore((state) => state.setHoveredNodeId);
+  const removeNode = usePlanStore((state) => state.removeNode);
 
   const {
     attributes,

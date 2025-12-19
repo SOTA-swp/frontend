@@ -1,7 +1,6 @@
 "use client";
 
 import NodeType from "@/types/node";
-import { useNodeStore } from "../../_store/nodeStore";
 import EditElement from "./EditElement";
 import FIELD_NAMES from "./FIELD_NAMES";
 import TextField from "@/components/TextField";
@@ -17,17 +16,18 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
+import { usePlanStore } from "../../_store/hook";
 
 interface ProcessNodeProps extends NodeType {
   depth?: number;
 }
 
 function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
-  const updateNode = useNodeStore((state) => state.updateNode);
-  const closeNode = useNodeStore((state) => state.closeNode);
-  const openNode = useNodeStore((state) => state.openNode);
-  const open = !useNodeStore((state) => state.closeNodeIds.includes(id));
-  const childrenNodes = useNodeStore((state) => state.structure[id]) || [];
+  const updateNode = usePlanStore((state) => state.updateNode);
+  const closeNode = usePlanStore((state) => state.closeNode);
+  const openNode = usePlanStore((state) => state.openNode);
+  const open = !usePlanStore((state) => state.closeNodeIds.includes(id));
+  const childrenNodes = usePlanStore((state) => state.structure[id]) || [];
 
   const noneChildren = childrenNodes.length === 0;
 

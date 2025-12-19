@@ -1,6 +1,5 @@
 "use client";
 import { useRef } from "react";
-import { useNodeStore } from "../_store/nodeStore";
 import {
   closestCorners,
   DndContext,
@@ -12,17 +11,18 @@ import {
 import Node from "./Node/Node";
 import { useShallow } from "zustand/shallow";
 import { SortableContext } from "@dnd-kit/sortable";
+import { usePlanStore } from "../_store/hook";
 
 function NodeThree() {
-  const structure = useNodeStore(useShallow((state) => state.structure));
-  const rootNodeIds = Object.entries(useNodeStore((state) => state.nodes))
+  const structure = usePlanStore(useShallow((state) => state.structure));
+  const rootNodeIds = Object.entries(usePlanStore((state) => state.nodes))
     .filter(([nodeId]) => {
       const allChildren = Object.values(structure).flat();
       return !allChildren.includes(nodeId);
     })
     .map(([nodeId]) => nodeId);
-  const moveNodeInStructure = useNodeStore((state) => state.moveNode);
-  const setNestNode = useNodeStore((state) => state.setNestNode);
+  const moveNodeInStructure = usePlanStore((state) => state.moveNode);
+  const setNestNode = usePlanStore((state) => state.setNestNode);
 
   // 最後に実行したターゲットを記憶（ターゲット変更時のみ実行）
   const lastExecutedRef = useRef<{

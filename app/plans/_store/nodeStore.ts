@@ -1,11 +1,20 @@
 import NodeType from "@/types/node";
 import { arrayMove } from "@dnd-kit/sortable";
-import { create } from "zustand";
+import { StateCreator } from "zustand";
 
-interface NodeStore {
-  // ノードデータを管理するストア
+export interface NodeState {
   nodes: Record<NodeType["id"], NodeType>;
   structure: Record<NodeType["id"], NodeType["id"][]>;
+  editFieldId: string | null;
+
+  // ホバー中のノードID
+  hoveredNodeId: string | null;
+
+  // 折りたたまれたノードIDリスト
+  closeNodeIds: NodeType["id"][];
+}
+
+export interface NodeActions {
   setNodes: (nodeList: NodeType[]) => void;
   setStructure: (structure: Record<NodeType["id"], NodeType["id"][]>) => void;
   setStructureList: (id: NodeType["id"], childrenIds: NodeType["id"][]) => void;
@@ -14,20 +23,28 @@ interface NodeStore {
   removeNode: (id: string) => void;
   setNestNode: (parentId: NodeType["id"], childId: NodeType["id"]) => void;
 
-  //  ノードの中の編集中要素を管理するストア
-  editFieldId: string | null;
+  // ノードの中の編集中要素をセットする関数
   setEditFieldId: (nodeId: string | null) => void;
 
-  // ホバー中のノードIDを管理するストア
-  hoveredNodeId: string | null;
+  // ホバー中のノードIDをセットする関数
   setHoveredNodeId: (nodeId: string | null) => void;
 
-  // 折りたたまれたノードIDを管理するストア
-  closeNodeIds: NodeType["id"][];
+  // 折りたたまれたノードIDを管理する関数
   closeNode: (nodeId: NodeType["id"]) => void;
   openNode: (nodeId: NodeType["id"]) => void;
 }
 
+export type NodeStore = NodeState & NodeActions;
+
+export const defaultNodeStore: NodeState = {
+  nodes: {},
+  structure: {},
+  editFieldId: null,
+  hoveredNodeId: null,
+  closeNodeIds: [],
+};
+
+// ancestorId が targetId の祖先ノードであるかを判定する再帰関数
 const isDescendant = (
   structure: Record<NodeType["id"], NodeType["id"][]>,
   ancestorId: NodeType["id"],
@@ -38,10 +55,8 @@ const isDescendant = (
   return children.some((childId) => isDescendant(structure, childId, targetId));
 };
 
-export const useNodeStore = create<NodeStore>((set) => ({
-  nodes: {},
-  structure: {},
-
+export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
+  ...defaultNodeStore,
   setNodes: (nodeList) => {
     const nodesMap: Record<string, NodeType> = nodeList.reduce((acc, nodes) => {
       acc[nodes.id] = nodes;
@@ -139,13 +154,10 @@ export const useNodeStore = create<NodeStore>((set) => ({
     });
   },
 
-  editFieldId: null,
   setEditFieldId: (nodeId) => set({ editFieldId: nodeId }),
 
-  hoveredNodeId: null,
   setHoveredNodeId: (nodeId) => set({ hoveredNodeId: nodeId }),
 
-  closeNodeIds: [],
   closeNode: (nodeId) =>
     set((state) => ({ closeNodeIds: [...state.closeNodeIds, nodeId] })),
   openNode: (nodeId) => {
@@ -153,4 +165,4 @@ export const useNodeStore = create<NodeStore>((set) => ({
       closeNodeIds: state.closeNodeIds.filter((id) => id !== nodeId),
     }));
   },
-}));
+});

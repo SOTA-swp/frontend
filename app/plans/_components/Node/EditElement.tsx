@@ -2,8 +2,8 @@
 
 import NodeType from "@/types/node";
 import FIELD_NAMES from "./FIELD_NAMES";
-import { useNodeStore } from "../../_store/nodeStore";
 import clsx from "clsx";
+import { usePlanStore } from "../../_store/hook";
 
 interface ToggleElementProps {
   id: NodeType["id"];
@@ -23,7 +23,8 @@ function EditElement({
   position = "inline",
 }: ToggleElementProps) {
   const wrapperId = `${id}-${fieldName}`;
-  const { editFieldId, setEditFieldId } = useNodeStore();
+  const editFieldId = usePlanStore((state) => state.editFieldId);
+  const setEditFieldId = usePlanStore((state) => state.setEditFieldId);
 
   const edited = editFieldId === wrapperId;
 

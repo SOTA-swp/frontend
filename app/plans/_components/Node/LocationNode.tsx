@@ -1,21 +1,20 @@
 "use client";
 import EmojiIcon from "@/components/EmojiIcon";
 import NodeType from "@/types/node";
-import { useLocationStore } from "../../_store/locationStore";
 import TimeContent from "./TimeContent";
 import EditElement from "./EditElement";
 import FIELD_NAMES from "./FIELD_NAMES";
 import TextField from "@/components/TextField";
-import { useNodeStore } from "../../_store/nodeStore";
 import { getFirstChar, removeEmoji } from "@/utils/removeEmoji";
 import clsx from "clsx";
 import styles from "./styles.module.css";
+import { usePlanStore } from "../../_store/hook";
 
 type LocationNodeProps = NodeType;
 
 function LocationNode({ id, locationId, name }: LocationNodeProps) {
-  const { updateNode } = useNodeStore();
-  const location = useLocationStore((state) => state.locations[locationId]);
+  const updateNode = usePlanStore((state) => state.updateNode);
+  const location = usePlanStore((state) => state.locations[locationId]);
 
   const handleNameChange = (value: string) => {
     updateNode(id, { name: value });

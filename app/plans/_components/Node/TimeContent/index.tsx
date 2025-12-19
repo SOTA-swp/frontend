@@ -2,16 +2,18 @@ import NodeType from "@/types/node";
 import EditElement from "../EditElement";
 import FIELD_NAMES from "../FIELD_NAMES";
 import TextField from "@/components/TextField";
-import { useNodeStore } from "../../../_store/nodeStore";
 import TimeCell from "./TimeCell";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { usePlanStore } from "@/app/plans/_store/hook";
 
 type TimeContentProps = Pick<NodeType, "id">;
 
 function TimeContent({ id }: TimeContentProps) {
-  const { updateNode } = useNodeStore();
-  const { startTime, endTime, durationMinutes } = useNodeStore(
-    (state) => state.nodes[id]
+  const updateNode = usePlanStore((state) => state.updateNode);
+  const startTime = usePlanStore((state) => state.nodes[id].startTime);
+  const endTime = usePlanStore((state) => state.nodes[id].endTime);
+  const durationMinutes = usePlanStore(
+    (state) => state.nodes[id].durationMinutes
   );
 
   const handleChange = (
