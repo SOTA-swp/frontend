@@ -1,10 +1,12 @@
+import UserType from "@/types/user";
 
 export interface ViewPageProps {
-    a: undefined;
+  params: { planId: Promise<UserType["id"]> };
 }
 
-const ViewPage: React.FC<ViewPageProps> = ({ }) => {
-    return <div>View Page</div>;
-}
+const ViewPage: React.FC<ViewPageProps> = async ({ params }) => {
+  const { planId } = await params;
+  return <div>planId: {planId}</div>;
+};
 
 export default ViewPage;
