@@ -2,10 +2,10 @@ import { cva, type VariantProps } from "class-variance-authority";
 import ComponentColor from "@/types/componentColor";
 import CommonText from "./CommonText";
 
-const chipStyles = cva("rounded-md px-2 py-1 text-xs flex", {
+const chipStyles = cva("px-2 py-1 text-xs flex whitespace-nowrap", {
   variants: {
     variant: {
-      outline: "border bg-paper",
+      outline: "border",
       contain: "",
     },
     color: {
@@ -14,6 +14,10 @@ const chipStyles = cva("rounded-md px-2 py-1 text-xs flex", {
       accent: "",
       error: "",
     } satisfies Record<ComponentColor, string>,
+    rounded: {
+      false: "rounded-md",
+      true: "rounded-full",
+    },
   },
 
   compoundVariants: [
@@ -62,6 +66,7 @@ const chipStyles = cva("rounded-md px-2 py-1 text-xs flex", {
   defaultVariants: {
     variant: "contain",
     color: "primary",
+    rounded: false,
   },
 });
 
@@ -69,9 +74,9 @@ interface ChipProps extends VariantProps<typeof chipStyles> {
   children?: React.ReactNode;
 }
 
-function Chip({ children, variant, color, ...props }: ChipProps) {
+function Chip({ children, variant, color, rounded, ...props }: ChipProps) {
   return (
-    <div {...props} className={chipStyles({ variant, color })}>
+    <div {...props} className={chipStyles({ variant, color, rounded })}>
       <button></button>
       <CommonText>{children}</CommonText>
     </div>
