@@ -1,11 +1,11 @@
-export const ViewMode = {
+export const VIEW_MODE = {
   TIMELINE: "timeline",
   IDEA_SPACE: "idea_space",
 } as const;
 
-export type ViewMode = (typeof ViewMode)[keyof typeof ViewMode];
+export type ViewModeType = (typeof VIEW_MODE)[keyof typeof VIEW_MODE];
 
-export const ViewModeNames: Record<ViewMode, string> = {
-  [ViewMode.TIMELINE]: "タイムライン",
-  [ViewMode.IDEA_SPACE]: "アイデアスペース",
+export const ViewModeNames: Record<ViewModeType, string> = {
+  [VIEW_MODE.TIMELINE]: "タイムライン",
+  [VIEW_MODE.IDEA_SPACE]: "アイデアスペース",
 } as const;
