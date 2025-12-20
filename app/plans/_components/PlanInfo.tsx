@@ -6,14 +6,18 @@ import { MdEdit } from "react-icons/md";
 function PlanInfo() {
   const planTitle = usePlanStore((state) => state.title);
   const planDescription = usePlanStore((state) => state.description);
+  const isPublic = usePlanStore((state) => state.isPublic);
 
   return (
     <div className="my-3 py-2 pl-4 max-w-[1200px] border-l-2 border-accent">
       <div className="flex items-center gap-6">
         <h2 className="text-2xl font-bold">{planTitle}</h2>
         <div className="flex gap-2 items-center">
-          <Chip variant="outline" rounded>
-            <p className="pr-2">・公開中 </p>
+          <Chip
+            variant={"outline"}
+            rounded
+            color={isPublic ? "primary" : "gray"}>
+            <p className="pr-1.5">・{isPublic ? "公開中" : "非公開"}</p>
           </Chip>
           {/* TODO: 編集モーダルを開く */}
           <IconButton
