@@ -4,9 +4,11 @@ import Tab from "@/components/Tab";
 import MapView from "./MapView";
 import NodeView from "./NodeView";
 import PlanInfo from "./PlanInfo";
-import { ViewMode, ViewModeNames } from "../_consts/viewMode";
+import { VIEW_MODE, ViewModeNames, ViewModeType } from "../_consts/viewMode";
 import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import IdeaSpaceView from "./IdeaSpaceView";
+import ViewGroupWrapper from "./ViewGroupWrapper";
 
 interface PlanMainContentProps {
   readOnly?: boolean;
@@ -14,10 +16,10 @@ interface PlanMainContentProps {
 
 // TODO: readOnlyに応じて編集不可にする
 function PlanMainContent({}: PlanMainContentProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.TIMELINE);
+  const [viewMode, setViewMode] = useState<ViewModeType>(VIEW_MODE.TIMELINE);
 
   const handleChangeViewMode = (newMode: string) => {
-    setViewMode(newMode as ViewMode);
+    setViewMode(newMode as ViewModeType);
   };
 
   return (
@@ -33,17 +35,19 @@ function PlanMainContent({}: PlanMainContentProps) {
           value={viewMode}
           onChange={handleChangeViewMode}
         />
-        <div className="flex flex-1 self-stretch min-h-0">
-          <AnimatePresence>
-            {viewMode === ViewMode.TIMELINE && (
-              <motion.div
-                className="flex gap-4 flex-1"
-                initial={{ opacity: 0, x: -500 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -500 }}>
+        <div className="relative flex flex-1 self-stretch min-h-0">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {viewMode === VIEW_MODE.TIMELINE ? (
+              <ViewGroupWrapper key="timeline" viewMode={VIEW_MODE.TIMELINE}>
                 <NodeView />
                 <MapView />
-              </motion.div>
+              </ViewGroupWrapper>
+            ) : (
+              <ViewGroupWrapper
+                key="idea-space"
+                viewMode={VIEW_MODE.IDEA_SPACE}>
+                <IdeaSpaceView />
+              </ViewGroupWrapper>
             )}
           </AnimatePresence>
         </div>
