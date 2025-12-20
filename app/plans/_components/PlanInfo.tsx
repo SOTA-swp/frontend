@@ -2,6 +2,7 @@ import Chip from "@/components/Chip";
 import { usePlanStore } from "../_store/hook";
 import IconButton from "@/components/IconButton";
 import { MdEdit } from "react-icons/md";
+import QuickMenu from "./QuickMenu";
 
 function PlanInfo() {
   const planTitle = usePlanStore((state) => state.title);
@@ -10,6 +11,7 @@ function PlanInfo() {
 
   return (
     <div className="my-3 py-2 pl-4 max-w-[1200px] border-l-2 border-accent">
+      <QuickMenu />
       <div className="flex items-center gap-6">
         <h2 className="text-2xl font-bold">{planTitle}</h2>
         <div className="flex gap-2 items-center">
