@@ -1,5 +1,7 @@
+import PlanMainContent from "../../_components/PlanMainContent";
+
 const ViewPage = async ({}) => {
-  return <div>View Page</div>;
+  return <PlanMainContent readOnly />;
 };
 
 export default ViewPage;

@@ -1,6 +1,8 @@
+import PlanMainContent from "../../_components/PlanMainContent";
+
 const EditPage = () => {
   // TODO: 権限があるかどうか調べて、なければplan/viewにリダイレクトする
-  return <div>Edit Page</div>;
+  return <PlanMainContent />;
 };
 
 export default EditPage;

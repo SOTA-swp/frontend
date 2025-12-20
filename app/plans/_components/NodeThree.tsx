@@ -78,7 +78,7 @@ function NodeThree() {
       collisionDetection={closestCorners}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}>
-      <div className="p-4 flex flex-col gap-2">
+      <div className="p-4 mr-[100px] flex flex-col items-start gap-2 content-start w-fit">
         <SortableContext items={rootNodeIds}>
           {rootNodeIds.map((nodeId) => (
             <Node key={nodeId} id={nodeId} depth={0} />
