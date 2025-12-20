@@ -90,20 +90,20 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
               id={0}
               tabList={[
                 {
-                  label: "time-line",
+                  value: "time-line",
                   itemContent: "タイムライン",
                 },
-                { label: "idea-space", itemContent: "アイデアスペース" },
+                { value: "idea-space", itemContent: "アイデアスペース" },
               ]}
             />
             <Tab
               id={1}
               tabList={[
-                { label: "1", itemContent: "タブ1" },
-                { label: "2", itemContent: "タブ2" },
-                { label: "3", itemContent: "タブ3" },
-                { label: "4", itemContent: "タブ4" },
-                { label: "5", itemContent: "タブ5" },
+                { value: "1", itemContent: "タブ1" },
+                { value: "2", itemContent: "タブ2" },
+                { value: "3", itemContent: "タブ3" },
+                { value: "4", itemContent: "タブ4" },
+                { value: "5", itemContent: "タブ5" },
               ]}
             />
           </div>
