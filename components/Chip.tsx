@@ -1,6 +1,5 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import ComponentColor from "@/types/componentColor";
-import CommonText from "./CommonText";
 
 const chipStyles = cva("px-2 py-1 text-xs flex whitespace-nowrap", {
   variants: {
@@ -77,8 +76,7 @@ interface ChipProps extends VariantProps<typeof chipStyles> {
 function Chip({ children, variant, color, rounded, ...props }: ChipProps) {
   return (
     <div {...props} className={chipStyles({ variant, color, rounded })}>
-      <button></button>
-      <CommonText>{children}</CommonText>
+      {children}
     </div>
   );
 }
