@@ -49,6 +49,11 @@ function LocationCard({ id }: LocationCardProps) {
   const openLocation = usePlanStore((state) => state.openLocation);
   const closeLocation = usePlanStore((state) => state.closeLocation);
 
+  // ロケーションが存在しない場合は何も表示しない
+  if (!location) {
+    return null;
+  }
+
   const handleDelete = () => {
     removeLocation(id);
   };

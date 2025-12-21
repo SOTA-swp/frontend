@@ -5,13 +5,13 @@ import { getPlan } from "../actions";
 
 interface PlanLayoutProps {
   children: ReactNode;
-  params: { planId: Promise<PlanType["id"]> };
+  params: Promise<{ planId: PlanType["id"] }>;
 }
 
 async function PlanLayout({ children, params }: PlanLayoutProps) {
   const { planId } = await params;
 
-  const planData = await getPlan(await planId);
+  const planData = await getPlan(planId);
 
   // TODO: ロード中にスケルトンを出したい
   return (

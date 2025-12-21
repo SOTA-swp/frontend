@@ -20,7 +20,6 @@ import { motion } from "motion/react";
 import React, { useEffect } from "react";
 import { MdHome } from "react-icons/md";
 import Side from "../(main)/_components/side/Side";
-import { createMockLocation } from "@/types/location";
 import LocationCard from "@/app/plans/_components/LocationCard";
 import NodeThree from "../plans/_components/NodeThree";
 import { usePlanStore } from "../plans/_store/hook";
@@ -48,7 +47,7 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
     setStructure(MOCK_STRUCTURE);
   }, [setStructure, setNodes, setLocations]);
 
-  const mockLocation = createMockLocation(1);
+  const mockLocation = MOCK_LOCATIONS[0];
 
   // if (process.env.NODE_ENV !== "development") {
   //   return <div>Not Found</div>;
@@ -272,18 +271,7 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
       </div>
 
       <div className="p-4">
-        <LocationCard
-          location={mockLocation}
-          onTitleChange={function (value: string): void {
-            throw new Error("Function not implemented.");
-          }}
-          onAddressChange={function (value: string): void {
-            throw new Error("Function not implemented.");
-          }}
-          onDescriptionChange={function (value: string): void {
-            throw new Error("Function not implemented.");
-          }}
-        />
+        <LocationCard id={mockLocation.id} />
       </div>
     </div>
   );
