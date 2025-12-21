@@ -7,21 +7,15 @@ import EmojiIcon from "@/components/EmojiIcon";
 import clsx from "clsx";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { motion, AnimatePresence } from "motion/react";
-import { div } from "motion/react-client";
+import { usePlanStore } from "../_store/hook";
 
 type LocationCardProps = {
-  location: LocationType;
-  onTitleChange: (value: string) => void;
-  onAddressChange: (value: string) => void;
-  onDescriptionChange: (value: string) => void;
+  id: LocationType["id"];
 };
 
-function LocationCard({
-  location,
-  onTitleChange,
-  onAddressChange,
-  onDescriptionChange,
-}: LocationCardProps) {
+function LocationCard({ id }: LocationCardProps) {
+  const location = usePlanStore((state) => state.locations[id]);
+  const updateLocation = usePlanStore((state) => state.updateLocation);
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const toggleExpand = () => {
@@ -34,8 +28,7 @@ function LocationCard({
       transition={{ duration: 0.3, ease: "easeInOut" }}
       className={clsx(
         "relative max-w-sm flex flex-col rounded-lg overflow-hidden bg-paper p-4 gap-[25px]"
-      )}
-    >
+      )}>
       <AnimatePresence initial={false} mode="wait">
         {isExpanded && (
           <motion.div
@@ -51,7 +44,9 @@ function LocationCard({
                 <TextField
                   label="ロケーション名"
                   value={location.title}
-                  onChange={(e) => onTitleChange(e.target.value)}
+                  onChange={(e) =>
+                    updateLocation(id, { title: e.target.value })
+                  }
                   placeholder="プレースホルダー"
                   autoComplete="off"
                   fullWidth
@@ -63,7 +58,9 @@ function LocationCard({
               <TextField
                 label="住所"
                 value={location.address}
-                onChange={(e) => onAddressChange(e.target.value)}
+                onChange={(e) =>
+                  updateLocation(id, { address: e.target.value })
+                }
                 placeholder="プレースホルダー"
                 autoComplete="off"
                 fullWidth
@@ -74,7 +71,9 @@ function LocationCard({
               <TextField
                 label="メモ"
                 value={location.description}
-                onChange={(e) => onDescriptionChange(e.target.value)}
+                onChange={(e) =>
+                  updateLocation(id, { description: e.target.value })
+                }
                 placeholder="プレースホルダー"
                 textarea
                 autoComplete="off"
@@ -85,14 +84,12 @@ function LocationCard({
             <div>
               <div
                 className="w-full h-[150px] bg-cover bg-center rounded-lg"
-                style={{ backgroundImage: `url(${location.thumbnail})` }}
-              ></div>
+                style={{ backgroundImage: `url(${location.thumbnail})` }}></div>
             </div>
 
             <button
               onClick={toggleExpand}
-              className="w-full h-4 flex justify-center"
-            >
+              className="w-full h-4 flex justify-center">
               <MdArrowDropUp className="text-lg text-text-secondary" />
             </button>
           </motion.div>
@@ -106,8 +103,7 @@ function LocationCard({
             exit={{ opacity: 0 }} // 終了時: 透明
             transition={{ duration: 0.2 }}
             className="flex items-center justify-between"
-            onClick={toggleExpand}
-          >
+            onClick={toggleExpand}>
             <div className="flex items-center gap-4">
               <EmojiIcon color="primary">📍</EmojiIcon>
               <h3>{location.title}</h3>
