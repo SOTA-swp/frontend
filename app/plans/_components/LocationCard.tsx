@@ -16,10 +16,18 @@ type LocationCardProps = {
 function LocationCard({ id }: LocationCardProps) {
   const location = usePlanStore((state) => state.locations[id]);
   const updateLocation = usePlanStore((state) => state.updateLocation);
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const isExpanded = !usePlanStore((state) =>
+    state.closedLocationIds.includes(id)
+  );
+  const openLocation = usePlanStore((state) => state.openLocation);
+  const closeLocation = usePlanStore((state) => state.closeLocation);
 
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
+  const handleOpen = () => {
+    openLocation(id);
+  };
+
+  const handleClose = () => {
+    closeLocation(id);
   };
 
   return (
@@ -88,7 +96,7 @@ function LocationCard({ id }: LocationCardProps) {
             </div>
 
             <button
-              onClick={toggleExpand}
+              onClick={handleClose}
               className="w-full h-4 flex justify-center">
               <MdArrowDropUp className="text-lg text-text-secondary" />
             </button>
@@ -103,7 +111,7 @@ function LocationCard({ id }: LocationCardProps) {
             exit={{ opacity: 0 }} // 終了時: 透明
             transition={{ duration: 0.2 }}
             className="flex items-center justify-between"
-            onClick={toggleExpand}>
+            onClick={handleOpen}>
             <div className="flex items-center gap-4">
               <EmojiIcon color="primary">📍</EmojiIcon>
               <h3>{location.title}</h3>

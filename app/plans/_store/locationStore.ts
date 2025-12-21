@@ -3,18 +3,23 @@ import { StateCreator } from "zustand";
 
 export interface LocationState {
   locations: Record<string, LocationType>;
+  closedLocationIds: string[];
 }
 
 export interface LocationActions {
   setLocations: (locationList: LocationType[]) => void;
   updateLocation: (id: string, updatedFields: Partial<LocationType>) => void;
   removeLocation: (id: string) => void;
+
+  closeLocation: (id: string) => void;
+  openLocation: (id: string) => void;
 }
 
 export type LocationStore = LocationState & LocationActions;
 
 export const defaultLocationStore: LocationState = {
   locations: {},
+  closedLocationIds: [],
 };
 
 export const createLocationSlice: StateCreator<LocationStore> = (set) => ({
@@ -46,5 +51,17 @@ export const createLocationSlice: StateCreator<LocationStore> = (set) => ({
       delete newLocations[id];
       return { locations: newLocations };
     });
+  },
+  closeLocation: (id) => {
+    set((state) => ({
+      closedLocationIds: [...state.closedLocationIds, id],
+    }));
+  },
+  openLocation: (id) => {
+    set((state) => ({
+      closedLocationIds: state.closedLocationIds.filter(
+        (locationId) => locationId !== id
+      ),
+    }));
   },
 });
