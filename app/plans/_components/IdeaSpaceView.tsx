@@ -1,8 +1,17 @@
-import React from "react";
+"use client";
+import AddButton from "./AddButton";
 import ViewWrapper from "./ViewWrapper";
 
+function IdeaSpaceViewAddButton() {
+  return <AddButton />;
+}
+
 function IdeaSpaceView() {
-  return <ViewWrapper>Idea Space</ViewWrapper>;
+  return (
+    <ViewWrapper outerElement={<IdeaSpaceViewAddButton />}>
+      Idea Space
+    </ViewWrapper>
+  );
 }
 
 export default IdeaSpaceView;
