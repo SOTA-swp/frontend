@@ -21,7 +21,7 @@ import React, { useEffect } from "react";
 import { MdHome } from "react-icons/md";
 import Side from "../(main)/_components/side/Side";
 import { createMockLocation } from "@/types/location";
-import LocationCard from "@/components/LocationCard";
+import LocationCard from "@/app/plans/_components/LocationCard";
 import NodeThree from "../plans/_components/NodeThree";
 import { usePlanStore } from "../plans/_store/hook";
 import { MOCK_LOCATIONS } from "../plans/_mock/MOCK_LOCATIONS";
