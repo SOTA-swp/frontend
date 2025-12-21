@@ -3,24 +3,32 @@ import { HTMLAttributes, ReactNode } from "react";
 
 interface ViewWrapperProps extends HTMLAttributes<HTMLDivElement> {
   overflow?: "clip" | "auto";
+  outerElement?: ReactNode;
   children: ReactNode;
 }
 
 function ViewWrapper({
   overflow = "clip",
+  outerElement,
   children,
   ...props
 }: ViewWrapperProps) {
   return (
-    <div
+    <section
       {...props}
       className={clsx(
-        "border border-border rounded-2xl flex-1 min-w-0 min-h-0 h-full",
-        overflow === "auto" ? "overflow-auto" : "overflow-clip",
+        "relative border border-border rounded-2xl flex-1 min-w-0 min-h-0 h-full overflow-clip",
         props.className
       )}>
-      {children}
-    </div>
+      <div
+        className={clsx(
+          "h-full",
+          overflow === "auto" ? "overflow-scroll" : "overflow-clip"
+        )}>
+        {children}
+      </div>
+      {outerElement}
+    </section>
   );
 }
 
