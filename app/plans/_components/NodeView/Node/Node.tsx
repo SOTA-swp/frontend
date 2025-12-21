@@ -9,7 +9,7 @@ import IconButton from "@/components/IconButton";
 import { AnimatePresence, motion } from "motion/react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { usePlanStore } from "../../_store/hook";
+import { usePlanStore } from "../../../_store/hook";
 
 export interface NodeProps {
   id: string;

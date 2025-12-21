@@ -8,7 +8,7 @@ import TextField from "@/components/TextField";
 import { getFirstChar, removeEmoji } from "@/utils/removeEmoji";
 import clsx from "clsx";
 import styles from "./styles.module.css";
-import { usePlanStore } from "../../_store/hook";
+import { usePlanStore } from "../../../_store/hook";
 
 type LocationNodeProps = NodeType;
 

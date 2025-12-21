@@ -1,8 +1,8 @@
 "use client";
-import { usePlanStore } from "../_store/hook";
-import AddButton from "./AddButton";
+import { usePlanStore } from "../../_store/hook";
+import AddButton from "../AddButton";
 import LocationCard from "./LocationCard";
-import ViewWrapper from "./ViewWrapper";
+import ViewWrapper from "../ViewWrapper";
 
 function IdeaSpaceViewAddButton() {
   return <AddButton />;

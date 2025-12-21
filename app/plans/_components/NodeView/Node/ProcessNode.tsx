@@ -16,7 +16,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
-import { usePlanStore } from "../../_store/hook";
+import { usePlanStore } from "../../../_store/hook";
 
 interface ProcessNodeProps extends NodeType {
   depth?: number;

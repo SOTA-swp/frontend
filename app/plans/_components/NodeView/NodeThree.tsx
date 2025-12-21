@@ -11,7 +11,7 @@ import {
 import Node from "./Node/Node";
 import { useShallow } from "zustand/shallow";
 import { SortableContext } from "@dnd-kit/sortable";
-import { usePlanStore } from "../_store/hook";
+import { usePlanStore } from "../../_store/hook";
 
 function NodeThree() {
   const structure = usePlanStore(useShallow((state) => state.structure));

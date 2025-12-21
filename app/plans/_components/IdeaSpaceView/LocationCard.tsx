@@ -11,7 +11,7 @@ import {
   Transition,
   HTMLMotionProps,
 } from "motion/react";
-import { usePlanStore } from "../_store/hook";
+import { usePlanStore } from "../../_store/hook";
 import { getFirstChar, removeEmoji } from "@/utils/removeEmoji";
 import Image from "next/image";
 import AddButton from "@/components/AddButton";

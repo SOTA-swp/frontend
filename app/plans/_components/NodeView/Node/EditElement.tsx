@@ -3,7 +3,7 @@
 import NodeType from "@/types/node";
 import FIELD_NAMES from "./FIELD_NAMES";
 import clsx from "clsx";
-import { usePlanStore } from "../../_store/hook";
+import { usePlanStore } from "../../../_store/hook";
 
 interface ToggleElementProps {
   id: NodeType["id"];

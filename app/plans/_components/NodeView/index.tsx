@@ -1,9 +1,9 @@
 import { ReactNode, useState } from "react";
 import NodeThree from "./NodeThree";
-import ViewWrapper from "./ViewWrapper";
+import ViewWrapper from "../ViewWrapper";
 import { MdDirectionsCar, MdFolderOpen, MdLocationPin } from "react-icons/md";
 import IconButton from "@/components/IconButton";
-import AddButton from "./AddButton";
+import AddButton from "../AddButton";
 
 const ADD_MODES = {
   PROCESS: "process",
