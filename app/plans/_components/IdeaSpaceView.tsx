@@ -13,9 +13,11 @@ function IdeaSpaceView() {
 
   return (
     <ViewWrapper outerElement={<IdeaSpaceViewAddButton />} paper>
-      <div className="flex gap-4">
+      <div className="flex gap-4 p-4">
         {Object.keys(locations).map((id) => (
-          <LocationCard key={id} id={id} />
+          <div key={id}>
+            <LocationCard key={id} id={id} />
+          </div>
         ))}
       </div>
     </ViewWrapper>
