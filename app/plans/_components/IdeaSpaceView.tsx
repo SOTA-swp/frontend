@@ -8,7 +8,7 @@ function IdeaSpaceViewAddButton() {
 
 function IdeaSpaceView() {
   return (
-    <ViewWrapper outerElement={<IdeaSpaceViewAddButton />}>
+    <ViewWrapper outerElement={<IdeaSpaceViewAddButton />} paper>
       Idea Space
     </ViewWrapper>
   );
