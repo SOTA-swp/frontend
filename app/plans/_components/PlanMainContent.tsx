@@ -25,7 +25,7 @@ function PlanMainContent({}: PlanMainContentProps) {
   return (
     <div className="flex flex-col p-4 gap-4">
       <PlanInfo />
-      <div className="flex flex-col gap-4 flex-none items-start h-[800px] overflow-hidden">
+      <div className="flex flex-col gap-4 flex-none items-start h-[800px]">
         <Tab
           id={"view-mode"}
           tabList={Object.entries(ViewModeNames).map(([id, name]) => ({
