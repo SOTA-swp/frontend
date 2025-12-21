@@ -30,8 +30,8 @@ export interface NodeActions {
   setHoveredNodeId: (nodeId: string | null) => void;
 
   // 折りたたまれたノードIDを管理する関数
-  closeNode: (nodeId: NodeType["id"]) => void;
-  openNode: (nodeId: NodeType["id"]) => void;
+  closeNode: (id: NodeType["id"]) => void;
+  openNode: (id: NodeType["id"]) => void;
 }
 
 export type NodeStore = NodeState & NodeActions;
@@ -158,11 +158,11 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
 
   setHoveredNodeId: (nodeId) => set({ hoveredNodeId: nodeId }),
 
-  closeNode: (nodeId) =>
-    set((state) => ({ closeNodeIds: [...state.closeNodeIds, nodeId] })),
-  openNode: (nodeId) => {
+  closeNode: (id) =>
+    set((state) => ({ closeNodeIds: [...state.closeNodeIds, id] })),
+  openNode: (id) => {
     set((state) => ({
-      closeNodeIds: state.closeNodeIds.filter((id) => id !== nodeId),
+      closeNodeIds: state.closeNodeIds.filter((nodeId) => nodeId !== id),
     }));
   },
 });
