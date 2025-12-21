@@ -101,7 +101,7 @@ const iconButtonStyles = cva(
   }
 );
 
-interface IconButtonProps
+export interface IconButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
     VariantProps<typeof iconButtonStyles> {
   icon?: React.ReactNode;
