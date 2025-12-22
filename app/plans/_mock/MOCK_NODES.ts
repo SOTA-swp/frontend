@@ -1,4 +1,5 @@
 import { createMockNode } from "@/types/node";
+import { PARENT_ID_ROOT } from "../_util/createNode";
 
 export const MOCK_NODES = [
   createMockNode(0, { id: "0" }),
@@ -24,6 +25,7 @@ export const MOCK_NODES = [
 ];
 
 export const MOCK_STRUCTURE = {
+  [PARENT_ID_ROOT]: ["0"],
   "0": ["1", "2", "3", "8", "9", "10"],
   "1": ["4", "5", "11", "12"],
   "2": ["6", "7", "13", "14", "15"],

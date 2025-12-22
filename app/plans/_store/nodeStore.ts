@@ -1,27 +1,41 @@
-import NodeType from "@/types/node";
+import NodeDataType from "@/types/node";
 import { arrayMove } from "@dnd-kit/sortable";
 import { StateCreator } from "zustand";
+import { PARENT_ID_ROOT } from "../_util/createNode";
 
 export interface NodeState {
-  nodes: Record<NodeType["id"], NodeType>;
-  structure: Record<NodeType["id"], NodeType["id"][]>;
+  nodes: Record<NodeDataType["id"], NodeDataType>;
+  structure: Record<NodeDataType["id"], NodeDataType["id"][]>;
   editFieldId: string | null;
 
   // ホバー中のノードID
   hoveredNodeId: string | null;
 
   // 折りたたまれたノードIDリスト
-  closeNodeIds: NodeType["id"][];
+  closeNodeIds: NodeDataType["id"][];
 }
 
 export interface NodeActions {
-  setNodes: (nodeList: NodeType[]) => void;
-  setStructure: (structure: Record<NodeType["id"], NodeType["id"][]>) => void;
-  setStructureList: (id: NodeType["id"], childrenIds: NodeType["id"][]) => void;
-  moveNode: (activeId: NodeType["id"], overId: NodeType["id"]) => void;
-  updateNode: (id: string, updatedFields: Partial<NodeType>) => void;
+  setNodes: (nodeList: NodeDataType[]) => void;
+  setStructure: (
+    structure: Record<NodeDataType["id"], NodeDataType["id"][]>
+  ) => void;
+  setStructureList: (
+    id: NodeDataType["id"],
+    childrenIds: NodeDataType["id"][]
+  ) => void;
+  moveNode: (activeId: NodeDataType["id"], overId: NodeDataType["id"]) => void;
+  addNode: (
+    node: NodeDataType,
+    parentId?: NodeDataType["id"],
+    order?: number
+  ) => void;
+  updateNode: (id: string, updatedFields: Partial<NodeDataType>) => void;
   removeNode: (id: string) => void;
-  setNestNode: (parentId: NodeType["id"], childId: NodeType["id"]) => void;
+  setNestNode: (
+    parentId: NodeDataType["id"],
+    childId: NodeDataType["id"]
+  ) => void;
 
   // ノードの中の編集中要素をセットする関数
   setEditFieldId: (nodeId: string | null) => void;
@@ -30,8 +44,8 @@ export interface NodeActions {
   setHoveredNodeId: (nodeId: string | null) => void;
 
   // 折りたたまれたノードIDを管理する関数
-  closeNode: (id: NodeType["id"]) => void;
-  openNode: (id: NodeType["id"]) => void;
+  closeNode: (id: NodeDataType["id"]) => void;
+  openNode: (id: NodeDataType["id"]) => void;
 }
 
 export type NodeStore = NodeState & NodeActions;
@@ -46,9 +60,9 @@ export const defaultNodeStore: NodeState = {
 
 // ancestorId が targetId の祖先ノードであるかを判定する再帰関数
 const isDescendant = (
-  structure: Record<NodeType["id"], NodeType["id"][]>,
-  ancestorId: NodeType["id"],
-  targetId: NodeType["id"]
+  structure: Record<NodeDataType["id"], NodeDataType["id"][]>,
+  ancestorId: NodeDataType["id"],
+  targetId: NodeDataType["id"]
 ): boolean => {
   const children = structure[ancestorId] || [];
   if (children.includes(targetId)) return true;
@@ -58,10 +72,13 @@ const isDescendant = (
 export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
   ...defaultNodeStore,
   setNodes: (nodeList) => {
-    const nodesMap: Record<string, NodeType> = nodeList.reduce((acc, nodes) => {
-      acc[nodes.id] = nodes;
-      return acc;
-    }, {} as Record<string, NodeType>);
+    const nodesMap: Record<string, NodeDataType> = nodeList.reduce(
+      (acc, nodes) => {
+        acc[nodes.id] = nodes;
+        return acc;
+      },
+      {} as Record<string, NodeDataType>
+    );
     set({ nodes: nodesMap });
   },
   setStructure: (structure) => set({ structure }),
@@ -80,7 +97,7 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
         return state;
       }
 
-      const findParentId = (nodeId: NodeType["id"]) =>
+      const findParentId = (nodeId: NodeDataType["id"]) =>
         Object.keys(structure).find((parentId) =>
           structure[parentId].includes(nodeId)
         );
@@ -106,8 +123,11 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
 
       const newChildren = structure[overParentId];
       const overIndex = newChildren.indexOf(overId);
-      newChildren.splice(overIndex, 0, activeId);
-      structure[overParentId] = newChildren;
+      structure[overParentId] = [
+        ...newChildren.slice(0, overIndex),
+        activeId,
+        ...newChildren.slice(overIndex),
+      ];
       return { structure: { ...structure } };
     });
   },
@@ -130,8 +150,32 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
       if (parentId && !structure[parentId]) {
         structure[parentId] = [];
       }
-      structure[parentId].push(childId);
+      structure[parentId] = [...structure[parentId], childId];
       return { structure };
+    });
+  },
+  addNode: (
+    node,
+    parentId = PARENT_ID_ROOT,
+    order = Number.MAX_SAFE_INTEGER
+  ) => {
+    set((state) => {
+      const newNodes = {
+        ...state.nodes,
+        [node.id]: node,
+      };
+      const newStructure = { ...state.structure };
+      if (!newStructure[parentId]) {
+        newStructure[parentId] = [];
+      }
+      newStructure[parentId] = [
+        ...newStructure[parentId].toSpliced(order, 0, node.id),
+      ];
+      console.log("structure: ", newStructure);
+      return {
+        nodes: newNodes,
+        structure: newStructure,
+      };
     });
   },
   updateNode: (id, updateFields) => {

@@ -12,15 +12,12 @@ import Node from "./Node/Node";
 import { useShallow } from "zustand/shallow";
 import { SortableContext } from "@dnd-kit/sortable";
 import { usePlanStore } from "../../_store/hook";
+import { PARENT_ID_ROOT } from "../../_util/createNode";
 
 function NodeThree() {
   const structure = usePlanStore(useShallow((state) => state.structure));
-  const rootNodeIds = Object.entries(usePlanStore((state) => state.nodes))
-    .filter(([nodeId]) => {
-      const allChildren = Object.values(structure).flat();
-      return !allChildren.includes(nodeId);
-    })
-    .map(([nodeId]) => nodeId);
+  const rootNodeIds =
+    usePlanStore(useShallow((state) => state.structure[PARENT_ID_ROOT])) ?? [];
   const moveNodeInStructure = usePlanStore((state) => state.moveNode);
   const setNestNode = usePlanStore((state) => state.setNestNode);
 

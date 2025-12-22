@@ -4,39 +4,40 @@ import ViewWrapper from "../ViewWrapper";
 import { MdDirectionsCar, MdFolderOpen, MdLocationPin } from "react-icons/md";
 import IconButton from "@/components/IconButton";
 import AddButton from "../AddButton";
-
-const ADD_MODES = {
-  PROCESS: "process",
-  MOVE: "move",
-  LOCATION: "location",
-} as const;
-
-type AddModeType = (typeof ADD_MODES)[keyof typeof ADD_MODES];
+import { usePlanStore } from "../../_store/hook";
+import { NODE_TYPES, NodeType } from "@/types/node";
+import { createNode } from "../../_util/createNode";
 
 function NodeViewAddButton() {
-  const [addMode, setAddMode] = useState<AddModeType>(ADD_MODES.PROCESS);
+  const [addMode, setAddMode] = useState<NodeType>(NODE_TYPES.PROCESS);
+  const addNode = usePlanStore((state) => state.addNode);
 
-  const handleModeChange = (mode: AddModeType) => {
+  const handleModeChange = (mode: NodeType) => {
     setAddMode(mode);
   };
 
+  const handleAddNode = () => {
+    const newNode = createNode(addMode);
+    addNode(newNode);
+  };
+
   const addButtonChildrenData: {
-    mode: AddModeType;
+    mode: NodeType;
     title: string;
     icon: ReactNode;
   }[] = [
     {
-      mode: ADD_MODES.PROCESS,
+      mode: NODE_TYPES.PROCESS,
       title: "プロセス",
       icon: <MdFolderOpen />,
     },
     {
-      mode: ADD_MODES.MOVE,
+      mode: NODE_TYPES.MOVE,
       title: "移動",
       icon: <MdDirectionsCar />,
     },
     {
-      mode: ADD_MODES.LOCATION,
+      mode: NODE_TYPES.LOCATION,
       title: "ロケーション",
       icon: <MdLocationPin />,
     },
@@ -52,7 +53,9 @@ function NodeViewAddButton() {
       />
     )
   );
-  return <AddButton childButtons={addButtonChildrenNodes} />;
+  return (
+    <AddButton onClick={handleAddNode} childButtons={addButtonChildrenNodes} />
+  );
 }
 
 function NodeView() {
