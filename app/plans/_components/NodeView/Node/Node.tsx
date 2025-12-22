@@ -82,7 +82,7 @@ function Node({ id, depth = 0 }: NodeProps) {
       onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseLeave}
       className={clsx(
-        "relative flex items-center gap-2",
+        "relative flex items-center gap-2 select-none",
         isProcessNode && "items-start",
         isDragging && "opacity-80"
       )}>
