@@ -133,7 +133,7 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
   },
   setNestNode: (parentId, childId) => {
     set((state) => {
-      console.log(`setNestNode: ${parentId}, ${childId}`);
+      // console.log(`setNestNode: ${parentId}, ${childId}`);
       if (parentId === childId) {
         return state;
       }
@@ -171,7 +171,7 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
       newStructure[parentId] = [
         ...newStructure[parentId].toSpliced(order, 0, node.id),
       ];
-      console.log("structure: ", newStructure);
+      // console.log("structure: ", newStructure);
       return {
         nodes: newNodes,
         structure: newStructure,
@@ -179,7 +179,7 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
     });
   },
   updateNode: (id, updateFields) => {
-    console.log("updateNode", id, updateFields);
+    // console.log("updateNode", id, updateFields);
     set((state) => ({
       nodes: {
         ...state.nodes,

@@ -55,18 +55,18 @@ function NodeThree() {
         return;
       }
       setNestNode(String(overId), String(activeId));
-      console.log("drop to ProcessNode:", activeId, "->", overId);
+      // console.log("drop to ProcessNode:", activeId, "->", overId);
     } else {
       // 通常のノード移動
       moveNodeInStructure(String(activeId), String(overId));
-      console.log("move node:", activeId, overId);
+      // console.log("move node:", activeId, overId);
     }
   };
 
   const handleDragEnd = () => {
     // ドラッグ終了時に記憶をリセット
     lastExecutedRef.current = null;
-    console.log("drag end");
+    // console.log("drag end");
   };
 
   return (
