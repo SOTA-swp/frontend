@@ -1,3 +1,4 @@
+// TODO: planIDとかいらんのか？
 export default interface LocationDataType {
   id: string;
   title: string;

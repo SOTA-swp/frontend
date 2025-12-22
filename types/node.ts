@@ -6,6 +6,7 @@ export const NODE_TYPES = {
 
 export type NodeType = (typeof NODE_TYPES)[keyof typeof NODE_TYPES];
 
+// TODO: PlanIDはいらん？
 export default interface NodeDataType {
   id: string;
   planId: string;
