@@ -20,13 +20,18 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
     updateNode(id, { name: value });
   };
 
+  const isLocationMissing = !location;
+  const title = isLocationMissing
+    ? "❗️ロケーションが見つかりません"
+    : location.title;
+
   return (
     <div className="flex items-center justify-between">
       <div
         className={clsx("flex items-center gap-2 min-w-0", styles.content)}
         title={name}>
-        <EmojiIcon size={"lg"}>
-          {getFirstChar(name || location.title)}
+        <EmojiIcon size={"lg"} color={isLocationMissing ? "error" : "primary"}>
+          {getFirstChar(name || title)}
         </EmojiIcon>
         <div className="flex flex-col flex-1 min-w-0">
           <EditElement
@@ -36,7 +41,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
               <TextField
                 label="プロセス名"
                 value={name}
-                placeholder={location.title}
+                placeholder={title}
                 onChange={(e) => handleNameChange(e.target.value)}
                 fullWidth
                 className="field-sizing-fixed"
@@ -44,14 +49,18 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
             }
             readElement={
               <p className="truncate min-h-4 min-w-4">
-                {removeEmoji(name || location.title)}
+                {removeEmoji(name || title)}
               </p>
             }
             position="absolute"
             className="min-w-0"
           />
-          <p className="text-text-secondary text-[14px] truncate leading-none">
-            {location.title}
+          <p
+            className={clsx(
+              " text-[14px] truncate leading-none",
+              isLocationMissing ? "text-error" : "text-text-secondary"
+            )}>
+            {title}
           </p>
         </div>
       </div>
