@@ -1,13 +1,9 @@
 "use client";
-
-import NodeDataType from "@/types/node";
-import FIELD_NAMES from "./FIELD_NAMES";
 import clsx from "clsx";
-import { usePlanStore } from "../../../_store/hook";
 
 interface ToggleElementProps {
-  id: NodeDataType["id"];
-  fieldName: (typeof FIELD_NAMES)[keyof typeof FIELD_NAMES];
+  isEditing?: boolean;
+  onClick?: () => void;
   editElement: React.ReactNode;
   readElement: React.ReactNode;
   className?: string;
@@ -15,24 +11,14 @@ interface ToggleElementProps {
 }
 
 function EditElement({
-  id,
-  fieldName,
+  isEditing = false,
+  onClick,
   editElement,
   readElement,
   className,
   position = "inline",
 }: ToggleElementProps) {
-  const wrapperId = `${id}-${fieldName}`;
-  const editFieldId = usePlanStore((state) => state.editFieldId);
-  const setEditFieldId = usePlanStore((state) => state.setEditFieldId);
-
-  const edited = editFieldId === wrapperId;
-
-  const handleEdited = () => {
-    setEditFieldId(wrapperId);
-  };
-
-  if (edited) {
+  if (isEditing) {
     return (
       <div className="relative flex items-center">
         {position === "absolute" && (
@@ -49,7 +35,7 @@ function EditElement({
     );
   } else {
     return (
-      <button className={clsx("text-start", className)} onClick={handleEdited}>
+      <button className={clsx("text-start", className)} onClick={onClick}>
         {readElement}
       </button>
     );

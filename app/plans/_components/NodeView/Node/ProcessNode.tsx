@@ -2,7 +2,6 @@
 
 import NodeDataType from "@/types/node";
 import EditElement from "./EditElement";
-import FIELD_NAMES from "./FIELD_NAMES";
 import TextField from "@/components/TextField";
 import Node from "./Node";
 import TimeContent from "./TimeContent";
@@ -17,6 +16,7 @@ import {
 } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
 import { usePlanStore } from "../../../_store/hook";
+import { useInlineEdit } from "@/app/plans/_hooks/useInlineEdit";
 
 interface ProcessNodeProps extends NodeDataType {
   depth?: number;
@@ -28,6 +28,8 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
   const openNode = usePlanStore((state) => state.openNode);
   const open = !usePlanStore((state) => state.closeNodeIds.includes(id));
   const childrenNodes = usePlanStore((state) => state.structure[id]) || [];
+  const { isEditing, handleOnEditing, inlineEditInputHandlers } =
+    useInlineEdit();
 
   const noneChildren = childrenNodes.length === 0;
 
@@ -72,14 +74,15 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
               !open && "rounded-b-lg"
             )}>
             <EditElement
-              id={id}
-              fieldName={FIELD_NAMES.NAME}
+              isEditing={isEditing}
+              onClick={handleOnEditing}
               editElement={
                 <TextField
                   label="プロセス名"
                   value={name}
                   fullWidth
                   onChange={(e) => handleNameChange(e.target.value)}
+                  {...inlineEditInputHandlers}
                 />
               }
               readElement={

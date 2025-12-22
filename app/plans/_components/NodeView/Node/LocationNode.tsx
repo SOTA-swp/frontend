@@ -3,18 +3,20 @@ import EmojiIcon from "@/components/EmojiIcon";
 import NodeDataType from "@/types/node";
 import TimeContent from "./TimeContent";
 import EditElement from "./EditElement";
-import FIELD_NAMES from "./FIELD_NAMES";
 import TextField from "@/components/TextField";
 import { getFirstChar, removeEmoji } from "@/utils/removeEmoji";
 import clsx from "clsx";
 import styles from "./styles.module.css";
 import { usePlanStore } from "../../../_store/hook";
+import { useInlineEdit } from "@/app/plans/_hooks/useInlineEdit";
 
 type LocationNodeProps = NodeDataType;
 
 function LocationNode({ id, locationId, name }: LocationNodeProps) {
   const updateNode = usePlanStore((state) => state.updateNode);
   const location = usePlanStore((state) => state.locations[locationId]);
+  const { isEditing, handleOnEditing, inlineEditInputHandlers } =
+    useInlineEdit();
 
   const handleNameChange = (value: string) => {
     updateNode(id, { name: value });
@@ -35,8 +37,8 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
         </EmojiIcon>
         <div className="flex flex-col flex-1 min-w-0">
           <EditElement
-            id={id}
-            fieldName={FIELD_NAMES.NAME}
+            isEditing={isEditing}
+            onClick={handleOnEditing}
             editElement={
               <TextField
                 label="プロセス名"
@@ -45,6 +47,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
                 onChange={(e) => handleNameChange(e.target.value)}
                 fullWidth
                 className="field-sizing-fixed"
+                {...inlineEditInputHandlers}
               />
             }
             readElement={
