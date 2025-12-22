@@ -8,6 +8,7 @@ export interface LocationState {
 
 export interface LocationActions {
   setLocations: (locationList: LocationDataType[]) => void;
+  addLocation: (location: LocationDataType) => void;
   updateLocation: (
     id: string,
     updatedFields: Partial<LocationDataType>
@@ -36,6 +37,14 @@ export const createLocationSlice: StateCreator<LocationStore> = (set) => ({
       {} as Record<string, LocationDataType>
     );
     set({ locations: locationMap });
+  },
+  addLocation: (location) => {
+    set((state) => ({
+      locations: {
+        ...state.locations,
+        [location.id]: location,
+      },
+    }));
   },
   updateLocation: (id, updatedFields) => {
     set((state) => ({
