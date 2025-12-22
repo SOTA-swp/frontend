@@ -1,12 +1,12 @@
 "use client";
 
-import NodeType from "@/types/node";
+import NodeDataType from "@/types/node";
 import FIELD_NAMES from "./FIELD_NAMES";
 import clsx from "clsx";
 import { usePlanStore } from "../../../_store/hook";
 
 interface ToggleElementProps {
-  id: NodeType["id"];
+  id: NodeDataType["id"];
   fieldName: (typeof FIELD_NAMES)[keyof typeof FIELD_NAMES];
   editElement: React.ReactNode;
   readElement: React.ReactNode;

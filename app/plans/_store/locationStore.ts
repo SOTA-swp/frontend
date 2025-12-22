@@ -1,14 +1,17 @@
-import LocationType from "@/types/location";
+import LocationDataType from "@/types/location";
 import { StateCreator } from "zustand";
 
 export interface LocationState {
-  locations: Record<string, LocationType>;
+  locations: Record<string, LocationDataType>;
   closedLocationIds: string[];
 }
 
 export interface LocationActions {
-  setLocations: (locationList: LocationType[]) => void;
-  updateLocation: (id: string, updatedFields: Partial<LocationType>) => void;
+  setLocations: (locationList: LocationDataType[]) => void;
+  updateLocation: (
+    id: string,
+    updatedFields: Partial<LocationDataType>
+  ) => void;
   removeLocation: (id: string) => void;
 
   closeLocation: (id: string) => void;
@@ -25,12 +28,12 @@ export const defaultLocationStore: LocationState = {
 export const createLocationSlice: StateCreator<LocationStore> = (set) => ({
   ...defaultLocationStore,
   setLocations: (locationList) => {
-    const locationMap: Record<string, LocationType> = locationList.reduce(
+    const locationMap: Record<string, LocationDataType> = locationList.reduce(
       (acc, location) => {
         acc[location.id] = location;
         return acc;
       },
-      {} as Record<string, LocationType>
+      {} as Record<string, LocationDataType>
     );
     set({ locations: locationMap });
   },

@@ -1,6 +1,6 @@
 "use client";
 
-import NodeType from "@/types/node";
+import NodeDataType from "@/types/node";
 import EditElement from "./EditElement";
 import FIELD_NAMES from "./FIELD_NAMES";
 import TextField from "@/components/TextField";
@@ -18,7 +18,7 @@ import {
 import { useDroppable } from "@dnd-kit/core";
 import { usePlanStore } from "../../../_store/hook";
 
-interface ProcessNodeProps extends NodeType {
+interface ProcessNodeProps extends NodeDataType {
   depth?: number;
 }
 

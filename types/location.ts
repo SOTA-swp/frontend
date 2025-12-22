@@ -1,4 +1,4 @@
-export default interface LocationType {
+export default interface LocationDataType {
   id: string;
   title: string;
   address: string;
@@ -10,8 +10,8 @@ export default interface LocationType {
 
 export const createMockLocation = (
   num: number = 0,
-  props?: Partial<LocationType>
-): LocationType => ({
+  props?: Partial<LocationDataType>
+): LocationDataType => ({
   id: `location-${num}`,
   title: `モック施設名${num}`,
   address: `モック住所${num}`,

@@ -1,7 +1,15 @@
-export default interface NodeType {
+export const NODE_TYPES = {
+  PROCESS: "process",
+  LOCATION: "location",
+  MOVE: "move",
+} as const;
+
+export type NodeType = (typeof NODE_TYPES)[keyof typeof NODE_TYPES];
+
+export default interface NodeDataType {
   id: string;
   planId: string;
-  nodeType: "process" | "location" | "move";
+  nodeType: NodeType;
   name: string;
   startTime: string;
   endTime: string;
@@ -13,8 +21,8 @@ export default interface NodeType {
 
 export const createMockNode = (
   num: number = 0,
-  props?: Partial<NodeType>
-): NodeType => ({
+  props?: Partial<NodeDataType>
+): NodeDataType => ({
   id: `mock-node-id${num}`,
   planId: `mock-plan-id${num}`,
   nodeType: "process",

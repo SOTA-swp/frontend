@@ -1,6 +1,6 @@
 "use client";
 import EmojiIcon from "@/components/EmojiIcon";
-import NodeType from "@/types/node";
+import NodeDataType from "@/types/node";
 import TimeContent from "./TimeContent";
 import EditElement from "./EditElement";
 import FIELD_NAMES from "./FIELD_NAMES";
@@ -10,7 +10,7 @@ import clsx from "clsx";
 import styles from "./styles.module.css";
 import { usePlanStore } from "../../../_store/hook";
 
-type LocationNodeProps = NodeType;
+type LocationNodeProps = NodeDataType;
 
 function LocationNode({ id, locationId, name }: LocationNodeProps) {
   const updateNode = usePlanStore((state) => state.updateNode);
