@@ -9,6 +9,9 @@ import clsx from "clsx";
 import styles from "./styles.module.css";
 import { usePlanStore } from "../../../_store/hook";
 import { useInlineEdit } from "@/app/plans/_hooks/useInlineEdit";
+import usePopover from "@/components/popover/usePopover";
+import Popover from "@/components/popover/Popover";
+import LocationSelector from "./LocationSelector";
 
 type LocationNodeProps = NodeDataType;
 
@@ -17,6 +20,12 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
   const location = usePlanStore((state) => state.locations[locationId]);
   const { isEditing, handleOnEditing, inlineEditInputHandlers } =
     useInlineEdit();
+  const {
+    open: openSelector,
+    anchorEl: selectorAnchorEl,
+    handleOpen: handleSelectorOpen,
+    handleClose: handleSelectorClose,
+  } = usePopover();
 
   const handleNameChange = (value: string) => {
     updateNode(id, { name: value });
@@ -29,12 +38,27 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
 
   return (
     <div className="flex items-center justify-between">
+      <Popover
+        open={openSelector}
+        anchorEl={selectorAnchorEl}
+        onClose={handleSelectorClose}
+        placement="top-start">
+        <LocationSelector nodeId={id} onClose={handleSelectorClose} />
+      </Popover>
+
       <div
         className={clsx("flex items-center gap-2 min-w-0", styles.content)}
         title={name}>
-        <EmojiIcon size={"lg"} color={isLocationMissing ? "error" : "primary"}>
-          {getFirstChar(name || title)}
-        </EmojiIcon>
+        <button
+          onClick={handleSelectorOpen}
+          title="ロケーションを変更"
+          className="hover:scale-105 hover:rotate-12 transition-all">
+          <EmojiIcon
+            size={"lg"}
+            color={isLocationMissing ? "error" : "primary"}>
+            {getFirstChar(name || title)}
+          </EmojiIcon>
+        </button>
         <div className="flex flex-col flex-1 min-w-0">
           <EditElement
             isEditing={isEditing}
@@ -58,13 +82,15 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
             position="absolute"
             className="min-w-0"
           />
-          <p
-            className={clsx(
-              " text-[14px] truncate leading-none",
-              isLocationMissing ? "text-error" : "text-text-secondary"
-            )}>
-            {title}
-          </p>
+          <button onClick={handleSelectorOpen} title="ロケーションを変更">
+            <p
+              className={clsx(
+                "text-start text-[14px] truncate leading-none",
+                isLocationMissing ? "text-error" : "text-text-secondary"
+              )}>
+              {title}
+            </p>
+          </button>
         </div>
       </div>
       <TimeContent id={id} />
