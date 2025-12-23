@@ -1,6 +1,7 @@
 import CommonButton from "@/components/CommonButton";
 import CommonText from "@/components/CommonText";
 import TextField from "@/components/TextField";
+import PATH from "@/consts/PATH";
 
 export interface TopPageProps {
   a: undefined;
@@ -31,7 +32,7 @@ const TopPage: React.FC<TopPageProps> = ({}) => {
           />
         </div>
         <div className="flex justify-center gap-80">
-          <CommonButton variant="text" color="primary" size="xs">
+          <CommonButton variant="text" color="primary" size="xs" href={PATH.REGISTER}>
             アカウント新規作成
           </CommonButton>
           <CommonButton
