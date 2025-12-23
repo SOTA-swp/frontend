@@ -1,15 +1,13 @@
 "use client";
-import { ModalPayload, useModalStore } from "./modalStore";
+import { useModalStore } from "./modalStore";
 import { AnimatePresence, motion } from "motion/react";
 import LAYER from "@/consts/LAYER";
-import ModalContent from "./ModalContent";
+import { ReactNode } from "react";
 
 function Modal() {
   const { isOpen, payloadQueue, closeModal, shiftQueue } = useModalStore();
-  const modalPayload: ModalPayload =
-    payloadQueue.length === 0
-      ? { modalType: "default", title: null, content: null, actions: [] }
-      : payloadQueue[0];
+  const modalPayload: ReactNode =
+    payloadQueue.length === 0 ? null : payloadQueue[0];
 
   return (
     <AnimatePresence onExitComplete={shiftQueue}>
@@ -31,7 +29,7 @@ function Modal() {
             exit={{ opacity: 0, y: 200, transition: { damping: 400 } }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
           >
-            <ModalContent {...modalPayload} closeModal={closeModal} />
+            {modalPayload}
           </motion.div>
         </motion.div>
       )}

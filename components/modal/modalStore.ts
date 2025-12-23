@@ -1,16 +1,10 @@
+import { ReactNode } from "react";
 import { create } from "zustand";
-
-export interface ModalPayload {
-  modalType: "default" | "error";
-  title: React.ReactNode;
-  content: React.ReactNode;
-  actions: React.ReactNode[];
-}
 
 export interface ModalState {
   isOpen: boolean;
-  payloadQueue: ModalPayload[];
-  openModal: (content: ModalPayload) => void;
+  payloadQueue: ReactNode[];
+  openModal: (content: ReactNode) => void;
   closeModal: () => void;
   shiftQueue: () => void;
 }
