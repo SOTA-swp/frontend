@@ -134,9 +134,7 @@ function CommonHeader() {
             <IconButton
               icon={<MdNotifications />}
               variant="iconOnly"
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) =>
-                handleOpen(e.currentTarget)
-              }
+              onClick={handleOpen}
             />
             <Notification
               open={open}
