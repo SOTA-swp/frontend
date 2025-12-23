@@ -7,7 +7,7 @@ export interface TopPageProps {
   a: undefined;
 }
 
-const TopPage: React.FC<TopPageProps> = ({}) => {
+const LoginPage: React.FC<TopPageProps> = ({}) => {
   return (
     <div className="flex flex-col h-screen justify-evenly">
       <div className="flex  items-center justify-center">
@@ -32,7 +32,12 @@ const TopPage: React.FC<TopPageProps> = ({}) => {
           />
         </div>
         <div className="flex justify-center gap-80">
-          <CommonButton variant="text" color="primary" size="xs" href={PATH.REGISTER}>
+          <CommonButton
+            variant="text"
+            color="primary"
+            size="xs"
+            href={PATH.REGISTER}
+          >
             アカウント新規作成
           </CommonButton>
           <CommonButton
@@ -49,4 +54,4 @@ const TopPage: React.FC<TopPageProps> = ({}) => {
   );
 };
 
-export default TopPage;
+export default LoginPage;

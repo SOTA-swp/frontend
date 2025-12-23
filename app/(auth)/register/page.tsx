@@ -6,7 +6,7 @@ export interface TopPageProps {
   a: undefined;
 }
 
-const TopPage: React.FC<TopPageProps> = ({}) => {
+const RegisterPage: React.FC<TopPageProps> = ({}) => {
   return (
     <div className="flex flex-col h-screen justify-evenly">
       <div className="flex items-center justify-center">
@@ -51,4 +51,4 @@ const TopPage: React.FC<TopPageProps> = ({}) => {
   );
 };
 
-export default TopPage;
+export default RegisterPage;
