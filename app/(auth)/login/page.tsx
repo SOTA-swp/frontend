@@ -3,11 +3,7 @@ import CommonText from "@/components/CommonText";
 import TextField from "@/components/TextField";
 import PATH from "@/consts/PATH";
 
-export interface TopPageProps {
-  a: undefined;
-}
-
-const LoginPage: React.FC<TopPageProps> = ({}) => {
+const LoginPage = () => {
   return (
     <div className="flex flex-col h-screen justify-evenly">
       <div className="flex  items-center justify-center">

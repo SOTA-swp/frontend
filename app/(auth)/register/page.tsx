@@ -2,11 +2,7 @@ import CommonButton from "@/components/CommonButton";
 import CommonText from "@/components/CommonText";
 import TextField from "@/components/TextField";
 
-export interface TopPageProps {
-  a: undefined;
-}
-
-const RegisterPage: React.FC<TopPageProps> = ({}) => {
+const RegisterPage = () => {
   return (
     <div className="flex flex-col h-screen justify-evenly">
       <div className="flex items-center justify-center">
