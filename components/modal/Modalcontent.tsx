@@ -1,6 +1,5 @@
-import React from "react";
 import { motion } from "motion/react";
-import IconButton from "./IconButton";
+import IconButton from "../IconButton";
 import LAYER from "@/consts/LAYER";
 import { MdClose } from "react-icons/md";
 
@@ -14,14 +13,7 @@ export default function ModalContent({
   children,
 }: ModalContentProps) {
   return (
-    <motion.div
-      onClick={(e) => e.stopPropagation()}
-      initial={{ opacity: 0, y: 200 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 200, transition: { damping: 400 } }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      className="relative flex flex-col justify-between max-w-[800px] min-w-[700px] max-h-[500px] min-h-[400px] bg-paper rounded-lg shadow-2xl"
-    >
+    <motion.div className="relative flex flex-col justify-between max-w-[800px] min-w-[700px] max-h-[500px] min-h-[400px] bg-paper rounded-lg shadow-2xl">
       <IconButton
         onClick={closeModal}
         icon={<MdClose />}

@@ -2,7 +2,7 @@
 import { ModalPayload, useModalStore } from "./modalStore";
 import { AnimatePresence, motion } from "motion/react";
 import LAYER from "@/consts/LAYER";
-import ModalContent from "../modalcontent";
+import ModalContent from "./ModalContent";
 
 function Modal() {
   const { isOpen, payloadQueue, closeModal, shiftQueue } = useModalStore();
@@ -24,9 +24,15 @@ function Modal() {
           style={{ zIndex: LAYER.MODAL }}
         >
           {/* 本体はmodalcontentに切り出し */}
-          <div onClick={(e) => e.stopPropagation()}>
+          <motion.div
+            onClick={(e) => e.stopPropagation()}
+            initial={{ opacity: 0, y: 200 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 200, transition: { damping: 400 } }}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}
+          >
             <ModalContent {...modalPayload} closeModal={closeModal} />
-          </div>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
