@@ -244,9 +244,7 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
             </CommonButton>
           </div>
           <div className="flex gap-2 p-4">
-            <CommonButton onClick={(e) => handleOpen(e.currentTarget)}>
-              ポップオーバー
-            </CommonButton>
+            <CommonButton onClick={handleOpen}>ポップオーバー</CommonButton>
             <Popover open={open} anchorEl={anchorEl} onClose={handleClose}>
               ポップオーバー
             </Popover>
