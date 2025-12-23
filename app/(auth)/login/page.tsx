@@ -9,13 +9,13 @@ export interface TopPageProps {
 const TopPage: React.FC<TopPageProps> = ({}) => {
   return (
     <div className="flex flex-col h-screen justify-evenly">
-      <form className="flex  items-center justify-center">
+      <div className="flex  items-center justify-center">
         <CommonText className="items-center" level="h1">
           ログイン
         </CommonText>
-      </form>
+      </div>
 
-      <div className="flex flex-col gap-16 items-center">
+      <form className="flex flex-col gap-16 items-center">
         <div className="flex flex-col items-center gap-16 w-[500px]">
           <TextField
             label="mail_address"
@@ -31,14 +31,19 @@ const TopPage: React.FC<TopPageProps> = ({}) => {
           />
         </div>
         <div className="flex justify-center gap-80">
-          <CommonButton variant="text" color="primary" size="xs" type="submit">
+          <CommonButton variant="text" color="primary" size="xs">
             アカウント新規作成
           </CommonButton>
-          <CommonButton variant="contain" color="primary" size="lg">
+          <CommonButton
+            variant="contain"
+            color="primary"
+            size="lg"
+            type="submit"
+          >
             ログイン
           </CommonButton>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
