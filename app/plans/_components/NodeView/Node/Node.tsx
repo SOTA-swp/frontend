@@ -10,14 +10,26 @@ import { AnimatePresence, motion } from "motion/react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { usePlanStore } from "../../../_store/hook";
+import AddNodeBar from "./AddNodeBar";
+import NodeDataType from "@/types/node";
+import { PARENT_ID_ROOT } from "@/app/plans/_util/createNode";
 
 export interface NodeProps {
   id: string;
+  parentId?: NodeDataType["id"];
+  order?: number;
   depth?: number;
+  isLast?: boolean;
   readOnly?: boolean;
 }
 
-function Node({ id, depth = 0 }: NodeProps) {
+function Node({
+  id,
+  parentId = PARENT_ID_ROOT,
+  order = 0,
+  depth = 0,
+  isLast = false,
+}: NodeProps) {
   const node = usePlanStore((state) => state.nodes[id]);
   const hoveredNodeId = usePlanStore((state) => state.hoveredNodeId);
   const setHoveredNodeId = usePlanStore((state) => state.setHoveredNodeId);
@@ -75,54 +87,60 @@ function Node({ id, depth = 0 }: NodeProps) {
     }
   })();
 
+  const addBar = <AddNodeBar parentId={parentId} order={order} />;
+
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      onMouseOver={handleMouseOver}
-      onMouseLeave={handleMouseLeave}
-      className={clsx(
-        "relative flex items-center gap-2 select-none",
-        isProcessNode && "items-start",
-        isDragging && "opacity-80"
-      )}>
-      <span
+    <>
+      {addBar}
+      <div
+        ref={setNodeRef}
+        style={style}
+        onMouseOver={handleMouseOver}
+        onMouseLeave={handleMouseLeave}
         className={clsx(
-          "text-text-secondary cursor-grab transition-opacity",
-          isProcessNode && "pt-5",
-          !isHovered && "opacity-0"
+          "relative flex items-center gap-2 select-none",
+          isProcessNode && "items-start",
+          isDragging && "opacity-80"
         )}>
-        <span {...attributes} {...listeners}>
-          <MdDragIndicator />
+        <span
+          className={clsx(
+            "text-text-secondary cursor-grab transition-opacity",
+            isProcessNode && "pt-5",
+            !isHovered && "opacity-0"
+          )}>
+          <span {...attributes} {...listeners}>
+            <MdDragIndicator />
+          </span>
         </span>
-      </span>
-      <span
-        className={clsx(
-          "flex-1 p-2 pr-0 ",
-          !isProcessNode &&
-            "border border-r-0 rounded-l-full transition-colors",
-          !isProcessNode && !isHovered && "border-transparent",
-          !isProcessNode && isHovered && "border-accent  shadow-md"
-        )}>
-        {content}
-      </span>
-      <AnimatePresence>
-        {isHovered && (
-          <motion.span
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="absolute left-full p-4">
-            <IconButton
-              onClick={handleDelete}
-              icon={<MdDelete />}
-              color={"error"}
-              title="削除する"
-            />
-          </motion.span>
-        )}
-      </AnimatePresence>
-    </div>
+        <span
+          className={clsx(
+            "flex-1 p-2 pr-0 ",
+            !isProcessNode &&
+              "border border-r-0 rounded-l-full transition-colors",
+            !isProcessNode && !isHovered && "border-transparent",
+            !isProcessNode && isHovered && "border-accent  shadow-md"
+          )}>
+          {content}
+        </span>
+        <AnimatePresence>
+          {isHovered && (
+            <motion.span
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="absolute left-full p-4">
+              <IconButton
+                onClick={handleDelete}
+                icon={<MdDelete />}
+                color={"error"}
+                title="削除する"
+              />
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </div>
+      {isLast && addBar}
+    </>
   );
 }
 

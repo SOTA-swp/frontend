@@ -109,7 +109,7 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
           <SortableContext
             items={childrenNodes}
             strategy={verticalListSortingStrategy}>
-            <div className="flex flex-col gap-2 p-4 pr-0 ">
+            <div className="flex flex-col p-4 pr-0 ">
               {noneChildren && (
                 <div
                   className={clsx(
@@ -121,8 +121,15 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
                   </p>
                 </div>
               )}
-              {childrenNodes?.map((childId) => (
-                <Node key={childId} id={childId} depth={depth + 1} />
+              {childrenNodes?.map((childId, i) => (
+                <Node
+                  key={childId}
+                  id={childId}
+                  parentId={id}
+                  order={i}
+                  depth={depth + 1}
+                  isLast={i === childrenNodes.length - 1}
+                />
               ))}
             </div>
           </SortableContext>
