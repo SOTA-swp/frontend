@@ -38,7 +38,7 @@ function AddNodeBar({
               width: "100%",
             },
           }}
-          className="border-primary absolute left-0"
+          className="border-primary border-dashed absolute left-0"
         />
       )}
 
