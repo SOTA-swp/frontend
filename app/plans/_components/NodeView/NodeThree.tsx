@@ -80,10 +80,16 @@ function NodeThree() {
         <div className="p-4 mr-[100px] content-start w-fit">
           <div className="flex flex-col gap-2">
             <SortableContext items={rootNodeIds}>
-              {rootNodeIds.map((nodeId) => (
-                <Node key={nodeId} id={nodeId} depth={0} />
+              {rootNodeIds.map((nodeId, i) => (
+                <Node
+                  key={nodeId}
+                  id={nodeId}
+                  parentId={PARENT_ID_ROOT}
+                  order={i}
+                  depth={0}
+                  isLast={i === rootNodeIds.length - 1}
+                />
               ))}
-              {}
             </SortableContext>
           </div>
         </div>
