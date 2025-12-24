@@ -9,9 +9,14 @@ import { createNode } from "@/app/plans/_util/createNode";
 interface AddNodeBarProps {
   parentId: NodeDataType["id"];
   order: number;
+  notAnimation?: boolean;
 }
 
-function AddNodeBar({ parentId, order }: AddNodeBarProps) {
+function AddNodeBar({
+  parentId,
+  order,
+  notAnimation = false,
+}: AddNodeBarProps) {
   const addNode = usePlanStore((state) => state.addNode);
 
   const handleAddNode = (type: NodeType) => {
@@ -21,19 +26,22 @@ function AddNodeBar({ parentId, order }: AddNodeBarProps) {
 
   return (
     <motion.div
-      animate={"close"}
+      animate={notAnimation ? "open" : "close"}
       whileHover={"open"}
       variants={{ close: { opacity: 0 }, open: { opacity: 1 } }}
       className="relative pr-2 h-3 flex items-center justify-center">
-      <motion.hr
-        variants={{
-          close: { width: 0 },
-          open: {
-            width: "100%",
-          },
-        }}
-        className="border-primary absolute left-0"
-      />
+      {!notAnimation && (
+        <motion.hr
+          variants={{
+            close: { width: 0 },
+            open: {
+              width: "100%",
+            },
+          }}
+          className="border-primary absolute left-0"
+        />
+      )}
+
       <motion.div
         variants={{
           open: { transition: { staggerChildren: 0.05 } },
@@ -54,6 +62,8 @@ function AddNodeBar({ parentId, order }: AddNodeBarProps) {
               onClick={() => handleAddNode(type as NodeType)}
               title={`${title}を追加`}
               icon={icon}
+              color={notAnimation ? "gray" : "primary"}
+              variant={notAnimation ? "outline" : "contain"}
               size={"sm"}
             />
           </motion.div>

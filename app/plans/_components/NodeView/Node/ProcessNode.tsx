@@ -6,7 +6,7 @@ import TextField from "@/components/TextField";
 import Node from "./Node";
 import TimeContent from "./TimeContent";
 import IconButton from "@/components/IconButton";
-import { MdArrowDropDown } from "react-icons/md";
+import { MdArrowDownward, MdArrowDropDown } from "react-icons/md";
 import clsx from "clsx";
 import styles from "./styles.module.css";
 import { motion } from "motion/react";
@@ -17,6 +17,7 @@ import {
 import { useDroppable } from "@dnd-kit/core";
 import { usePlanStore } from "../../../_store/hook";
 import { useInlineEdit } from "@/app/plans/_hooks/useInlineEdit";
+import AddNodeBar from "./AddNodeBar";
 
 interface ProcessNodeProps extends NodeDataType {
   depth?: number;
@@ -113,12 +114,16 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
               {noneChildren && (
                 <div
                   className={clsx(
-                    "p-3 mr-3 border border-dashed border-text-secondary/50 rounded-md text-center transition-colors",
+                    "flex flex-col items-center gap-4 px-2 py-6 mr-3 border border-dashed border-text-secondary/50 rounded-md text-center transition-colors",
                     isOver ? "bg-accent/10" : "bg-paper"
                   )}>
-                  <p className="text-text-secondary text-sm">
-                    要素を追加しよう！
-                  </p>
+                  <div className="flex gap-1 items-baseline text-text-secondary text-sm">
+                    <p>要素を追加しよう！</p>
+                    <span>
+                      <MdArrowDownward />
+                    </span>
+                  </div>
+                  <AddNodeBar parentId={id} order={0} notAnimation />
                 </div>
               )}
               {childrenNodes?.map((childId, i) => (
