@@ -13,6 +13,7 @@ import { useShallow } from "zustand/shallow";
 import { SortableContext } from "@dnd-kit/sortable";
 import { usePlanStore } from "../../_store/hook";
 import { PARENT_ID_ROOT } from "../../_util/createNode";
+import NullBox from "./NullBox";
 
 function NodeThree() {
   const structure = usePlanStore(useShallow((state) => state.structure));
@@ -75,13 +76,22 @@ function NodeThree() {
       collisionDetection={closestCorners}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}>
-      <div className="p-4 mr-[100px] flex flex-col items-start gap-2 content-start w-fit">
-        <SortableContext items={rootNodeIds}>
-          {rootNodeIds.map((nodeId) => (
-            <Node key={nodeId} id={nodeId} depth={0} />
-          ))}
-        </SortableContext>
-      </div>
+      {rootNodeIds.length > 0 ? (
+        <div className="p-4 mr-[100px] content-start w-fit">
+          <div className="flex flex-col gap-2">
+            <SortableContext items={rootNodeIds}>
+              {rootNodeIds.map((nodeId) => (
+                <Node key={nodeId} id={nodeId} depth={0} />
+              ))}
+              {}
+            </SortableContext>
+          </div>
+        </div>
+      ) : (
+        <div className="w-full h-full flex flex-col p-4 pr-0">
+          <NullBox id={PARENT_ID_ROOT} />
+        </div>
+      )}
     </DndContext>
   );
 }

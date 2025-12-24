@@ -26,7 +26,7 @@ function ViewWrapper({
       <div
         className={clsx(
           "h-full",
-          overflow === "auto" ? "overflow-scroll" : "overflow-clip"
+          overflow === "auto" ? "overflow-auto" : "overflow-clip"
         )}>
         {children}
       </div>
