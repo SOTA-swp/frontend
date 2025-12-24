@@ -1,6 +1,6 @@
 "use client";
 import IconButton from "@/components/IconButton";
-import { NODE_TYPE_ITEMS } from "../NODE_ITEMS";
+import { NODE_TYPE_ITEMS } from "./NODE_ITEMS";
 import { motion } from "motion/react";
 import NodeDataType, { NodeType } from "@/types/node";
 import { usePlanStore } from "@/app/plans/_store/hook";

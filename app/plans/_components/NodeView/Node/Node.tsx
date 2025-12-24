@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { usePlanStore } from "../../../_store/hook";
-import AddNodeBar from "./AddNodeBar";
+import AddNodeBar from "../AddNodeBar";
 import NodeDataType from "@/types/node";
 import { PARENT_ID_ROOT } from "@/app/plans/_util/createNode";
 

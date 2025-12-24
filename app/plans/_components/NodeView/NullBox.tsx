@@ -1,5 +1,5 @@
 import { MdArrowDownward } from "react-icons/md";
-import AddNodeBar from "./Node/AddNodeBar";
+import AddNodeBar from "./AddNodeBar";
 import clsx from "clsx";
 import NodeDataType from "@/types/node";
 
