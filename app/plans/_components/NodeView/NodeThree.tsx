@@ -78,7 +78,7 @@ function NodeThree() {
       onDragEnd={handleDragEnd}>
       {rootNodeIds.length > 0 ? (
         <div className="p-4 mr-[100px] content-start w-fit">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col">
             <SortableContext items={rootNodeIds}>
               {rootNodeIds.map((nodeId, i) => (
                 <Node
