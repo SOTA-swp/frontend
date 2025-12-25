@@ -21,6 +21,7 @@ export interface NodeActions {
     structure: Record<NodeDataType["id"], NodeDataType["id"][]>
   ) => void;
   moveNode: (activeId: NodeDataType["id"], overId: NodeDataType["id"]) => void;
+  moveNodeStep: (id: NodeDataType["id"], direction: "up" | "down") => void;
   addNode: (
     node: NodeDataType,
     parentId?: NodeDataType["id"],
@@ -125,6 +126,47 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
         ...newChildren.slice(overIndex),
       ];
       return { structure: { ...structure } };
+    });
+  },
+  moveNodeStep: (id, direction) => {
+    set((state) => {
+      const structure = { ...state.structure };
+      const parentId = findParentId(structure, id);
+      if (!parentId) return state;
+      const siblings = structure[parentId];
+      const index = siblings.indexOf(id);
+      if (index === -1) return state;
+      const newIndex = direction === "up" ? index - 1 : index + 1;
+
+      // 上限、下限にいる場合、親を超えて移動する
+      if (newIndex < 0 || newIndex >= siblings.length) {
+        const grandParentId = findParentId(structure, parentId);
+        if (!grandParentId) return state;
+        const parentSiblings = structure[grandParentId];
+        const parentIndex = parentSiblings.indexOf(parentId);
+        if (parentIndex === -1) return state;
+        structure[parentId] = siblings.filter((sid) => sid !== id);
+        // 親の上に移動
+        if (newIndex < 0) {
+          structure[grandParentId] = [
+            ...parentSiblings.slice(0, parentIndex),
+            id,
+            ...parentSiblings.slice(parentIndex),
+          ];
+        } else {
+          // 親の下に移動
+          structure[grandParentId] = [
+            ...parentSiblings.slice(0, parentIndex + 1),
+            id,
+            ...parentSiblings.slice(parentIndex + 1),
+          ];
+        }
+        return { structure: { ...structure } };
+      } else {
+        // 同じ親内での移動
+        structure[parentId] = arrayMove(siblings, index, newIndex);
+        return { structure: { ...structure } };
+      }
     });
   },
   setNestNode: (parentId, childId) => {

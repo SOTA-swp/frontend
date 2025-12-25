@@ -1,6 +1,11 @@
 "use client";
 import { MouseEvent as ReactMouseEvent } from "react";
-import { MdDelete, MdDragIndicator } from "react-icons/md";
+import {
+  MdArrowDownward,
+  MdArrowUpward,
+  MdDelete,
+  MdDragIndicator,
+} from "react-icons/md";
 import LocationNode from "./LocationNode";
 import MoveNode from "./MoveNode";
 import ProcessNode from "./ProcessNode";
@@ -34,6 +39,7 @@ function Node({
   const hoveredNodeId = usePlanStore((state) => state.hoveredNodeId);
   const setHoveredNodeId = usePlanStore((state) => state.setHoveredNodeId);
   const removeNode = usePlanStore((state) => state.removeNode);
+  const moveNodeStep = usePlanStore((state) => state.moveNodeStep);
 
   const {
     attributes,
@@ -122,18 +128,42 @@ function Node({
         </span>
         <AnimatePresence>
           {isHovered && (
-            <motion.span
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="absolute left-full p-4">
-              <IconButton
-                onClick={handleDelete}
-                icon={<MdDelete />}
-                color={"error"}
-                title="削除する"
-              />
-            </motion.span>
+              className="absolute left-full flex gap-4 p-4 items-center">
+              <div className="flex flex-col">
+                <motion.div>
+                  <IconButton
+                    onClick={() => moveNodeStep(id, "up")}
+                    icon={<MdArrowUpward />}
+                    variant={"iconOnly"}
+                    color={"gray"}
+                    size={"xs"}
+                    title="上に移動する"
+                  />
+                </motion.div>
+                <motion.div>
+                  <IconButton
+                    onClick={() => moveNodeStep(id, "down")}
+                    icon={<MdArrowDownward />}
+                    variant={"iconOnly"}
+                    color={"gray"}
+                    size={"xs"}
+                    title="下に移動する"
+                  />
+                </motion.div>
+              </div>
+              <motion.span>
+                <IconButton
+                  onClick={handleDelete}
+                  icon={<MdDelete />}
+                  color={"error"}
+                  title="削除する"
+                />
+              </motion.span>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
