@@ -6,7 +6,9 @@ export const createLocation = (
   const id = window.crypto.randomUUID();
   return {
     id,
-    title: "新しい場所",
+    title: "",
+    lat: 0,
+    lng: 0,
     address: "",
     description: "",
     thumbnail: "",
