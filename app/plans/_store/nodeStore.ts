@@ -20,10 +20,6 @@ export interface NodeActions {
   setStructure: (
     structure: Record<NodeDataType["id"], NodeDataType["id"][]>
   ) => void;
-  setStructureList: (
-    id: NodeDataType["id"],
-    childrenIds: NodeDataType["id"][]
-  ) => void;
   moveNode: (activeId: NodeDataType["id"], overId: NodeDataType["id"]) => void;
   addNode: (
     node: NodeDataType,
@@ -82,13 +78,6 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
     set({ nodes: nodesMap });
   },
   setStructure: (structure) => set({ structure }),
-  setStructureList: (id, childrenIds) =>
-    set((state) => ({
-      structure: {
-        ...state.structure,
-        [id]: childrenIds,
-      },
-    })),
   moveNode: (activeId, overId) => {
     set((state) => {
       const structure = { ...state.structure };
