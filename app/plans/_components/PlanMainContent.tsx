@@ -9,6 +9,7 @@ import { useState } from "react";
 import { AnimatePresence } from "motion/react";
 import IdeaSpaceView from "./IdeaSpaceView";
 import ViewGroupWrapper from "./ViewGroupWrapper";
+import HomeButton from "./HomeButton";
 
 interface PlanMainContentProps {
   readOnly?: boolean;
@@ -24,6 +25,7 @@ function PlanMainContent({}: PlanMainContentProps) {
 
   return (
     <div className="flex flex-col p-4 gap-4">
+      <HomeButton />
       <PlanInfo />
       <div className="flex flex-col gap-4 flex-none items-start h-[800px]">
         <Tab
