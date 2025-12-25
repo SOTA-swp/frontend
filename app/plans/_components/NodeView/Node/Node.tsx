@@ -69,7 +69,7 @@ function Node({
   };
 
   if (!node) {
-    return null;
+    return <p className="text-error p-2">ノードが見つかりません！</p>;
   }
 
   const { nodeType } = node;

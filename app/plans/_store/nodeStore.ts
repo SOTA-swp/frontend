@@ -194,7 +194,33 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
     set((state) => {
       const newNodes = { ...state.nodes };
       delete newNodes[id];
-      return { nodes: newNodes };
+      const newStructure = { ...state.structure };
+
+      const delChildrenList: NodeDataType["id"][] = [id];
+
+      // 子ノードも再帰的に検索してリストに加える関数
+      const searchDeleteChildren = (id: NodeDataType["id"]) => {
+        const children = newStructure[id] || [];
+        children.forEach((childId) => {
+          delChildrenList.push(childId);
+          searchDeleteChildren(childId);
+        });
+      };
+      searchDeleteChildren(id);
+
+      // 構造体から親のノードの参照のみ削除(どこにいるかわからないので全探索)
+      Object.keys(newStructure).forEach((parentId) => {
+        newStructure[parentId] = newStructure[parentId].filter(
+          (childId) => childId !== id
+        );
+      });
+      // 削除対象ノードとその子ノードを構造体から削除
+      delChildrenList.forEach((delId) => {
+        delete newNodes[delId];
+        delete newStructure[delId];
+      });
+
+      return { nodes: newNodes, structure: newStructure };
     });
   },
 
