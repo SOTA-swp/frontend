@@ -56,13 +56,25 @@ export const defaultNodeStore: NodeState = {
 
 // ancestorId が targetId の祖先ノードであるかを判定する再帰関数
 const isDescendant = (
-  structure: Record<NodeDataType["id"], NodeDataType["id"][]>,
+  structure: NodeState["structure"],
   ancestorId: NodeDataType["id"],
   targetId: NodeDataType["id"]
 ): boolean => {
   const children = structure[ancestorId] || [];
   if (children.includes(targetId)) return true;
   return children.some((childId) => isDescendant(structure, childId, targetId));
+};
+
+const findParentId = (
+  structure: NodeState["structure"],
+  nodeId: NodeDataType["id"]
+): NodeDataType["id"] | null => {
+  for (const parentId in structure) {
+    if (structure[parentId].includes(nodeId)) {
+      return parentId;
+    }
+  }
+  return null;
 };
 
 export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
@@ -86,13 +98,8 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
         return state;
       }
 
-      const findParentId = (nodeId: NodeDataType["id"]) =>
-        Object.keys(structure).find((parentId) =>
-          structure[parentId].includes(nodeId)
-        );
-
-      const activeParentId = findParentId(activeId);
-      const overParentId = findParentId(overId);
+      const activeParentId = findParentId(structure, activeId);
+      const overParentId = findParentId(structure, overId);
 
       if (!activeParentId || !overParentId) return state;
 
