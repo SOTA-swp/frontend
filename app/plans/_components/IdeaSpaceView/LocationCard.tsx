@@ -16,6 +16,7 @@ import { getFirstChar, removeEmoji } from "@/utils/removeEmoji";
 import Image from "next/image";
 import AddButton from "@/components/AddButton";
 import IconButton from "@/components/IconButton";
+import { useLocationSearch } from "../../_hooks/useLocationSearch";
 
 const MOTION_ELEMENTS = {
   ICON: "icon",
@@ -48,6 +49,15 @@ function LocationCard({ id }: LocationCardProps) {
   const removeLocation = usePlanStore((state) => state.removeLocation);
   const openLocation = usePlanStore((state) => state.openLocation);
   const closeLocation = usePlanStore((state) => state.closeLocation);
+
+  const { inputRef } = useLocationSearch((result) => {
+    updateLocation(id, {
+      title: result.name,
+      address: result.address,
+      lat: result.lat,
+      lng: result.lng,
+    });
+  });
 
   // ロケーションが存在しない場合は何も表示しない
   if (!location) {
@@ -129,6 +139,7 @@ function LocationCard({ id }: LocationCardProps) {
                     transition={commonTransition(45)}
                     className="flex-2">
                     <TextField
+                      ref={inputRef}
                       label="ロケーション名"
                       value={location.title}
                       onChange={(e) =>
