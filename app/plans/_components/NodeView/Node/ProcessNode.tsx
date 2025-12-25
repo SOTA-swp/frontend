@@ -109,7 +109,8 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
           )}>
           <SortableContext
             items={childrenNodes}
-            strategy={verticalListSortingStrategy}>
+            strategy={verticalListSortingStrategy}
+            disabled={!open}>
             <div className="flex flex-col p-4 pr-0 ">
               {noneChildren && <NullBox id={id} isOver={isOver} />}
               {childrenNodes?.map((childId, i) => (
