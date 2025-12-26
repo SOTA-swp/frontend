@@ -73,11 +73,9 @@ function TextField<T extends boolean = false>({
         <label
           htmlFor={label}
           className={clsx(
-            "absolute left-2 text-[14px] bg-paper rounded-md border  select-none transition-all duration-200",
-            isFocus && "border-primary bg-primary text-paper! px-3 -top-3",
+            "absolute left-2 text-[14px] bg-paper rounded-md border  select-none transition-all duration-200 -top-3",
+            isFocus && "border-primary bg-primary text-paper! px-3 ",
             !isFocus && "border-border text-text-secondary px-2",
-            !isFocus && !props.value && "top-2",
-            !isFocus && (props.value || props.placeholder) && "-top-3!",
             error && "border-error! text-error! ",
             error && isFocus && "bg-error!"
           )}>
