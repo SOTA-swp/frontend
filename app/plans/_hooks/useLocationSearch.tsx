@@ -1,7 +1,7 @@
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import { useEffect, useRef, useState } from "react";
 
-interface LocationSearchResult {
+export interface LocationSearchResult {
   name: string;
   address: string;
   lat: number;
@@ -32,6 +32,7 @@ export const useLocationSearch = (
   // 場所が選択されたときの処理
   useEffect(() => {
     if (!autocomplete) return;
+    google.maps.event.clearInstanceListeners(autocomplete);
 
     const listener = autocomplete.addListener("place_changed", () => {
       const place = autocomplete.getPlace();
