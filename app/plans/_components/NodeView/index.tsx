@@ -8,7 +8,7 @@ import { usePlanStore } from "../../_store/hook";
 import { NODE_TYPES, NodeType } from "@/types/node";
 import { createNode } from "../../_util/createNode";
 import { NODE_TYPE_ITEMS } from "./NODE_ITEMS";
-import { useAddWithScroll } from "../../_hooks/useAddWithScroll";
+import { scrollToBottom } from "@/utils/scroll";
 
 export const NODE_VIEW_ID = "node-view";
 
@@ -23,9 +23,8 @@ function NodeViewAddButton() {
   const handleAddNode = () => {
     const newNode = createNode(addMode);
     addNode(newNode);
+    scrollToBottom(NODE_VIEW_ID);
   };
-
-  const { addAndScroll } = useAddWithScroll(handleAddNode);
 
   const addButtonChildrenNodes: ReactNode[] = Object.entries(
     NODE_TYPE_ITEMS
@@ -40,7 +39,7 @@ function NodeViewAddButton() {
     />
   ));
   return (
-    <AddButton onClick={addAndScroll} childButtons={addButtonChildrenNodes} />
+    <AddButton onClick={handleAddNode} childButtons={addButtonChildrenNodes} />
   );
 }
 
