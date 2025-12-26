@@ -1,3 +1,4 @@
+"use client";
 import { ReactNode, useState } from "react";
 import NodeThree from "./NodeThree";
 import ViewWrapper from "../ViewWrapper";
