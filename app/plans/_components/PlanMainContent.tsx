@@ -10,6 +10,7 @@ import { AnimatePresence } from "motion/react";
 import IdeaSpaceView from "./IdeaSpaceView";
 import ViewGroupWrapper from "./ViewGroupWrapper";
 import HomeButton from "./HomeButton";
+import { APIProvider } from "@vis.gl/react-google-maps";
 
 interface PlanMainContentProps {
   readOnly?: boolean;
@@ -24,37 +25,39 @@ function PlanMainContent({}: PlanMainContentProps) {
   };
 
   return (
-    <div className="flex flex-col p-4 gap-4">
-      <HomeButton />
-      <PlanInfo />
-      <div className="flex flex-col gap-4 flex-none items-start h-[800px]">
-        <Tab
-          id={"view-mode"}
-          tabList={Object.entries(ViewModeNames).map(([id, name]) => ({
-            value: id,
-            itemContent: name,
-          }))}
-          value={viewMode}
-          onChange={handleChangeViewMode}
-        />
-        <div className="relative flex flex-1 self-stretch min-h-0">
-          <AnimatePresence mode="popLayout" initial={false}>
-            {viewMode === VIEW_MODE.TIMELINE ? (
-              <ViewGroupWrapper key="timeline" viewMode={VIEW_MODE.TIMELINE}>
-                <NodeView />
-                <MapView />
-              </ViewGroupWrapper>
-            ) : (
-              <ViewGroupWrapper
-                key="idea-space"
-                viewMode={VIEW_MODE.IDEA_SPACE}>
-                <IdeaSpaceView />
-              </ViewGroupWrapper>
-            )}
-          </AnimatePresence>
+    <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}>
+      <div className="flex flex-col p-4 gap-4">
+        <HomeButton />
+        <PlanInfo />
+        <div className="flex flex-col gap-4 flex-none items-start h-[800px]">
+          <Tab
+            id={"view-mode"}
+            tabList={Object.entries(ViewModeNames).map(([id, name]) => ({
+              value: id,
+              itemContent: name,
+            }))}
+            value={viewMode}
+            onChange={handleChangeViewMode}
+          />
+          <div className="relative flex flex-1 self-stretch min-h-0">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {viewMode === VIEW_MODE.TIMELINE ? (
+                <ViewGroupWrapper key="timeline" viewMode={VIEW_MODE.TIMELINE}>
+                  <NodeView />
+                  <MapView />
+                </ViewGroupWrapper>
+              ) : (
+                <ViewGroupWrapper
+                  key="idea-space"
+                  viewMode={VIEW_MODE.IDEA_SPACE}>
+                  <IdeaSpaceView />
+                </ViewGroupWrapper>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
-    </div>
+    </APIProvider>
   );
 }
 
