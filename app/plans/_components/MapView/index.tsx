@@ -1,44 +1,12 @@
 "use client";
 import { ControlPosition, Map } from "@vis.gl/react-google-maps";
 import ViewWrapper from "../ViewWrapper";
-import {
-  LocationSearchResult,
-  useLocationSearch,
-} from "../../_hooks/useLocationSearch";
 import { usePlanStore } from "../../_store/hook";
-import { createLocation } from "../../_util/createLocation";
-import TextField from "@/components/TextField";
 import { useFlatNodes } from "../../_hooks/useFlatNodes";
 import { NODE_TYPES } from "@/types/node";
 import LocationMarker from "./LocationMarker";
 import Polyline from "./Polyline";
-
-function LocationSearchBox() {
-  const addLocation = usePlanStore((state) => state.addLocation);
-
-  const handleAddLocation = (result: LocationSearchResult) => {
-    const newLocation = createLocation({
-      title: result.name,
-      address: result.address,
-      lat: result.lat,
-      lng: result.lng,
-    });
-    addLocation(newLocation);
-  };
-
-  const { inputRef } = useLocationSearch(handleAddLocation);
-
-  return (
-    <div className="absolute top-0 left-0 w-full p-2 pt-4">
-      <TextField
-        label="検索"
-        ref={inputRef}
-        fullWidth
-        placeholder="場所を検索してタイムラインに追加"
-      />
-    </div>
-  );
-}
+import LocationSearchBox from "./LocationSearchBox";
 
 function MapView() {
   const structure = usePlanStore((state) => state.structure);
