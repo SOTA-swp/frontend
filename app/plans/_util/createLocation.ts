@@ -7,8 +7,8 @@ export const createLocation = (
   return {
     id,
     title: "",
-    lat: 0,
-    lng: 0,
+    lat: -1,
+    lng: -1,
     address: "",
     description: "",
     thumbnail: "",
