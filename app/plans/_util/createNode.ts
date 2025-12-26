@@ -30,7 +30,7 @@ export const createNode = (
         id,
         planId: "",
         nodeType: NODE_TYPES.LOCATION,
-        name: "新しい場所",
+        name: "",
         startTime: "09:00",
         endTime: "10:00",
         durationMinutes: 60,
