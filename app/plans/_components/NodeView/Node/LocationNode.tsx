@@ -81,7 +81,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
             onClick={handleOnEditing}
             editElement={
               <TextField
-                label="プロセス名"
+                label="ロケーション名"
                 value={name}
                 placeholder={title}
                 onChange={(e) => handleNameChange(e.target.value)}
@@ -90,11 +90,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
                 {...inlineEditInputHandlers}
               />
             }
-            readElement={
-              <p className="truncate min-h-4 min-w-4">
-                {title}
-              </p>
-            }
+            readElement={<p className="truncate min-h-4 min-w-4">{title}</p>}
             position="absolute"
             className="min-w-0"
           />
