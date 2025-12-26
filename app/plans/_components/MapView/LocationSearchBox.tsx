@@ -1,10 +1,18 @@
 import TextField from "@/components/TextField";
-import { LocationSearchResult, useLocationSearch } from "../../_hooks/useLocationSearch";
+import {
+  LocationSearchResult,
+  useLocationSearch,
+} from "../../_hooks/useLocationSearch";
 import { usePlanStore } from "../../_store/hook";
 import { createLocation } from "../../_util/createLocation";
+import { scrollToBottom } from "@/utils/scroll";
+import { NODE_VIEW_ID } from "../NodeView";
+import { createNode } from "../../_util/createNode";
+import { NODE_TYPES } from "@/types/node";
 
 function LocationSearchBox() {
   const addLocation = usePlanStore((state) => state.addLocation);
+  const addNode = usePlanStore((state) => state.addNode);
 
   const handleAddLocation = (result: LocationSearchResult) => {
     const newLocation = createLocation({
@@ -13,7 +21,12 @@ function LocationSearchBox() {
       lat: result.lat,
       lng: result.lng,
     });
+    const newLocationNode = createNode(NODE_TYPES.LOCATION, {
+      locationId: newLocation.id,
+    });
     addLocation(newLocation);
+    addNode(newLocationNode);
+    scrollToBottom(NODE_VIEW_ID);
   };
 
   const { inputRef } = useLocationSearch(handleAddLocation);
