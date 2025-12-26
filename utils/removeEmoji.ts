@@ -6,7 +6,7 @@ export const removeEmoji = (value: string) => {
   const segments = Array.from(segmenter.segment(value));
   const firstChar = getFirstChar(value);
 
-  return /^\p{Extended_Pictographic}/u.test(firstChar)
+  return isEmoji(firstChar)
     ? segments
         .slice(1)
         .map((s) => s.segment)
@@ -20,4 +20,8 @@ export const getFirstChar = (value: string) => {
   const segmenter = new Intl.Segmenter("ja", { granularity: "grapheme" });
   const segments = Array.from(segmenter.segment(value));
   return segments[0]?.segment || "";
+};
+
+export const isEmoji = (char: string) => {
+  return /^\p{Extended_Pictographic}/u.test(char);
 };

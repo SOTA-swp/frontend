@@ -4,7 +4,7 @@ import NodeDataType from "@/types/node";
 import TimeContent from "./TimeContent";
 import EditElement from "./EditElement";
 import TextField from "@/components/TextField";
-import { getFirstChar, removeEmoji } from "@/utils/removeEmoji";
+import { getFirstChar, isEmoji, removeEmoji } from "@/utils/removeEmoji";
 import clsx from "clsx";
 import styles from "./styles.module.css";
 import { usePlanStore } from "../../../_store/hook";
@@ -32,9 +32,25 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
   };
 
   const isLocationMissing = !location;
-  const title = isLocationMissing
-    ? "❗️ロケーションが見つかりません"
-    : location.title;
+  const emoji = (() => {
+    if (isLocationMissing) return "❗️"; // ロケーションが見つからない場合のアイコン
+    const nameFirstChar = getFirstChar(name || "");
+    const locationTitleFirstChar = getFirstChar(location.title);
+    if (isEmoji(nameFirstChar)) return nameFirstChar; // カスタム名の最初の文字が絵文字の場合はそれを使用
+    if (isEmoji(locationTitleFirstChar)) return locationTitleFirstChar; // ロケーションのタイトルの最初の文字が絵文字の場合はそれを使用
+    return nameFirstChar || locationTitleFirstChar; // それ以外はカスタム名の最初の文字、なければロケーションのタイトルの最初の文字を使用
+  })();
+  const title = (() => {
+    if (isLocationMissing) return "ロケーションが見つかりません"; // ロケーションが見つからない場合のタイトル
+    if (name) return removeEmoji(name); // カスタム名がある場合はそれをタイトルに
+    if (!location.title) return "タイトル未設定"; // ロケーションのタイトルが空の場合
+    return removeEmoji(location.title); // それ以外はロケーションのタイトルを表示
+  })();
+  const smallMessage = (() => {
+    if (isLocationMissing) return "ロケーションを指定してください"; // ロケーションが見つからない場合のメッセージ
+    if (name) return removeEmoji(location.title); // カスタム名がある場合はロケーションのタイトルを表示
+    return location.address; // カスタム名がない場合はロケーションの住所を表示
+  })();
 
   return (
     <div className="flex items-center justify-between">
@@ -56,7 +72,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
           <EmojiIcon
             size={"lg"}
             color={isLocationMissing ? "error" : "primary"}>
-            {getFirstChar(name || title)}
+            {emoji}
           </EmojiIcon>
         </button>
         <div className="flex flex-col flex-1 min-w-0">
@@ -76,7 +92,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
             }
             readElement={
               <p className="truncate min-h-4 min-w-4">
-                {removeEmoji(name || title)}
+                {title}
               </p>
             }
             position="absolute"
@@ -88,7 +104,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
                 "text-start text-[14px] truncate leading-none",
                 isLocationMissing ? "text-error" : "text-text-secondary"
               )}>
-              {title}
+              {smallMessage}
             </p>
           </button>
         </div>
