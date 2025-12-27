@@ -17,11 +17,14 @@ import TextField from "@/components/TextField";
 import { createMockPlan } from "@/types/plan";
 import { createMockUser } from "@/types/user";
 import { motion } from "motion/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { MdHome } from "react-icons/md";
 import Side from "../(main)/_components/side/Side";
-import { createMockLocation } from "@/types/location";
-import LocationCard from "@/components/LocationCard";
+import LocationCard from "@/app/plans/_components/IdeaSpaceView/LocationCard";
+import NodeThree from "../plans/_components/NodeView/NodeThree";
+import { usePlanStore } from "../plans/_store/hook";
+import { MOCK_LOCATIONS } from "../plans/_mock/MOCK_LOCATIONS";
+import { MOCK_NODES, MOCK_STRUCTURE } from "../plans/_mock/MOCK_NODES";
 
 export interface DevPageProps {
   a: undefined;
@@ -33,12 +36,22 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   const [planOpen, setPlanOpen] = React.useState(-1);
   const { openModal, closeModal } = useModalStore();
   const { open, anchorEl, handleOpen, handleClose } = usePopover();
+  const setNodes = usePlanStore((state) => state.setNodes);
+  const setStructure = usePlanStore((state) => state.setStructure);
+  const setLocations = usePlanStore((state) => state.setLocations);
 
-  const mockLocation = createMockLocation(1);
+  useEffect(() => {
+    setLocations(MOCK_LOCATIONS);
 
-  if (process.env.NODE_ENV !== "development") {
-    return <div>Not Found</div>;
-  }
+    setNodes(MOCK_NODES);
+    setStructure(MOCK_STRUCTURE);
+  }, [setStructure, setNodes, setLocations]);
+
+  const mockLocation = MOCK_LOCATIONS[0];
+
+  // if (process.env.NODE_ENV !== "development") {
+  //   return <div>Not Found</div>;
+  // }
 
   return (
     <div className="mb-[100px]">
@@ -76,20 +89,20 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
               id={0}
               tabList={[
                 {
-                  label: "time-line",
+                  value: "time-line",
                   itemContent: "タイムライン",
                 },
-                { label: "idea-space", itemContent: "アイデアスペース" },
+                { value: "idea-space", itemContent: "アイデアスペース" },
               ]}
             />
             <Tab
               id={1}
               tabList={[
-                { label: "1", itemContent: "タブ1" },
-                { label: "2", itemContent: "タブ2" },
-                { label: "3", itemContent: "タブ3" },
-                { label: "4", itemContent: "タブ4" },
-                { label: "5", itemContent: "タブ5" },
+                { value: "1", itemContent: "タブ1" },
+                { value: "2", itemContent: "タブ2" },
+                { value: "3", itemContent: "タブ3" },
+                { value: "4", itemContent: "タブ4" },
+                { value: "5", itemContent: "タブ5" },
               ]}
             />
           </div>
@@ -244,25 +257,19 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
             </CommonButton>
           </div>
           <div className="flex gap-2 p-4">
-            <CommonButton onClick={(e) => handleOpen(e.currentTarget)}>
-              ポップオーバー
-            </CommonButton>
+            <CommonButton onClick={handleOpen}>ポップオーバー</CommonButton>
             <Popover open={open} anchorEl={anchorEl} onClose={handleClose}>
               ポップオーバー
             </Popover>
+          </div>
+          <div className="flex p-4">
+            <NodeThree />
           </div>
         </div>
       </div>
 
       <div className="p-4">
-        <LocationCard location={mockLocation} onTitleChange={function (value: string): void {
-          throw new Error("Function not implemented.");
-        } } onAddressChange={function (value: string): void {
-          throw new Error("Function not implemented.");
-        } } onDescriptionChange={function (value: string): void {
-          throw new Error("Function not implemented.");
-        } } />
-
+        <LocationCard id={mockLocation.id} />
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ const iconButtonStyles = cva(
       variant: {
         contain: "text-paper",
         outline: "border bg-paper",
-        iconOnly: "text-text-secondary hover:bg-shadow",
+        iconOnly: "",
       },
       size: {
         xs: "h-6 text-[1rem]",
@@ -72,6 +72,26 @@ const iconButtonStyles = cva(
         color: "error",
         class: "border-error text-error",
       },
+      {
+        variant: "iconOnly",
+        color: "primary",
+        class: "text-primary hover:bg-primary/10",
+      },
+      {
+        variant: "iconOnly",
+        color: "gray",
+        class: "text-text-secondary hover:bg-text-secondary/10",
+      },
+      {
+        variant: "iconOnly",
+        color: "accent",
+        class: "text-accent hover:bg-accent/10",
+      },
+      {
+        variant: "iconOnly",
+        color: "error",
+        class: "text-error hover:bg-error/10",
+      },
     ],
     defaultVariants: {
       variant: "contain",
@@ -81,12 +101,11 @@ const iconButtonStyles = cva(
   }
 );
 
-interface IconButtonProps
+export interface IconButtonProps
   extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
     VariantProps<typeof iconButtonStyles> {
   icon?: React.ReactNode;
 }
-
 
 function IconButton({
   size,
@@ -103,8 +122,7 @@ function IconButton({
       className={cn(
         iconButtonStyles({ variant, size, color, disable }),
         className
-      )}
-    >
+      )}>
       {icon}
     </button>
   );

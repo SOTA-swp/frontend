@@ -29,11 +29,33 @@ function TextField<T extends boolean = false>({
     >)) {
   const [isFocus, setIsFocus] = React.useState(false);
 
-  const handleFocus = () => {
+  const handleFocus = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (textarea) {
+      (props?.onFocus as React.FocusEventHandler<HTMLTextAreaElement>)?.(
+        e as React.FocusEvent<HTMLTextAreaElement>
+      );
+    } else {
+      (props?.onFocus as React.FocusEventHandler<HTMLInputElement>)?.(
+        e as React.FocusEvent<HTMLInputElement>
+      );
+    }
     setIsFocus(true);
   };
 
-  const handleBlur = () => {
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (textarea) {
+      (props?.onBlur as React.FocusEventHandler<HTMLTextAreaElement>)?.(
+        e as React.FocusEvent<HTMLTextAreaElement>
+      );
+    } else {
+      (props?.onBlur as React.FocusEventHandler<HTMLInputElement>)?.(
+        e as React.FocusEvent<HTMLInputElement>
+      );
+    }
     setIsFocus(false);
   };
 
@@ -51,11 +73,9 @@ function TextField<T extends boolean = false>({
         <label
           htmlFor={label}
           className={clsx(
-            "absolute left-2 text-[14px] bg-paper rounded-md border  select-none transition-all duration-200",
-            isFocus && "border-primary bg-primary text-paper! px-3 -top-3",
+            "absolute left-2 text-[14px] bg-paper rounded-md border  select-none transition-all duration-200 -top-3",
+            isFocus && "border-primary bg-primary text-paper! px-3 ",
             !isFocus && "border-border text-text-secondary px-2",
-            !isFocus && !props.value && "top-2",
-            !isFocus && (props.value || props.placeholder) && "-top-3!",
             error && "border-error! text-error! ",
             error && isFocus && "bg-error!"
           )}>
@@ -64,22 +84,22 @@ function TextField<T extends boolean = false>({
       )}
       {textarea ? (
         <textarea
-          onFocus={handleFocus}
-          onBlur={handleBlur}
           name={label}
           {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           className={commonClassName}
         />
       ) : (
         <input
-          onFocus={handleFocus}
-          onBlur={handleBlur}
           name={label}
           type={
             (props as React.InputHTMLAttributes<HTMLInputElement>).type ||
             "text"
           }
           {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           className={commonClassName}
         />
       )}

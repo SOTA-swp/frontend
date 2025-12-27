@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 import React from "react";
 
 interface TabItemProps {
-  label: string;
+  value: string;
   itemContent: React.ReactNode;
 }
 
@@ -32,21 +32,21 @@ const TabItem = ({
 
 function Tab({
   id,
-  label,
+  value,
   tabList,
   onChange,
 }: {
   id?: string | number;
-  label?: string;
+  value?: string;
   tabList?: TabItemProps[];
-  onChange?: (label: string) => void;
+  onChange?: (value: string) => void;
 }) {
-  const [stateLabel, setStateLabel] = React.useState(tabList?.[0]?.label || "");
-  const activeLabel = label || stateLabel;
+  const [stateValue, setStateValue] = React.useState(tabList?.[0]?.value || "");
+  const activeValue = value || stateValue;
 
-  const onChangeLabel = (newLabel: string) => {
-    onChange?.(newLabel);
-    setStateLabel(newLabel);
+  const onChangeValue = (newValue: string) => {
+    onChange?.(newValue);
+    setStateValue(newValue);
   };
 
   return (
@@ -55,17 +55,17 @@ function Tab({
       className={`flex border border-border rounded-full overflow-hidden select-none`}>
       {tabList?.map((tab) => (
         <TabItem
-          key={tab.label}
-          label={tab.label}
+          key={tab.value}
+          value={tab.value}
           itemContent={tab.itemContent}
-          onClick={() => onChangeLabel(tab.label)}
+          onClick={() => onChangeValue(tab.value)}
           className={clsx(
             "transition-colors",
-            activeLabel === tab.label && "text-paper",
-            activeLabel !== tab.label &&
+            activeValue === tab.value && "text-paper",
+            activeValue !== tab.value &&
               "text-text-secondary hover:text-primary hover:bg-primary/10"
           )}>
-          {activeLabel === tab.label && (
+          {activeValue === tab.value && (
             <motion.div
               className="absolute inset-0 bg-primary rounded-full"
               layoutId={`tabSelector-${id}`}

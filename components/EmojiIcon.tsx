@@ -1,9 +1,10 @@
 import ComponentColor from "@/types/componentColor";
+import ComponentSizeType from "@/types/componentSize";
 import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
 
 const emojiIconStyles = cva(
-  "flex items-center justify-center h-9 w-9 bg-paper border rounded-full select-none",
+  "flex shrink-0 items-center justify-center bg-paper border rounded-full select-none",
   {
     variants: {
       color: {
@@ -12,9 +13,17 @@ const emojiIconStyles = cva(
         accent: "border-accent",
         error: "border-error",
       } satisfies Record<ComponentColor, string>,
+      size: {
+        xs: "h-6 w-6 text-sm",
+        sm: "h-8 w-8 text-sm",
+        md: "h-9 w-9",
+        lg: "h-10 w-10 text-lg",
+        xl: "h-12 w-12 text-2xl",
+      } satisfies Record<ComponentSizeType, string>,
     },
     defaultVariants: {
       color: "primary",
+      size: "md",
     },
   }
 );
@@ -23,9 +32,9 @@ interface EmojiIconProps extends VariantProps<typeof emojiIconStyles> {
   children?: React.ReactNode;
 }
 
-function EmojiIcon({ color, children, ...props }: EmojiIconProps) {
+function EmojiIcon({ color, size, children, ...props }: EmojiIconProps) {
   return (
-    <div {...props} className={emojiIconStyles({ color })}>
+    <div {...props} className={emojiIconStyles({ color, size })}>
       {children}
     </div>
   );
