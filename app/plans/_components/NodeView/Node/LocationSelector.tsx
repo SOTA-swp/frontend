@@ -35,7 +35,9 @@ function LocationSelector({ nodeId, onClose }: LocationSelectorProps) {
               <EmojiIcon>{getFirstChar(title)}</EmojiIcon>
               <div className="text-start min-w-0">
                 <p className="truncate">{removeEmoji(title)}</p>
-                <p className="text-text-secondary text-sm">〒 {address}</p>
+                <p className="text-text-secondary text-sm truncate">
+                  {address}
+                </p>
               </div>
             </div>
           </button>
