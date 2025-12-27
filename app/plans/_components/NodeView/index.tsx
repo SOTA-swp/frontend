@@ -15,6 +15,11 @@ export const NODE_VIEW_ID = "node-view";
 function NodeViewAddButton() {
   const [addMode, setAddMode] = useState<NodeType>(NODE_TYPES.PROCESS);
   const addNode = usePlanStore((state) => state.addNode);
+  const isReadOnly = usePlanStore((state) => state.isReadOnly);
+
+  if (isReadOnly) {
+    return null;
+  }
 
   const handleModeChange = (mode: NodeType) => {
     setAddMode(mode);

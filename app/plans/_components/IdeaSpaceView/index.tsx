@@ -6,7 +6,12 @@ import ViewWrapper from "../ViewWrapper";
 import { createLocation } from "../../_util/createLocation";
 
 function IdeaSpaceViewAddButton() {
+  const isReadonly = usePlanStore((state) => state.isReadOnly);
   const addLocation = usePlanStore((state) => state.addLocation);
+
+  if (isReadonly) {
+    return null;
+  }
 
   const handleAddLocation = () => {
     const newLocation = createLocation();

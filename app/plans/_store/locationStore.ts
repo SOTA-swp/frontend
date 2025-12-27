@@ -1,5 +1,6 @@
 import LocationDataType from "@/types/location";
 import { StateCreator } from "zustand";
+import { PermissionStore } from "./permissionStore";
 
 export interface LocationState {
   locations: Record<string, LocationDataType>;
@@ -26,7 +27,14 @@ export const defaultLocationStore: LocationState = {
   closedLocationIds: [],
 };
 
-export const createLocationSlice: StateCreator<LocationStore> = (set) => ({
+const isReadOnly = (state: LocationStore & PermissionStore) => state.isReadOnly;
+
+export const createLocationSlice: StateCreator<
+  LocationStore & PermissionStore,
+  [],
+  [],
+  LocationStore
+> = (set) => ({
   ...defaultLocationStore,
   setLocations: (locationList) => {
     const locationMap: Record<string, LocationDataType> = locationList.reduce(
@@ -39,26 +47,33 @@ export const createLocationSlice: StateCreator<LocationStore> = (set) => ({
     set({ locations: locationMap });
   },
   addLocation: (location) => {
-    set((state) => ({
-      locations: {
-        ...state.locations,
-        [location.id]: location,
-      },
-    }));
+    set((state) => {
+      if (isReadOnly(state)) return state;
+      return {
+        locations: {
+          ...state.locations,
+          [location.id]: location,
+        },
+      };
+    });
   },
   updateLocation: (id, updatedFields) => {
-    set((state) => ({
-      locations: {
-        ...state.locations,
-        [id]: {
-          ...state.locations[id],
-          ...updatedFields,
+    set((state) => {
+      if (isReadOnly(state)) return state;
+      return {
+        locations: {
+          ...state.locations,
+          [id]: {
+            ...state.locations[id],
+            ...updatedFields,
+          },
         },
-      },
-    }));
+      };
+    });
   },
   removeLocation: (id) => {
     set((state) => {
+      if (isReadOnly(state)) return state;
       const newLocations = { ...state.locations };
       delete newLocations[id];
       return { locations: newLocations };

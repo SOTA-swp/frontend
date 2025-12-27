@@ -5,20 +5,24 @@ import MapView from "./MapView";
 import NodeView from "./NodeView";
 import PlanInfo from "./PlanInfo";
 import { VIEW_MODE, ViewModeNames, ViewModeType } from "../_consts/viewMode";
-import { useState } from "react";
+import {  useMemo, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import IdeaSpaceView from "./IdeaSpaceView";
 import ViewGroupWrapper from "./ViewGroupWrapper";
 import HomeButton from "./HomeButton";
 import { APIProvider } from "@vis.gl/react-google-maps";
+import { usePlanStore } from "../_store/hook";
 
 interface PlanMainContentProps {
   readOnly?: boolean;
 }
 
-// TODO: readOnlyに応じて編集不可にする
-function PlanMainContent({}: PlanMainContentProps) {
+function PlanMainContent({ readOnly = false }: PlanMainContentProps) {
+  const setReadOnly = usePlanStore((state) => state.setReadOnly);
   const [viewMode, setViewMode] = useState<ViewModeType>(VIEW_MODE.TIMELINE);
+  useMemo(() => {
+    setReadOnly(readOnly);
+  }, [readOnly, setReadOnly]);
 
   const handleChangeViewMode = (newMode: string) => {
     setViewMode(newMode as ViewModeType);

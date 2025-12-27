@@ -2,6 +2,7 @@ import NodeDataType from "@/types/node";
 import { arrayMove } from "@dnd-kit/sortable";
 import { StateCreator } from "zustand";
 import { PARENT_ID_ROOT } from "../_util/createNode";
+import { PermissionStore } from "./permissionStore";
 
 export interface NodeState {
   nodes: Record<NodeDataType["id"], NodeDataType>;
@@ -78,7 +79,14 @@ const findParentId = (
   return null;
 };
 
-export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
+const isReadOnly = (state: NodeStore & PermissionStore) => state.isReadOnly;
+
+export const createNodeSlice: StateCreator<
+  NodeStore & PermissionStore,
+  [],
+  [],
+  NodeStore
+> = (set) => ({
   ...defaultNodeStore,
   setNodes: (nodeList) => {
     const nodesMap: Record<string, NodeDataType> = nodeList.reduce(
@@ -93,6 +101,7 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
   setStructure: (structure) => set({ structure }),
   moveNode: (activeId, overId) => {
     set((state) => {
+      if (isReadOnly(state)) return state;
       const structure = { ...state.structure };
 
       if (isDescendant(structure, activeId, overId)) {
@@ -130,6 +139,7 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
   },
   moveNodeStep: (id, direction) => {
     set((state) => {
+      if (isReadOnly(state)) return state;
       const structure = { ...state.structure };
       const parentId = findParentId(structure, id);
       if (!parentId) return state;
@@ -171,6 +181,7 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
   },
   setNestNode: (parentId, childId) => {
     set((state) => {
+      if (isReadOnly(state)) return state;
       // console.log(`setNestNode: ${parentId}, ${childId}`);
       if (parentId === childId) {
         return state;
@@ -198,6 +209,7 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
     order = Number.MAX_SAFE_INTEGER
   ) => {
     set((state) => {
+      if (isReadOnly(state)) return state;
       const newNodes = {
         ...state.nodes,
         [node.id]: node,
@@ -218,18 +230,22 @@ export const createNodeSlice: StateCreator<NodeStore> = (set) => ({
   },
   updateNode: (id, updateFields) => {
     // console.log("updateNode", id, updateFields);
-    set((state) => ({
-      nodes: {
-        ...state.nodes,
-        [id]: {
-          ...state.nodes[id],
-          ...updateFields,
+    set((state) => {
+      if (isReadOnly(state)) return state;
+      return {
+        nodes: {
+          ...state.nodes,
+          [id]: {
+            ...state.nodes[id],
+            ...updateFields,
+          },
         },
-      },
-    }));
+      };
+    });
   },
   removeNode: (id) => {
     set((state) => {
+      if (isReadOnly(state)) return state;
       const newNodes = { ...state.nodes };
       delete newNodes[id];
       const newStructure = { ...state.structure };

@@ -8,6 +8,7 @@ function PlanInfo() {
   const planTitle = usePlanStore((state) => state.title);
   const planDescription = usePlanStore((state) => state.description);
   const isPublic = usePlanStore((state) => state.isPublic);
+  const isReadOnly = usePlanStore((state) => state.isReadOnly);
 
   return (
     <div className="my-3 py-2 pl-4 max-w-[1200px] border-l-2 border-accent">
@@ -22,12 +23,14 @@ function PlanInfo() {
             <p className="pr-1.5">・{isPublic ? "公開中" : "非公開"}</p>
           </Chip>
           {/* TODO: 編集モーダルを開く */}
-          <IconButton
-            title="編集する"
-            variant={"iconOnly"}
-            color={"gray"}
-            icon={<MdEdit />}
-          />
+          {!isReadOnly && (
+            <IconButton
+              title="編集する"
+              variant={"iconOnly"}
+              color={"gray"}
+              icon={<MdEdit />}
+            />
+          )}
         </div>
       </div>
       <p className="mt-1 text-text-secondary text-sm text-muted-foreground">

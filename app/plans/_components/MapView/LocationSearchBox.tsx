@@ -13,8 +13,10 @@ import { NODE_TYPES } from "@/types/node";
 function LocationSearchBox() {
   const addLocation = usePlanStore((state) => state.addLocation);
   const addNode = usePlanStore((state) => state.addNode);
+  const isReadOnly = usePlanStore((state) => state.isReadOnly);
 
   const handleAddLocation = (result: LocationSearchResult) => {
+    if (isReadOnly) return;
     const newLocation = createLocation({
       title: result.name,
       address: result.address,
@@ -37,7 +39,12 @@ function LocationSearchBox() {
         label="検索"
         ref={inputRef}
         fullWidth
-        placeholder="場所を検索してタイムラインに追加"
+        disabled={isReadOnly}
+        placeholder={
+          isReadOnly
+            ? "閲覧モードでは編集できません"
+            : "場所を検索してタイムラインに追加"
+        }
       />
     </div>
   );

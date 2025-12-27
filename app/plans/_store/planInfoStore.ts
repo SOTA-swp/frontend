@@ -1,5 +1,6 @@
 import PlanType from "@/types/plan";
 import { StateCreator } from "zustand";
+import { PermissionStore } from "./permissionStore";
 
 export type PlanInfoStoreState = PlanType;
 
@@ -20,15 +21,25 @@ export const defaultPlanInfoStore: PlanInfoStoreState = {
   isPublic: false,
 };
 
-export const createPlanInfoSlice: StateCreator<PlanInfoStore> = (set) => ({
+const isReadOnly = (state: PlanInfoStore & PermissionStore) => state.isReadOnly;
+
+export const createPlanInfoSlice: StateCreator<
+  PlanInfoStore & PermissionStore,
+  [],
+  [],
+  PlanInfoStore
+> = (set) => ({
   ...defaultPlanInfoStore,
   setPlanInfo: (planInfo) => {
     set({ ...planInfo });
   },
   updatePlanInfo: (updatedFields) => {
-    set((state) => ({
-      ...state,
-      ...updatedFields,
-    }));
+    set((state) => {
+      if (isReadOnly(state)) return state;
+      return {
+        ...state,
+        ...updatedFields,
+      };
+    });
   },
 });

@@ -1,4 +1,5 @@
 "use client";
+import { usePlanStore } from "@/app/plans/_store/hook";
 import clsx from "clsx";
 
 interface ToggleElementProps {
@@ -18,6 +19,12 @@ function EditElement({
   className,
   position = "inline",
 }: ToggleElementProps) {
+  const isReadOnly = usePlanStore((state) => state.isReadOnly);
+
+  if (isReadOnly) {
+    return <div className={clsx("text-start", className)}>{readElement}</div>;
+  }
+
   if (isEditing) {
     return (
       <div className="relative flex items-center">

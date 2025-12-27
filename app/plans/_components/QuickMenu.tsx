@@ -9,11 +9,13 @@ import {
   MdKeyboardArrowDown,
   MdUpload,
 } from "react-icons/md";
+import { usePlanStore } from "../_store/hook";
 
 interface QuickMenuItem {
   id: string;
   icon: ReactNode;
   label: string;
+  isEditOnly: boolean; // 編集モード時のみ表示
   onClick: () => void;
 }
 
@@ -22,18 +24,21 @@ const items: QuickMenuItem[] = [
     id: "edit-basic-info",
     icon: <MdEditNote />,
     label: "基本情報を編集",
+    isEditOnly: true,
     onClick: () => {},
   },
   {
     id: "export",
     icon: <MdUpload />,
     label: "エクスポート",
+    isEditOnly: false,
     onClick: () => {},
   },
   {
     id: "group",
     icon: <MdGroup />,
     label: "グループ",
+    isEditOnly: false,
     onClick: () => {},
   },
 ];
@@ -63,6 +68,7 @@ const itemVariants: Variants = {
 function QuickMenu() {
   const [open, setOpen] = useState(true);
   const [active, setActive] = useState(true);
+  const isReadOnly = usePlanStore((state) => state.isReadOnly);
 
   const handleToggleOpen = () => {
     setOpen((prev) => !prev);
@@ -107,11 +113,16 @@ function QuickMenu() {
           onAnimationStart={handleAnimationStart}
           onAnimationComplete={handleAnimationEnd}>
           <div className="flex gap-3 p-3">
-            {items.map((item) => (
-              <motion.li key={item.id} variants={itemVariants}>
-                {<GrowIconButton icon={item.icon}>{item.label}</GrowIconButton>}
-              </motion.li>
-            ))}
+            {items.map(
+              (item) =>
+                (!isReadOnly || !item.isEditOnly) && (
+                  <motion.li key={item.id} variants={itemVariants}>
+                    <GrowIconButton icon={item.icon}>
+                      {item.label}
+                    </GrowIconButton>
+                  </motion.li>
+                )
+            )}
           </div>
         </motion.ul>
       </div>

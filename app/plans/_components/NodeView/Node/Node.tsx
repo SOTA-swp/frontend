@@ -40,6 +40,7 @@ function Node({
   const setHoveredNodeId = usePlanStore((state) => state.setHoveredNodeId);
   const removeNode = usePlanStore((state) => state.removeNode);
   const moveNodeStep = usePlanStore((state) => state.moveNodeStep);
+  const isReadOnly = usePlanStore((state) => state.isReadOnly);
 
   const {
     attributes,
@@ -48,7 +49,7 @@ function Node({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id, data: { id, type: "node" } });
+  } = useSortable({ id, data: { id, type: "node" }, disabled: isReadOnly });
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -127,7 +128,7 @@ function Node({
           {content}
         </span>
         <AnimatePresence>
-          {isHovered && (
+          {!isReadOnly && isHovered && (
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}

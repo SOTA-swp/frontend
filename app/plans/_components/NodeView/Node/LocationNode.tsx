@@ -26,6 +26,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
     handleOpen: handleSelectorOpen,
     handleClose: handleSelectorClose,
   } = usePopover();
+  const isReadOnly = usePlanStore((state) => state.isReadOnly);
 
   const handleNameChange = (value: string) => {
     updateNode(id, { name: value });
@@ -52,22 +53,26 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
     return location.address; // カスタム名がない場合はロケーションの住所を表示
   })();
 
+  const changeMessage = isReadOnly ? "" : "ロケーションを変更";
+
   return (
     <div className="flex items-center justify-between">
-      <Popover
-        open={openSelector}
-        anchorEl={selectorAnchorEl}
-        onClose={handleSelectorClose}
-        placement="top-start">
-        <LocationSelector nodeId={id} onClose={handleSelectorClose} />
-      </Popover>
+      {!isReadOnly && (
+        <Popover
+          open={openSelector}
+          anchorEl={selectorAnchorEl}
+          onClose={handleSelectorClose}
+          placement="top-start">
+          <LocationSelector nodeId={id} onClose={handleSelectorClose} />
+        </Popover>
+      )}
 
       <div
         className={clsx("flex items-center gap-2 min-w-0", styles.content)}
         title={name}>
         <button
           onClick={handleSelectorOpen}
-          title="ロケーションを変更"
+          title={changeMessage}
           className="hover:scale-105 hover:rotate-12 transition-all">
           <EmojiIcon
             size={"lg"}
@@ -94,7 +99,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
             position="absolute"
             className="min-w-0"
           />
-          <button onClick={handleSelectorOpen} title="ロケーションを変更">
+          <button onClick={handleSelectorOpen} title={changeMessage}>
             <p
               className={clsx(
                 "text-start text-[14px] truncate leading-none",

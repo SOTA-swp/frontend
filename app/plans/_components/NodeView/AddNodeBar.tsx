@@ -18,6 +18,11 @@ function AddNodeBar({
   notAnimation = false,
 }: AddNodeBarProps) {
   const addNode = usePlanStore((state) => state.addNode);
+  const isReadOnly = usePlanStore((state) => state.isReadOnly);
+
+  if (isReadOnly) {
+    return null;
+  }
 
   const handleAddNode = (type: NodeType) => {
     const newNode = createNode(type);
