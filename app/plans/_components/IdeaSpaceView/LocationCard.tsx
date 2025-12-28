@@ -1,6 +1,6 @@
 "use client";
 
-import LocationDataType from "@/types/location";
+import LocationData from "@/types/location";
 import TextField from "@/components/TextField";
 import EmojiIcon from "@/components/EmojiIcon";
 import clsx from "clsx";
@@ -25,7 +25,7 @@ const MOTION_ELEMENTS = {
 } as const;
 
 type LocationCardProps = {
-  id: LocationDataType["id"];
+  id: LocationData["id"];
 };
 
 const commonTransition = (damping: number = 30): Transition => ({

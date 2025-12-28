@@ -2,12 +2,12 @@
 import IconButton from "@/components/IconButton";
 import { NODE_TYPE_ITEMS } from "./NODE_ITEMS";
 import { motion } from "motion/react";
-import NodeDataType, { NodeType } from "@/types/node";
+import NodeData, { NodeType } from "@/types/node";
 import { usePlanStore } from "@/app/plans/_store/hook";
 import { createNode } from "@/app/plans/_util/createNode";
 
 interface AddNodeBarProps {
-  parentId: NodeDataType["id"];
+  parentId: NodeData["id"];
   order: number;
   notAnimation?: boolean;
 }

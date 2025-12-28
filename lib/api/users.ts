@@ -1,6 +1,6 @@
 "use server";
 
-import UserType, { createMockUser } from "@/types/user";
+import User, { createMockUser } from "@/types/user";
 
 export interface FetchUsersParams {
   userId?: string;
@@ -10,9 +10,7 @@ export interface FetchUsersParams {
 /**
  * ユーザーを取得する共通関数
  */
-export async function fetchUsers(
-  params: FetchUsersParams
-): Promise<UserType[]> {
+export async function fetchUsers(params: FetchUsersParams): Promise<User[]> {
   const queryParams = new URLSearchParams();
 
   if (params.userId) queryParams.append("userId", params.userId);

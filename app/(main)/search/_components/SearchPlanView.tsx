@@ -7,7 +7,7 @@ import {
 } from "react-icons/md";
 import PlanBlock from "../../_components/PlanBlock";
 import { useState } from "react";
-import { PlanWithDetailsType } from "@/types/plan";
+import { PlanWithDetails } from "@/types/plan";
 import PlanCard from "@/components/PlanCard";
 import CommonButton from "@/components/CommonButton";
 import { getPlans } from "../../actions";
@@ -39,8 +39,8 @@ function SearchPlanView({
   initialPlans,
 }: {
   initialPlans: {
-    popularPlans: { size: number; planData: PlanWithDetailsType[] };
-    newPlans: { size: number; planData: PlanWithDetailsType[] };
+    popularPlans: { size: number; planData: PlanWithDetails[] };
+    newPlans: { size: number; planData: PlanWithDetails[] };
   };
 }) {
   const params = useSearchParams();

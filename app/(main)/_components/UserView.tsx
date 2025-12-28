@@ -1,5 +1,5 @@
 "use client";
-import UserType from "@/types/user";
+import User from "@/types/user";
 import { MAIN_PAGE_IDs } from "../_consts/MAIN_PAGE_IDs";
 import { UserInfoBlock } from "@/components/UserInfoBlock";
 import PROJECT_NAME from "@/consts/PROJECT_NAME";
@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import PATH from "@/consts/PATH";
 
 export interface UserViewProps {
-  userData: UserType & {
+  userData: User & {
     favoritesCount: number;
     favoredCount: number;
     createdCount: number;

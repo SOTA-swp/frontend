@@ -1,4 +1,4 @@
-export default interface UserType {
+export default interface User {
   id: string;
   googleUserId: string;
   name: string;
@@ -8,7 +8,7 @@ export default interface UserType {
   updatedAt: string;
 }
 
-export const createMockUser = (num: number = 0): UserType => ({
+export const createMockUser = (num: number = 0): User => ({
   id: `mock-user-id${num}`,
   googleUserId: "mock-google-user-id",
   name: `モックユーザー${num}`,

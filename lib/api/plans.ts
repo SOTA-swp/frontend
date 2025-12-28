@@ -1,6 +1,6 @@
 "use server";
 
-import PlanType, { createMockPlan } from "@/types/plan";
+import Plan, { createMockPlan } from "@/types/plan";
 
 export interface FetchPlansParams {
   planId?: string;
@@ -16,9 +16,7 @@ export interface FetchPlansParams {
 /**
  * 計画一覧を取得する共通関数
  */
-export async function fetchPlans(
-  params: FetchPlansParams
-): Promise<PlanType[]> {
+export async function fetchPlans(params: FetchPlansParams): Promise<Plan[]> {
   const queryParams = new URLSearchParams();
 
   if (params.planId) queryParams.append("planId", params.planId);

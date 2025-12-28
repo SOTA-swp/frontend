@@ -1,6 +1,6 @@
 "use client";
 
-import NodeDataType from "@/types/node";
+import NodeData from "@/types/node";
 import EditElement from "./EditElement";
 import TextField from "@/components/TextField";
 import Node from "./Node";
@@ -19,7 +19,7 @@ import { usePlanStore } from "../../../_store/hook";
 import { useInlineEdit } from "@/app/plans/_hooks/useInlineEdit";
 import NullBox from "../NullBox";
 
-interface ProcessNodeProps extends NodeDataType {
+interface ProcessNodeProps extends NodeData {
   depth?: number;
 }
 

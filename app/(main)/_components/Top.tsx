@@ -1,10 +1,10 @@
 "use client";
 import Chip from "@/components/Chip";
 import PlanCard from "@/components/PlanCard";
-import { PlanWithDetailsType } from "@/types/plan";
+import { PlanWithDetails } from "@/types/plan";
 import { useOpenPlanCard } from "../_store/openPlanCardStore";
 
-function Top({ data }: { data: PlanWithDetailsType[] }) {
+function Top({ data }: { data: PlanWithDetails[] }) {
   const { openPlanCardId, setOpenPlanCardId } = useOpenPlanCard();
 
   return (

@@ -1,5 +1,5 @@
 // TODO: planIDとかいらんのか？
-export default interface LocationDataType {
+export default interface LocationData {
   id: string;
   title: string;
   address: string;
@@ -13,8 +13,8 @@ export default interface LocationDataType {
 
 export const createMockLocation = (
   num: number = 0,
-  props?: Partial<LocationDataType>
-): LocationDataType => ({
+  props?: Partial<LocationData>
+): LocationData => ({
   id: `location-${num}`,
   title: `モック施設名${num}`,
   address: `モック住所${num}`,

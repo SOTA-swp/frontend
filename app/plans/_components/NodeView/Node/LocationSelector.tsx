@@ -1,13 +1,13 @@
 "use client";
 import { usePlanStore } from "@/app/plans/_store/hook";
 import EmojiIcon from "@/components/EmojiIcon";
-import LocationDataType from "@/types/location";
-import NodeDataType from "@/types/node";
+import LocationData from "@/types/location";
+import NodeData from "@/types/node";
 import { getFirstChar, removeEmoji } from "@/utils/removeEmoji";
 import { MouseEvent } from "react";
 
 interface LocationSelectorProps {
-  nodeId: NodeDataType["id"];
+  nodeId: NodeData["id"];
   onClose?: () => void;
 }
 
@@ -15,7 +15,7 @@ function LocationSelector({ nodeId, onClose }: LocationSelectorProps) {
   const locations = usePlanStore((state) => state.locations);
   const updateNode = usePlanStore((state) => state.updateNode);
 
-  const handleSelect = (e: MouseEvent, locationId: LocationDataType["id"]) => {
+  const handleSelect = (e: MouseEvent, locationId: LocationData["id"]) => {
     e.preventDefault();
     updateNode(nodeId, { locationId });
     onClose?.();

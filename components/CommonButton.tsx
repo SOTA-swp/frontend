@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import ComponentColor from "@/types/componentColor";
-import ComponentSizeType from "@/types/componentSize";
+import ComponentSize from "@/types/componentSize";
 import { cva, VariantProps } from "class-variance-authority";
 import Link from "next/link";
 import React from "react";
@@ -29,7 +29,7 @@ const CommonButtonStyles = cva(
         md: "p-2 px-3 text-[14px] rounded-lg",
         lg: "p-2.5 px-3.5 text-[18px] rounded-lg",
         xl: "p-3 px-4 text-[20px] rounded-lg",
-      } satisfies Record<ComponentSizeType, string>,
+      } satisfies Record<ComponentSize, string>,
       variant: {
         contain: "bg-primary text-paper",
         outline:
@@ -119,9 +119,10 @@ const CommonButtonStyles = cva(
 );
 
 interface CommonButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof CommonButtonStyles> {
-  size?: ComponentSizeType;
+  size?: ComponentSize;
   variant?: VariantType;
   icon?: React.ReactNode;
   color?: ComponentColor;

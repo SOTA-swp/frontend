@@ -1,4 +1,4 @@
-import UserType from "@/types/user";
+import User from "@/types/user";
 import React from "react";
 import CommonText from "./CommonText";
 import { MdChevronRight } from "react-icons/md";
@@ -10,7 +10,7 @@ function UserIcon({
   rightIcon = true,
   ...props
 }: {
-  userData: UserType;
+  userData: User;
   enableEmail?: boolean;
   rightIcon?: boolean;
 } & React.HTMLAttributes<HTMLButtonElement>) {

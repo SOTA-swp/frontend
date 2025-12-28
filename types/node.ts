@@ -7,7 +7,7 @@ export const NODE_TYPES = {
 export type NodeType = (typeof NODE_TYPES)[keyof typeof NODE_TYPES];
 
 // TODO: PlanIDはいらん？
-export default interface NodeDataType {
+export default interface NodeData {
   id: string;
   planId: string;
   nodeType: NodeType;
@@ -22,8 +22,8 @@ export default interface NodeDataType {
 
 export const createMockNode = (
   num: number = 0,
-  props?: Partial<NodeDataType>
-): NodeDataType => ({
+  props?: Partial<NodeData>
+): NodeData => ({
   id: `mock-node-id${num}`,
   planId: `mock-plan-id${num}`,
   nodeType: "process",

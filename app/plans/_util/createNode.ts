@@ -1,12 +1,12 @@
-import NodeDataType, { NODE_TYPES } from "@/types/node";
+import NodeData, { NODE_TYPES } from "@/types/node";
 
 export const PARENT_ID_ROOT = "root";
 
 // planIdはpropsで渡す想定 (そもそもいらんのか？)
 export const createNode = (
-  nodeType: NodeDataType["nodeType"],
-  props?: Partial<NodeDataType>
-): NodeDataType => {
+  nodeType: NodeData["nodeType"],
+  props?: Partial<NodeData>
+): NodeData => {
   const id = window.crypto.randomUUID();
 
   switch (nodeType) {

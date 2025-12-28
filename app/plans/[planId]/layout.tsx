@@ -1,11 +1,11 @@
-import PlanType from "@/types/plan";
+import Plan from "@/types/plan";
 import { ReactNode } from "react";
 import PlanStoreProvider from "../_store/PlanStoreProvider";
 import { getPlan } from "../actions";
 
 interface PlanLayoutProps {
   children: ReactNode;
-  params: Promise<{ planId: PlanType["id"] }>;
+  params: Promise<{ planId: Plan["id"] }>;
 }
 
 async function PlanLayout({ children, params }: PlanLayoutProps) {

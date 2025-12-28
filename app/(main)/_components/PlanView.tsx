@@ -1,5 +1,5 @@
 "use client";
-import { PlanWithDetailsType } from "@/types/plan";
+import { PlanWithDetails } from "@/types/plan";
 import { MAIN_PAGE_IDs } from "../_consts/MAIN_PAGE_IDs";
 import { MdAirplanemodeActive, MdFavorite } from "react-icons/md";
 import AddButton from "@/components/AddButton";
@@ -13,7 +13,7 @@ import { useOpenPlanCard } from "../_store/openPlanCardStore";
 
 export interface PlanViewProps {
   viewId: (typeof MAIN_PAGE_IDs)["PLANS"] | (typeof MAIN_PAGE_IDs)["FAVORITES"];
-  plans: PlanWithDetailsType[];
+  plans: PlanWithDetails[];
 }
 
 function PlanView({ viewId, plans }: PlanViewProps) {

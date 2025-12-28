@@ -1,12 +1,12 @@
 "use server";
 
-import { createMockPlan, PlanWithDetailsType } from "@/types/plan";
-import UserType, { createMockUser } from "@/types/user";
+import { createMockPlan, PlanWithDetails } from "@/types/plan";
+import User, { createMockUser } from "@/types/user";
 import { PLAN_LIMIT } from "./_consts/PLAN_LIMIT";
 
 // TODO: 実際のAPIが完成したら置き換える
 export async function getUserData(userId: string): Promise<
-  UserType & {
+  User & {
     favoritesCount: number;
     favoredCount: number;
     createdCount: number;
@@ -33,7 +33,7 @@ export async function getPlans(
   q: string,
   page: number,
   limit: number = PLAN_LIMIT
-): Promise<{ size: number; planData: PlanWithDetailsType[] }> {
+): Promise<{ size: number; planData: PlanWithDetails[] }> {
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   return {

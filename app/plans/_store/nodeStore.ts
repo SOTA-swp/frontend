@@ -1,39 +1,30 @@
-import NodeDataType from "@/types/node";
+import NodeData from "@/types/node";
 import { arrayMove } from "@dnd-kit/sortable";
 import { StateCreator } from "zustand";
 import { PARENT_ID_ROOT } from "../_util/createNode";
 import { PermissionStore } from "./permissionStore";
 
 export interface NodeState {
-  nodes: Record<NodeDataType["id"], NodeDataType>;
-  structure: Record<NodeDataType["id"], NodeDataType["id"][]>;
+  nodes: Record<NodeData["id"], NodeData>;
+  structure: Record<NodeData["id"], NodeData["id"][]>;
   editFieldId: string | null;
 
   // ホバー中のノードID
   hoveredNodeId: string | null;
 
   // 折りたたまれたノードIDリスト
-  closeNodeIds: NodeDataType["id"][];
+  closeNodeIds: NodeData["id"][];
 }
 
 export interface NodeActions {
-  setNodes: (nodeList: NodeDataType[]) => void;
-  setStructure: (
-    structure: Record<NodeDataType["id"], NodeDataType["id"][]>
-  ) => void;
-  moveNode: (activeId: NodeDataType["id"], overId: NodeDataType["id"]) => void;
-  moveNodeStep: (id: NodeDataType["id"], direction: "up" | "down") => void;
-  addNode: (
-    node: NodeDataType,
-    parentId?: NodeDataType["id"],
-    order?: number
-  ) => void;
-  updateNode: (id: string, updatedFields: Partial<NodeDataType>) => void;
+  setNodes: (nodeList: NodeData[]) => void;
+  setStructure: (structure: Record<NodeData["id"], NodeData["id"][]>) => void;
+  moveNode: (activeId: NodeData["id"], overId: NodeData["id"]) => void;
+  moveNodeStep: (id: NodeData["id"], direction: "up" | "down") => void;
+  addNode: (node: NodeData, parentId?: NodeData["id"], order?: number) => void;
+  updateNode: (id: string, updatedFields: Partial<NodeData>) => void;
   removeNode: (id: string) => void;
-  setNestNode: (
-    parentId: NodeDataType["id"],
-    childId: NodeDataType["id"]
-  ) => void;
+  setNestNode: (parentId: NodeData["id"], childId: NodeData["id"]) => void;
 
   // ノードの中の編集中要素をセットする関数
   setEditFieldId: (nodeId: string | null) => void;
@@ -42,8 +33,8 @@ export interface NodeActions {
   setHoveredNodeId: (nodeId: string | null) => void;
 
   // 折りたたまれたノードIDを管理する関数
-  closeNode: (id: NodeDataType["id"]) => void;
-  openNode: (id: NodeDataType["id"]) => void;
+  closeNode: (id: NodeData["id"]) => void;
+  openNode: (id: NodeData["id"]) => void;
 }
 
 export type NodeStore = NodeState & NodeActions;
@@ -59,8 +50,8 @@ export const defaultNodeStore: NodeState = {
 // ancestorId が targetId の祖先ノードであるかを判定する再帰関数
 const isDescendant = (
   structure: NodeState["structure"],
-  ancestorId: NodeDataType["id"],
-  targetId: NodeDataType["id"]
+  ancestorId: NodeData["id"],
+  targetId: NodeData["id"]
 ): boolean => {
   const children = structure[ancestorId] || [];
   if (children.includes(targetId)) return true;
@@ -69,8 +60,8 @@ const isDescendant = (
 
 const findParentId = (
   structure: NodeState["structure"],
-  nodeId: NodeDataType["id"]
-): NodeDataType["id"] | null => {
+  nodeId: NodeData["id"]
+): NodeData["id"] | null => {
   for (const parentId in structure) {
     if (structure[parentId].includes(nodeId)) {
       return parentId;
@@ -89,12 +80,12 @@ export const createNodeSlice: StateCreator<
 > = (set) => ({
   ...defaultNodeStore,
   setNodes: (nodeList) => {
-    const nodesMap: Record<string, NodeDataType> = nodeList.reduce(
+    const nodesMap: Record<string, NodeData> = nodeList.reduce(
       (acc, nodes) => {
         acc[nodes.id] = nodes;
         return acc;
       },
-      {} as Record<string, NodeDataType>
+      {} as Record<string, NodeData>
     );
     set({ nodes: nodesMap });
   },
@@ -250,10 +241,10 @@ export const createNodeSlice: StateCreator<
       delete newNodes[id];
       const newStructure = { ...state.structure };
 
-      const delChildrenList: NodeDataType["id"][] = [id];
+      const delChildrenList: NodeData["id"][] = [id];
 
       // 子ノードも再帰的に検索してリストに加える関数
-      const searchDeleteChildren = (id: NodeDataType["id"]) => {
+      const searchDeleteChildren = (id: NodeData["id"]) => {
         const children = newStructure[id] || [];
         children.forEach((childId) => {
           delChildrenList.push(childId);

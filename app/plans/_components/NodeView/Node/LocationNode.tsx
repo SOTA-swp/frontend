@@ -1,6 +1,6 @@
 "use client";
 import EmojiIcon from "@/components/EmojiIcon";
-import NodeDataType from "@/types/node";
+import NodeData from "@/types/node";
 import TimeContent from "./TimeContent";
 import EditElement from "./EditElement";
 import TextField from "@/components/TextField";
@@ -13,7 +13,7 @@ import usePopover from "@/components/popover/usePopover";
 import Popover from "@/components/popover/Popover";
 import LocationSelector from "./LocationSelector";
 
-type LocationNodeProps = NodeDataType;
+type LocationNodeProps = NodeData;
 
 function LocationNode({ id, locationId, name }: LocationNodeProps) {
   const updateNode = usePlanStore((state) => state.updateNode);

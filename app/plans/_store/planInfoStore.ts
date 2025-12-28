@@ -1,12 +1,12 @@
-import PlanType from "@/types/plan";
+import Plan from "@/types/plan";
 import { StateCreator } from "zustand";
 import { PermissionStore } from "./permissionStore";
 
-export type PlanInfoStoreState = PlanType;
+export type PlanInfoStoreState = Plan;
 
 export interface PlanInfoActions {
-  setPlanInfo: (planInfo: Partial<PlanType>) => void;
-  updatePlanInfo: (updatedFields: Partial<PlanType>) => void;
+  setPlanInfo: (planInfo: Partial<Plan>) => void;
+  updatePlanInfo: (updatedFields: Partial<Plan>) => void;
 }
 
 export type PlanInfoStore = PlanInfoStoreState & PlanInfoActions;

@@ -1,5 +1,5 @@
 "use client";
-import { PlanWithDetailsType } from "@/types/plan";
+import { PlanWithDetails } from "@/types/plan";
 import { AnimatePresence, motion } from "motion/react";
 import FavoriteCounter from "./FavoriteCounter";
 import subTimestamp from "@/utils/subTimestamp";
@@ -27,7 +27,7 @@ const MOTION_ELEMENTS = {
 type PlanCardProps = {
   variant?: "default" | "mini";
   open?: boolean;
-  data: PlanWithDetailsType;
+  data: PlanWithDetails;
   layoutId?: string;
   onJump?: () => void;
   onClose?: () => void;

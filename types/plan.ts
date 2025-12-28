@@ -1,7 +1,7 @@
-import UserType from "./user";
+import User from "./user";
 
 // TODO: サムネは？
-export default interface PlanType {
+export default interface Plan {
   id: string;
   creatorId: string;
   title: string;
@@ -11,12 +11,12 @@ export default interface PlanType {
   updatedAt: string;
 }
 
-export interface PlanWithDetailsType {
-  planData: PlanType & { favorites: number };
-  creatorData: UserType;
+export interface PlanWithDetails {
+  planData: Plan & { favorites: number };
+  creatorData: User;
 }
 
-export const createMockPlan = (num: number = 0): PlanType => ({
+export const createMockPlan = (num: number = 0): Plan => ({
   id: `mock-plan-id${num}`,
   creatorId: `mock-user-id${num}`,
   title: `モックプランタイトル${num}あああああああああああ`,

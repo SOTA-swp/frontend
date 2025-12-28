@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import ComponentSizeType from "@/types/componentSize";
+import ComponentSize from "@/types/componentSize";
 import ComponentColor from "@/types/componentColor";
 
 const iconButtonStyles = cva(
@@ -18,7 +18,7 @@ const iconButtonStyles = cva(
         md: "h-10 text-[1.5rem]",
         lg: "h-12 text-[1.75rem]",
         xl: "h-14 text-[2rem]",
-      } satisfies Record<ComponentSizeType, string>,
+      } satisfies Record<ComponentSize, string>,
       color: {
         primary: "",
         gray: "",
@@ -102,7 +102,8 @@ const iconButtonStyles = cva(
 );
 
 export interface IconButtonProps
-  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
+  extends
+    Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
     VariantProps<typeof iconButtonStyles> {
   icon?: React.ReactNode;
 }

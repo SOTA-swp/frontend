@@ -1,9 +1,9 @@
-import NodeDataType from "@/types/node";
+import NodeData from "@/types/node";
 import TimeContent from "./TimeContent";
 import styles from "./styles.module.css";
 import clsx from "clsx";
 
-type MoveNodeProps = NodeDataType;
+type MoveNodeProps = NodeData;
 
 function MoveNode({ id }: MoveNodeProps) {
   return (
