@@ -1,15 +1,19 @@
+import z from "zod";
+
+export const LocationDataSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1).max(100),
+  address: z.string().min(1).max(200),
+  lat: z.number(), // 緯度
+  lng: z.number(), // 経度
+  description: z.string().max(500),
+  thumbnail: z.url(),
+  created_at: z.iso.datetime(),
+  updated_at: z.iso.datetime(),
+});
+
 // TODO: planIDとかいらんのか？
-export default interface LocationData {
-  id: string;
-  title: string;
-  address: string;
-  lat: number; // 緯度
-  lng: number; // 経度
-  description: string;
-  thumbnail: string;
-  created_at: string;
-  updated_at: string;
-}
+export type LocationData = z.infer<typeof LocationDataSchema>;
 
 export const createMockLocation = (
   num: number = 0,

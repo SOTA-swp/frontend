@@ -1,4 +1,4 @@
-import LocationData from "@/types/location";
+import { LocationData } from "@/types/location";
 
 export const createLocation = (props?: Partial<LocationData>): LocationData => {
   const id = window.crypto.randomUUID();

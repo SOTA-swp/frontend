@@ -1,6 +1,6 @@
 "use client";
 
-import LocationData from "@/types/location";
+import { LocationData } from "@/types/location";
 import TextField from "@/components/TextField";
 import EmojiIcon from "@/components/EmojiIcon";
 import clsx from "clsx";

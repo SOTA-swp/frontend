@@ -1,5 +1,5 @@
 "use client";
-import LocationData from "@/types/location";
+import { LocationData } from "@/types/location";
 import { Marker, MarkerProps } from "@vis.gl/react-google-maps";
 
 interface LocationMarkerProps extends MarkerProps {

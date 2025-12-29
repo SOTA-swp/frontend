@@ -1,4 +1,4 @@
-import LocationData from "@/types/location";
+import { LocationData } from "@/types/location";
 import { StateCreator } from "zustand";
 import { PermissionStore } from "./permissionStore";
 
