@@ -1,4 +1,4 @@
-import NodeData from "@/types/node";
+import { NodeData } from "@/types/node";
 import TimeContent from "./TimeContent";
 import styles from "./styles.module.css";
 import clsx from "clsx";

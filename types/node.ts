@@ -1,3 +1,5 @@
+import z from "zod";
+
 export const NODE_TYPES = {
   PROCESS: "process",
   LOCATION: "location",
@@ -6,19 +8,25 @@ export const NODE_TYPES = {
 
 export type NodeType = (typeof NODE_TYPES)[keyof typeof NODE_TYPES];
 
+export const NodeDataSchema = z.object({
+  id: z.string(),
+  planId: z.string(),
+  nodeType: z.enum(NODE_TYPES),
+  name: z.string().min(1).max(100),
+  startTime: z.iso.datetime(),
+  endTime: z.iso.datetime(),
+  durationMinutes: z
+    .number()
+    .int()
+    .min(0)
+    .max(60 * 24),
+  locationId: z.string(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
+});
+
 // TODO: PlanIDはいらん？
-export default interface NodeData {
-  id: string;
-  planId: string;
-  nodeType: NodeType;
-  name: string;
-  startTime: string;
-  endTime: string;
-  durationMinutes: number;
-  locationId: string;
-  createdAt: string;
-  updatedAt: string;
-}
+export type NodeData = z.infer<typeof NodeDataSchema>;
 
 export const createMockNode = (
   num: number = 0,

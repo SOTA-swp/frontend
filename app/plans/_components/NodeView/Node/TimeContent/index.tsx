@@ -1,4 +1,4 @@
-import NodeData from "@/types/node";
+import { NodeData } from "@/types/node";
 import TimeCell, { TIME_CELL_TYPES } from "./TimeCell";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { usePlanStore } from "@/app/plans/_store/hook";

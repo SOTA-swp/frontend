@@ -16,7 +16,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { usePlanStore } from "../../../_store/hook";
 import AddNodeBar from "../AddNodeBar";
-import NodeData from "@/types/node";
+import { NodeData } from "@/types/node";
 import { PARENT_ID_ROOT } from "@/app/plans/_util/createNode";
 
 export interface NodeProps {

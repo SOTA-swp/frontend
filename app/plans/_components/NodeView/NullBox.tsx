@@ -1,7 +1,7 @@
 import { MdArrowDownward } from "react-icons/md";
 import AddNodeBar from "./AddNodeBar";
 import clsx from "clsx";
-import NodeData from "@/types/node";
+import { NodeData } from "@/types/node";
 
 interface NullBoxProps {
   id: NodeData["id"];

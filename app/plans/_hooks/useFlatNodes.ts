@@ -1,4 +1,4 @@
-import NodeData from "@/types/node";
+import { NodeData } from "@/types/node";
 import { NodeStore } from "../_store/nodeStore";
 import { PARENT_ID_ROOT } from "../_util/createNode";
 import { useMemo } from "react";

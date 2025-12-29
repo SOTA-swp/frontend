@@ -1,6 +1,6 @@
 "use client";
 import EmojiIcon from "@/components/EmojiIcon";
-import NodeData from "@/types/node";
+import { NodeData } from "@/types/node";
 import TimeContent from "./TimeContent";
 import EditElement from "./EditElement";
 import TextField from "@/components/TextField";

@@ -2,7 +2,7 @@
 import { usePlanStore } from "@/app/plans/_store/hook";
 import EmojiIcon from "@/components/EmojiIcon";
 import LocationData from "@/types/location";
-import NodeData from "@/types/node";
+import { NodeData } from "@/types/node";
 import { getFirstChar, removeEmoji } from "@/utils/removeEmoji";
 import { MouseEvent } from "react";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import NodeData from "@/types/node";
+import { NodeData } from "@/types/node";
 import EditElement from "./EditElement";
 import TextField from "@/components/TextField";
 import Node from "./Node";

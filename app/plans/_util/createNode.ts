@@ -1,4 +1,4 @@
-import NodeData, { NODE_TYPES } from "@/types/node";
+import { NodeData, NODE_TYPES } from "@/types/node";
 
 export const PARENT_ID_ROOT = "root";
 
