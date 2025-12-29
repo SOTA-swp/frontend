@@ -2,22 +2,12 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserSchema } from "@/types/user";
 import CommonButton from "@/components/CommonButton";
 import TextField from "@/components/TextField";
-import z from "zod";
-
-const RegisterFormSchema = UserSchema.pick({
-  name: true,
-  email: true,
-}).extend({
-  password: z
-    .string()
-    .min(6, "パスワードは6文字以上")
-    .max(100, "パスワードは100文字以下"),
-});
-
-type RegisterFormData = z.infer<typeof RegisterFormSchema>;
+import { RegisterFormData, RegisterFormSchema } from "../../_types";
+import { registerUser } from "../../actions";
+import { useRouter } from "next/navigation";
+import PATH from "@/consts/PATH";
 
 function RegisterForm() {
   const {
@@ -32,16 +22,22 @@ function RegisterForm() {
       password: "",
     },
   });
+  const router = useRouter();
 
-  const onSubmit = (data: RegisterFormData) => {
-    console.log(data);
+  const onSubmit = async (data: RegisterFormData) => {
+    const res = await registerUser(data);
+    if (!res.ok) {
+      alert(`登録に失敗しました: ${res.message}`);
+      return;
+    }
+    router.push(PATH.LOGIN);
   };
 
   return (
     <form
       className="flex flex-col gap-16 items-center"
       onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex flex-col items-center gap-12 w-[500px]">
+      <div className="flex flex-col items-center gap-12 w-125">
         <TextField
           {...register("name")}
           helperText={errors.name?.message}

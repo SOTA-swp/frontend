@@ -3,18 +3,11 @@
 import CommonButton from "@/components/CommonButton";
 import TextField from "@/components/TextField";
 import PATH from "@/consts/PATH";
-import { UserSchema } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import z from "zod";
-
-const LoginFormSchema = UserSchema.pick({
-  email: true,
-}).extend({
-  password: z.string(),
-});
-
-type LoginFormData = z.infer<typeof LoginFormSchema>;
+import { LoginFormData, LoginFormSchema } from "../../_types";
+import { loginUser } from "../../actions";
+import { useRouter } from "next/navigation";
 
 function LoginForm() {
   const {
@@ -25,16 +18,22 @@ function LoginForm() {
     resolver: zodResolver(LoginFormSchema),
     defaultValues: { email: "", password: "" },
   });
+  const router = useRouter();
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log(data);
+  const onSubmit = async (data: LoginFormData) => {
+    const res = await loginUser(data);
+    if (!res.ok) {
+      alert(`ログインに失敗しました: ${res.message}`);
+      return;
+    }
+    router.push(PATH.USER("me"));
   };
 
   return (
     <form
       className="flex flex-col gap-16 items-center"
       onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex flex-col items-center gap-16 w-[500px]">
+      <div className="flex flex-col items-center gap-16 w-125">
         <TextField
           {...register("email")}
           helperText={errors.email?.message}
