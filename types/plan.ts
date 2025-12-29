@@ -7,8 +7,8 @@ export const PlanSchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string().max(500),
   isPublic: z.boolean(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
 
 // TODO: サムネは？

@@ -6,8 +6,8 @@ export const UserSchema = z.object({
   name: z.string().min(1).max(50),
   email: z.email(),
   picture: z.url(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
 
 export type User = z.infer<typeof UserSchema>;
