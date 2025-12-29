@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Modal from "@/components/modal/Modal";
+import { AppStoreProvider } from "@/store/AppStoreProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,11 +26,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-clip`}>
-        {children}
-        <Modal />
-      </body>
+      <AppStoreProvider>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-clip`}>
+          {children}
+          <Modal />
+        </body>
+      </AppStoreProvider>
     </html>
   );
 }
