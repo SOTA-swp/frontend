@@ -1,4 +1,4 @@
-import Plan from "@/types/plan";
+import { Plan } from "@/types/plan";
 import { StateCreator } from "zustand";
 import { PermissionStore } from "./permissionStore";
 

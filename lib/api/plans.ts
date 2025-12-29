@@ -1,6 +1,6 @@
 "use server";
 
-import Plan, { createMockPlan } from "@/types/plan";
+import { Plan, createMockPlan } from "@/types/plan";
 
 export interface FetchPlansParams {
   planId?: string;

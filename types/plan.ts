@@ -1,15 +1,18 @@
+import z from "zod";
 import { User } from "./user";
 
+export const PlanSchema = z.object({
+  id: z.string(),
+  creatorId: z.string(),
+  title: z.string().min(1).max(100),
+  description: z.string().max(500),
+  isPublic: z.boolean(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
 // TODO: サムネは？
-export default interface Plan {
-  id: string;
-  creatorId: string;
-  title: string;
-  description: string;
-  isPublic: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+export type Plan = z.infer<typeof PlanSchema>;
 
 export interface PlanWithDetails {
   planData: Plan & { favorites: number };

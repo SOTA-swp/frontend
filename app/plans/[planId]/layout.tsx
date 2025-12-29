@@ -1,4 +1,4 @@
-import Plan from "@/types/plan";
+import { Plan } from "@/types/plan";
 import { ReactNode } from "react";
 import PlanStoreProvider from "../_store/PlanStoreProvider";
 import { getPlan } from "../actions";
