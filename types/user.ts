@@ -3,8 +3,11 @@ import z from "zod";
 export const UserSchema = z.object({
   id: z.string(),
   googleUserId: z.string(),
-  name: z.string().min(1).max(50),
-  email: z.email(),
+  name: z
+    .string()
+    .min(1, "ユーザー名は1文字以上")
+    .max(50, "ユーザー名は50文字以下"),
+  email: z.email("有効なメールアドレスを入力してください"),
   picture: z.url(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
