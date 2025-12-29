@@ -1,12 +1,16 @@
-export default interface User {
-  id: string;
-  googleUserId: string;
-  name: string;
-  email: string;
-  picture: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import z from "zod";
+
+export const UserSchema = z.object({
+  id: z.string(),
+  googleUserId: z.string(),
+  name: z.string().min(1).max(50),
+  email: z.email(),
+  picture: z.url(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type User = z.infer<typeof UserSchema>;
 
 export const createMockUser = (num: number = 0): User => ({
   id: `mock-user-id${num}`,

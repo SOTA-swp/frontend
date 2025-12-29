@@ -1,6 +1,6 @@
 "use server";
 
-import User, { createMockUser } from "@/types/user";
+import { User, createMockUser } from "@/types/user";
 
 export interface FetchUsersParams {
   userId?: string;

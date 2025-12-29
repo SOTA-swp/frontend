@@ -1,4 +1,4 @@
-import User from "@/types/user";
+import { User } from "@/types/user";
 import React from "react";
 import CommonText from "./CommonText";
 import { MdChevronRight } from "react-icons/md";

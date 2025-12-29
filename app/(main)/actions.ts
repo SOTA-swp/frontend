@@ -1,7 +1,7 @@
 "use server";
 
 import { createMockPlan, PlanWithDetails } from "@/types/plan";
-import User, { createMockUser } from "@/types/user";
+import { createMockUser, User } from "@/types/user";
 import { PLAN_LIMIT } from "./_consts/PLAN_LIMIT";
 
 // TODO: 実際のAPIが完成したら置き換える

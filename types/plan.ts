@@ -1,4 +1,4 @@
-import User from "./user";
+import { User } from "./user";
 
 // TODO: サムネは？
 export default interface Plan {
