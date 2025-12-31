@@ -2,6 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import ComponentSize from "@/types/componentSize";
 import ComponentColor from "@/types/componentColor";
+import Link from "next/link";
 
 const iconButtonStyles = cva(
   "relative flex items-center justify-center aspect-square rounded-full hover:scale-105 active:scale-95 transition",
@@ -106,6 +107,7 @@ export interface IconButtonProps
     Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
     VariantProps<typeof iconButtonStyles> {
   icon?: React.ReactNode;
+  href?: string;
 }
 
 function IconButton({
@@ -115,8 +117,21 @@ function IconButton({
   icon,
   disable,
   className,
+  href,
   ...props
 }: IconButtonProps) {
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className={cn(
+          iconButtonStyles({ variant, size, color, disable }),
+          className
+        )}>
+        {icon}
+      </Link>
+    );
+  }
   return (
     <button
       {...props}
