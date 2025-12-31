@@ -10,6 +10,7 @@ import { useRef } from "react";
 import MainViewController from "./MainViewController";
 import { useRouter } from "next/navigation";
 import PATH from "@/consts/PATH";
+import { useAppStore } from "@/store/AppStoreProvider";
 
 export interface UserViewProps {
   userData: User & {
@@ -23,6 +24,10 @@ function UserView({ userData }: UserViewProps) {
   const router = useRouter();
   const createDate = new Date(userData.createdAt);
   const ref = useRef<HTMLElement>(null);
+  const user = useAppStore((state) => state.user);
+
+  const isMe = user?.id === userData.id;
+  console.log(user);
 
   const handleSearch = () => {
     router.push(PATH.SEARCH);
@@ -50,29 +55,33 @@ function UserView({ userData }: UserViewProps) {
               }
             </div>
             <div>
-              <h1 className="text-2xl font-bold">{userData.name}</h1>
+              <h1 className="text-2xl font-bold">
+                {isMe ? user?.id : userData.name}
+              </h1>
               <p className="text-text-secondary">
                 {createDate.toLocaleDateString()}から利用しています
               </p>
             </div>
           </div>
-          <div className="flex gap-8">
-            <GrowIconButton icon={<MdAdd />} title="新規作成">
-              新規作成
-            </GrowIconButton>
-            <GrowIconButton
-              onClick={handleSearch}
-              icon={<MdSearch />}
-              title="検索">
-              検索
-            </GrowIconButton>
-            <GrowIconButton icon={<MdNotifications />} title="通知">
-              通知
-            </GrowIconButton>
-            <GrowIconButton icon={<MdLogout />} title="ログアウト">
-              ログアウト
-            </GrowIconButton>
-          </div>
+          {isMe && (
+            <div className="flex gap-8">
+              <GrowIconButton icon={<MdAdd />} title="新規作成">
+                新規作成
+              </GrowIconButton>
+              <GrowIconButton
+                onClick={handleSearch}
+                icon={<MdSearch />}
+                title="検索">
+                検索
+              </GrowIconButton>
+              <GrowIconButton icon={<MdNotifications />} title="通知">
+                通知
+              </GrowIconButton>
+              <GrowIconButton icon={<MdLogout />} title="ログアウト">
+                ログアウト
+              </GrowIconButton>
+            </div>
+          )}
         </div>
         <div className="flex gap-4">
           <UserInfoBlock title={"作った計画"} sum={userData.createdCount} />

@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { AppStore, createAppStore } from "./appStore";
 import { useStore } from "zustand";
 
@@ -16,6 +16,11 @@ export const AppStoreProvider = ({
   initData,
 }: AppStoreProviderProps) => {
   const [store] = useState(() => createAppStore(initData));
+  const refetch = store.getState().refetch;
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
   return (
     <AppStoreContext.Provider value={store}>
       {children}

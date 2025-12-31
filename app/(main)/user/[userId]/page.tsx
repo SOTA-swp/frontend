@@ -9,11 +9,12 @@ export interface UserPageProps {
 
 const UserPage: React.FC<UserPageProps> = async ({ params }) => {
   const { userId } = await params;
+  const awaitUserId = await userId;
 
   return (
     <main className="relative flex-1 ">
       {/* TODO: 実際のAPIが完成したら置き換える */}
-      <UserView userData={await getUserData(await userId)} />
+      <UserView userData={await getUserData(awaitUserId)} />
       <PlanView
         viewId={MAIN_PAGE_IDs.PLANS}
         plans={(await getPlans("", 0)).planData}

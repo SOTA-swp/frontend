@@ -6,8 +6,10 @@ import PATH from "@/consts/PATH";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { LoginFormData, LoginFormSchema } from "../../_types";
-import { loginUser } from "../../actions";
 import { useRouter } from "next/navigation";
+import { fetchWrapper } from "@/utils/fetchWrapper";
+import { ApiRoutes } from "api-contract";
+import { useAppStore } from "@/store/AppStoreProvider";
 
 function LoginForm() {
   const {
@@ -19,14 +21,23 @@ function LoginForm() {
     defaultValues: { email: "", password: "" },
   });
   const router = useRouter();
+  const refetch = useAppStore((state) => state.refetch);
 
   const onSubmit = async (data: LoginFormData) => {
-    const res = await loginUser(data);
+    const res = await fetchWrapper.post(ApiRoutes.auth.login, data);
     if (!res.ok) {
-      alert(`ログインに失敗しました: ${res.message}`);
+      alert(`ログインに失敗しました: ${res.statusText}`);
       return;
     }
-    router.push(PATH.USER("me"));
+    const ok = await refetch();
+    if (ok) {
+      router.push(PATH.USER());
+    } else {
+      alert(
+        "ユーザーデータの取得に失敗しました。再度ログインページへ移動します。"
+      );
+      router.push(PATH.LOGIN);
+    }
   };
 
   return (

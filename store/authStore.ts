@@ -1,5 +1,4 @@
 import { User } from "@/types/user";
-import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
 import { StateCreator } from "zustand";
 
@@ -11,7 +10,7 @@ export interface AuthStoreState {
 }
 
 interface AuthStoreActions {
-  refetch: () => Promise<void>;
+  refetch: (onFailed?: () => void) => Promise<boolean>;
   logout: () => Promise<void>;
 }
 
@@ -22,35 +21,32 @@ const defaultAuthStore: AuthStoreState = {
 
 export type AuthStore = AuthStoreState & AuthStoreActions;
 
-export const createAuthStoreSlice: StateCreator<AuthStore> = (set) => {
-  const fetchMe = async () => {
-    try {
-      set({ isLoading: true });
-
-      const response = await fetchWrapper.get(ApiRoutes.auth.me);
-
-      if (response.ok) {
-        const data: AuthUser = await response.json();
-        set({ user: data });
-      } else {
-        set({ user: null });
-      }
-    } catch (_) {
-      // console.error("本人確認に失敗しました", error);
-      set({ user: null });
-    } finally {
-      set({ isLoading: false });
-    }
-  };
-
-  // 初期化時にfetchMeを実行（クライアント側のみ）
-  if (typeof window !== "undefined") {
-    fetchMe();
-  }
-
+export const createAuthStoreSlice: StateCreator<AuthStore> = (set, get) => {
   return {
     ...defaultAuthStore,
-    refetch: fetchMe,
+    refetch: async (onFailed) => {
+      let ok = false;
+      try {
+        set({ isLoading: true });
+
+        const response = await fetch(ApiRoutes.auth.me);
+
+        if (response.ok) {
+          const data: AuthUser = await response.json();
+          ok = true;
+          set({ user: { ...data } });
+        } else {
+          set({ user: null });
+          onFailed?.();
+        }
+      } catch (_) {
+        set({ user: null });
+        onFailed?.();
+      } finally {
+        set({ isLoading: false });
+        return ok;
+      }
+    },
     logout: async () => {
       try {
         await fetch(ApiRoutes.auth.logout, {
@@ -59,7 +55,7 @@ export const createAuthStoreSlice: StateCreator<AuthStore> = (set) => {
       } catch (_) {
         // console.error("ログアウトAPIの呼び出しに失敗", error);
       } finally {
-        await fetchMe();
+        await get().refetch();
       }
     },
   };

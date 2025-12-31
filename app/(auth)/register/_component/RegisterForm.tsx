@@ -5,9 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import CommonButton from "@/components/CommonButton";
 import TextField from "@/components/TextField";
 import { RegisterFormData, RegisterFormSchema } from "../../_types";
-import { registerUser } from "../../actions";
 import { useRouter } from "next/navigation";
 import PATH from "@/consts/PATH";
+import { fetchWrapper } from "@/utils/fetchWrapper";
+import { ApiRoutes } from "api-contract";
 
 function RegisterForm() {
   const {
@@ -25,12 +26,12 @@ function RegisterForm() {
   const router = useRouter();
 
   const onSubmit = async (data: RegisterFormData) => {
-    const res = await registerUser(data);
+    const res = await fetchWrapper.post(ApiRoutes.auth.register, data);
     if (!res.ok) {
-      alert(`登録に失敗しました: ${res.message}`);
+      alert(`登録に失敗しました: ${res.statusText}`);
       return;
     }
-    router.push(PATH.LOGIN);
+    router.push(PATH.USER());
   };
 
   return (

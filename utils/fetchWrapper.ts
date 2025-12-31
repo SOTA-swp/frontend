@@ -1,5 +1,5 @@
 export const fetchWrapper = {
-  get: async <T>(url: string, options: RequestInit = {}) => {
+  get: async (url: string, options: RequestInit = {}) => {
     const response = await fetch(url, {
       ...options,
       method: "GET",
