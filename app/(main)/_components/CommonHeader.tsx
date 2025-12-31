@@ -2,14 +2,15 @@
 import React from "react";
 import CommonText from "../../../components/CommonText";
 import PROJECT_NAME from "@/consts/PROJECT_NAME";
-import { MdAdd, MdNotifications, MdSearch } from "react-icons/md";
+import { MdAdd, MdLogout, MdNotifications, MdSearch } from "react-icons/md";
 import IconButton from "../../../components/IconButton";
 import UserIcon from "../../../components/UserIcon";
-import { createMockUser } from "@/types/user";
 import { motion, Variants } from "motion/react";
 import LAYER from "@/consts/LAYER";
 import clsx from "clsx";
 import HEADER_HEIGHT from "../_consts/HEADER_HIGHT";
+import { useAppStore } from "@/store/AppStoreProvider";
+import PATH from "@/consts/PATH";
 
 const curtainVariants: Variants = {
   hover: {
@@ -19,9 +20,50 @@ const curtainVariants: Variants = {
 };
 
 function CommonHeader() {
-  // TODO: 認証ができたらユーザーデータを受け取るように修正
-  const userData = createMockUser();
+  const userData = useAppStore((state) => state.user);
+  const logout = useAppStore((state) => state.logout);
   const [scrolled, setScrolled] = React.useState(false);
+
+  const isLoggedIn = !!userData;
+
+  const iconItems: {
+    icon: React.ReactNode;
+    login: boolean; // ログインしているときのみ表示するかどうか
+    title: string;
+    onClick?: () => void;
+    href?: string;
+  }[] = [
+    {
+      icon: <MdAdd />,
+      login: true,
+      title: "計画追加",
+      onClick: () => {
+        // TODO: 計画追加処理
+        console.log("Add clicked");
+      },
+    },
+    {
+      icon: <MdSearch />,
+      login: false,
+      title: "検索ページへ",
+      href: PATH.SEARCH,
+    },
+    {
+      icon: <MdNotifications />,
+      login: true,
+      title: "通知一覧",
+      onClick: () => {
+        // TODO: 通知表示処理
+        console.log("Notifications clicked");
+      },
+    },
+    {
+      icon: <MdLogout />,
+      login: true,
+      title: "ログアウト",
+      onClick: logout,
+    },
+  ];
 
   const handleScroll = () => {
     const offset = window.scrollY;
@@ -39,28 +81,14 @@ function CommonHeader() {
 
   return (
     <nav
-      className={`
-        sticky
-        flex
-        top-0
-    `}
+      className="sticky flex top-0"
       style={{
         zIndex: LAYER.HEADER,
         height: HEADER_HEIGHT,
       }}>
       <motion.div
         className={clsx(
-          `
-        flex 
-        flex-1
-        items-center 
-        justify-between
-        border
-        border-primary
-        rounded-2xl
-        bg-paper
-        overflow-hidden
-        `.trim(),
+          "flex flex-1 items-center justify-between border border-primary rounded-2xl bg-paper overflow-hidden",
           scrolled ? "shadow-md backdrop-blur-lg bg-paper/70" : "shadow-none"
         )}
         animate={{
@@ -108,29 +136,27 @@ function CommonHeader() {
           </motion.div>
         </motion.div>
 
-        <ul
-          className="
-          flex
-          items-center
-          gap-8
-          pr-4
-          ">
-          <li>
-            <IconButton icon={<MdAdd />} variant="iconOnly" color={"gray"} />
-          </li>
-          <li>
-            <IconButton icon={<MdSearch />} variant="iconOnly" color={"gray"} />
-          </li>
-          <li>
-            <IconButton
-              icon={<MdNotifications />}
-              variant="iconOnly"
-              color={"gray"}
-            />
-          </li>
-          <li className="flex items-center">
-            <UserIcon userData={userData} />
-          </li>
+        <ul className="flex items-center gap-8 pr-6">
+          {iconItems.map(
+            ({ onClick, href, icon, login, title }, i) =>
+              (!login || isLoggedIn) && (
+                <li key={i}>
+                  <IconButton
+                    onClick={onClick}
+                    href={href}
+                    icon={icon}
+                    variant={"iconOnly"}
+                    color={"gray"}
+                    title={title}
+                  />
+                </li>
+              )
+          )}
+          {isLoggedIn && (
+            <li className="flex items-center">
+              <UserIcon userData={userData} />
+            </li>
+          )}
         </ul>
       </motion.div>
     </nav>
