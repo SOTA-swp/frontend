@@ -10,17 +10,7 @@ type VariantType = "contain" | "outline" | "text";
 // type color = "primary" | "gray" | "accent" | "error";
 
 const CommonButtonStyles = cva(
-  `
-    relative
-    flex
-    items-center
-    justify-between
-    group
-    active:scale-90
-    hover:scale-105
-    transition
-    font-bold
-    `,
+  "relative flex items-center justify-between group active:scale-90 hover:scale-105 transition font-bold",
   {
     variants: {
       size: {
@@ -35,13 +25,17 @@ const CommonButtonStyles = cva(
         outline:
           "border border-primary bg-paper text-primary hover:bg-primary hover:text-paper",
         text: " text-text-secondary hover:bg-primary/50 hover:text-primary",
-      },
+      } satisfies Record<VariantType, string>,
       color: {
         primary: "",
         gray: "",
         accent: "",
         error: "",
       } satisfies Record<ComponentColor, string>,
+      modal: {
+        true: "min-w-40",
+        false: "",
+      },
     },
 
     compoundVariants: [
@@ -114,6 +108,7 @@ const CommonButtonStyles = cva(
       size: "md",
       variant: "contain",
       color: "primary",
+      modal: false,
     },
   }
 );
@@ -122,8 +117,6 @@ interface CommonButtonProps
   extends
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof CommonButtonStyles> {
-  size?: ComponentSize;
-  variant?: VariantType;
   icon?: React.ReactNode;
   color?: ComponentColor;
   fullWidth?: boolean;
@@ -135,6 +128,7 @@ function CommonButton({
   size,
   variant,
   color,
+  modal,
   fullWidth,
   href,
   icon,
@@ -143,7 +137,7 @@ function CommonButton({
   ...props
 }: CommonButtonProps) {
   const commonClassName = cn(
-    CommonButtonStyles({ size, variant, color }),
+    CommonButtonStyles({ size, variant, color, modal }),
     className,
     icon ? "justify-between" : "justify-center",
     fullWidth && "w-full"
