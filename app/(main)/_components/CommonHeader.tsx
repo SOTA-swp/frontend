@@ -1,8 +1,7 @@
 "use client";
-import React from "react";
+import React, { MouseEventHandler, ReactNode } from "react";
 import CommonText from "../../../components/CommonText";
 import PROJECT_NAME from "@/consts/PROJECT_NAME";
-import { MdAdd, MdLogout, MdNotifications, MdSearch } from "react-icons/md";
 import IconButton from "../../../components/IconButton";
 import UserIcon from "../../../components/UserIcon";
 import { motion, Variants } from "motion/react";
@@ -10,6 +9,7 @@ import LAYER from "@/consts/LAYER";
 import clsx from "clsx";
 import HEADER_HEIGHT from "../_consts/HEADER_HIGHT";
 import { useAppStore } from "@/store/AppStoreProvider";
+import { MdAdd, MdSearch, MdNotifications, MdLogout } from "react-icons/md";
 import PATH from "@/consts/PATH";
 
 const curtainVariants: Variants = {
@@ -26,41 +26,41 @@ function CommonHeader() {
 
   const isLoggedIn = !!userData;
 
-  const iconItems: {
-    icon: React.ReactNode;
-    login: boolean; // ログインしているときのみ表示するかどうか
+  interface HeaderItem {
+    key: string;
+    icon: ReactNode;
     title: string;
-    onClick?: () => void;
+    login: boolean; // ログインしているときのみ表示するかどうか
+    onClick?: MouseEventHandler;
     href?: string;
-  }[] = [
+  }
+  const items: HeaderItem[] = [
     {
+      key: "add",
       icon: <MdAdd />,
-      login: true,
       title: "計画追加",
-      onClick: () => {
-        // TODO: 計画追加処理
-        console.log("Add clicked");
-      },
+      login: true,
+      onClick: () => {},
     },
     {
+      key: "search",
       icon: <MdSearch />,
+      title: "検索ページ",
       login: false,
-      title: "検索ページへ",
       href: PATH.SEARCH,
     },
     {
+      key: "notifications",
       icon: <MdNotifications />,
-      login: true,
       title: "通知一覧",
-      onClick: () => {
-        // TODO: 通知表示処理
-        console.log("Notifications clicked");
-      },
+      login: true,
+      onClick: () => {},
     },
     {
+      key: "logout",
       icon: <MdLogout />,
-      login: true,
       title: "ログアウト",
+      login: true,
       onClick: logout,
     },
   ];
@@ -137,10 +137,10 @@ function CommonHeader() {
         </motion.div>
 
         <ul className="flex items-center gap-8 pr-6">
-          {iconItems.map(
-            ({ onClick, href, icon, login, title }, i) =>
+          {items.map(
+            ({ key, onClick, href, icon, login, title }) =>
               (!login || isLoggedIn) && (
-                <li key={i}>
+                <li key={key}>
                   <IconButton
                     onClick={onClick}
                     href={href}
