@@ -13,6 +13,7 @@ import { MdAdd, MdSearch, MdNotifications, MdLogout } from "react-icons/md";
 import PATH from "@/consts/PATH";
 import Notification from "../_components/Notification";
 import usePopover from "@/components/popover/usePopover";
+import { useAddPlanModal } from "../_hooks/useAddPlanModal";
 
 const curtainVariants: Variants = {
   hover: {
@@ -26,6 +27,7 @@ function CommonHeader() {
   const logout = useAppStore((state) => state.logout);
   const [scrolled, setScrolled] = React.useState(false);
   const { handleOpen: notificationsOpen, ...notificationsProps } = usePopover(); // 通知用
+  const { handleOpenAddPlanModal } = useAddPlanModal();
 
   const isLoggedIn = !!userData;
 
@@ -43,7 +45,7 @@ function CommonHeader() {
       icon: <MdAdd />,
       title: "計画追加",
       login: true,
-      onClick: () => {},
+      onClick: handleOpenAddPlanModal,
     },
     {
       key: "search",
