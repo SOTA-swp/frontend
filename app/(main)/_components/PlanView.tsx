@@ -9,7 +9,7 @@ import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
 import { useRef } from "react";
 import MainViewController from "./MainViewController";
 import PlanBlock from "./PlanBlock";
-import { useOpenPlanCard } from "../_store/openPlanCardStore";
+import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
 
 export interface PlanViewProps {
   viewId: (typeof MAIN_PAGE_IDs)["PLANS"] | (typeof MAIN_PAGE_IDs)["FAVORITES"];
@@ -17,7 +17,10 @@ export interface PlanViewProps {
 }
 
 function PlanView({ viewId, plans }: PlanViewProps) {
-  const { openPlanCardId, setOpenPlanCardId } = useOpenPlanCard();
+  const openPlanCardId = useOpenPlanCardStore((state) => state.openPlanCardId);
+  const setOpenPlanCardId = useOpenPlanCardStore(
+    (state) => state.setOpenPlanCardId
+  );
   const ref = useRef<HTMLElement>(null);
 
   return (

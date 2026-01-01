@@ -2,11 +2,13 @@
 import Chip from "@/components/Chip";
 import PlanCard from "@/components/PlanCard";
 import { PlanWithDetails } from "@/types/plan";
-import { useOpenPlanCard } from "../_store/openPlanCardStore";
+import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
 
 function Top({ data }: { data: PlanWithDetails[] }) {
-  const { openPlanCardId, setOpenPlanCardId } = useOpenPlanCard();
-
+  const openPlanCardId = useOpenPlanCardStore((state) => state.openPlanCardId);
+  const setOpenPlanCardId = useOpenPlanCardStore(
+    (state) => state.setOpenPlanCardId
+  );
   return (
     <div className="relative flex flex-col py-3">
       <span className="relative flex ml-4 -mb-4 z-10">

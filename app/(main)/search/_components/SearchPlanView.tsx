@@ -13,7 +13,7 @@ import CommonButton from "@/components/CommonButton";
 import { getPlans } from "../../actions";
 import { useSearchParams } from "next/navigation";
 import { PLAN_LIMIT } from "../../_consts/PLAN_LIMIT";
-import { useOpenPlanCard } from "../../_store/openPlanCardStore";
+import { useOpenPlanCardStore } from "../../_store/OpenPlanCardStoreProvider";
 
 function MoreButton({
   maxSize,
@@ -45,7 +45,10 @@ function SearchPlanView({
 }) {
   const params = useSearchParams();
   const q = params.get("q") || "";
-  const { openPlanCardId, setOpenPlanCardId } = useOpenPlanCard();
+  const openPlanCardId = useOpenPlanCardStore((state) => state.openPlanCardId);
+  const setOpenPlanCardId = useOpenPlanCardStore(
+    (state) => state.setOpenPlanCardId
+  );
 
   const [popularPlans, setPopularPlans] = useState(
     initialPlans ? initialPlans.popularPlans.planData : []

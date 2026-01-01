@@ -1,11 +1,26 @@
-import { create } from "zustand";
+import { createStore } from "zustand";
 
-interface OpenPlanCardStore {
+export interface OpenPlanCardStoreState {
   openPlanCardId: string | null;
+}
+
+export interface OpenPlanCardStoreActions {
   setOpenPlanCardId: (planId: string | null) => void;
 }
 
-export const useOpenPlanCard = create<OpenPlanCardStore>((set) => ({
+export type OpenPlanCardStore = OpenPlanCardStoreState & OpenPlanCardStoreActions;
+
+const defaultOpenPlanCardStore: OpenPlanCardStoreState = {
   openPlanCardId: null,
-  setOpenPlanCardId: (planId) => set({ openPlanCardId: planId }),
-}));
+};
+
+export const createOpenPlanCardStore = (
+  initState: OpenPlanCardStoreState = defaultOpenPlanCardStore
+) => {
+  return createStore<OpenPlanCardStore>((set) => ({
+    ...initState,
+    setOpenPlanCardId: (planId: string | null) => {
+      set({ openPlanCardId: planId });
+    },
+  }));
+};
