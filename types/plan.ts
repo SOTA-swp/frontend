@@ -4,8 +4,11 @@ import { User } from "./user";
 export const PlanSchema = z.object({
   id: z.string(),
   creatorId: z.string(),
-  title: z.string().min(1).max(100),
-  description: z.string().max(500),
+  title: z
+    .string()
+    .min(1, "計画名は1文字以上入力してください")
+    .max(100, "計画名は100文字以下で入力してください"),
+  description: z.string().max(500, "説明は500文字以下で入力してください"),
   isPublic: z.boolean(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
