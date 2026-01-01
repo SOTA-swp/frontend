@@ -3,6 +3,10 @@
 import { createMockPlan, PlanWithDetails } from "@/types/plan";
 import { createMockUser, User } from "@/types/user";
 import { PLAN_LIMIT } from "./_consts/PLAN_LIMIT";
+import { fetchWrapper } from "@/utils/fetchWrapper";
+import { ApiRoutes } from "api-contract";
+import { AddPlanFormData, addPlanFormSchema } from "./_components/AddPlanModal";
+import { cookies } from "next/headers";
 
 // TODO: 実際のAPIが完成したら置き換える
 export async function getUserData(userId: string): Promise<
@@ -45,4 +49,44 @@ export async function getPlans(
       }))
       .slice(0, Math.max(0, 100 - page * limit)),
   };
+}
+
+interface CreatePlanResult {
+  ok: boolean;
+  newPlan: { id: string } | null;
+  message: string;
+}
+export async function createPlan(
+  data: AddPlanFormData
+): Promise<CreatePlanResult> {
+  const failedMessage = (message: string) =>
+    `計画の作成に失敗しました: ${message}`;
+  const successMessage = "計画を作成しました";
+
+  try {
+    const result = addPlanFormSchema.safeParse(data);
+    if (!result.success) {
+      return {
+        ok: false,
+        newPlan: null,
+        message: failedMessage(result.error.message),
+      };
+    }
+    const cookie = (await cookies()).toString();
+    const res = await fetchWrapper.post(ApiRoutes.plan.create, data, true, {
+      credentials: "include",
+      headers: {
+        Cookie: cookie,
+      },
+    });
+
+    const ok = res.ok;
+    const newPlan = await res.json();
+    const message = ok
+      ? successMessage
+      : failedMessage(res.statusText || "不明なエラー");
+    return { ok, newPlan, message };
+  } catch (_) {
+    return { ok: false, newPlan: null, message: failedMessage("不明なエラー") };
+  }
 }
