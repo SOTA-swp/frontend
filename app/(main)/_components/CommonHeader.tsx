@@ -11,6 +11,8 @@ import HEADER_HEIGHT from "../_consts/HEADER_HIGHT";
 import { useAppStore } from "@/store/AppStoreProvider";
 import { MdAdd, MdSearch, MdNotifications, MdLogout } from "react-icons/md";
 import PATH from "@/consts/PATH";
+import Notification from "../_components/Notification";
+import usePopover from "@/components/popover/usePopover";
 
 const curtainVariants: Variants = {
   hover: {
@@ -23,6 +25,7 @@ function CommonHeader() {
   const userData = useAppStore((state) => state.user);
   const logout = useAppStore((state) => state.logout);
   const [scrolled, setScrolled] = React.useState(false);
+  const { open, anchorEl, handleOpen, handleClose } = usePopover();
 
   const isLoggedIn = !!userData;
 
@@ -85,7 +88,8 @@ function CommonHeader() {
       style={{
         zIndex: LAYER.HEADER,
         height: HEADER_HEIGHT,
-      }}>
+      }}
+    >
       <motion.div
         className={clsx(
           "flex flex-1 items-center justify-between border border-primary rounded-2xl bg-paper overflow-hidden",
@@ -96,14 +100,17 @@ function CommonHeader() {
           marginBottom: 0,
           borderRadius: scrolled ? "" : 4,
         }}
-        transition={{ type: "spring", stiffness: 500, damping: 50 }}>
+        transition={{ type: "spring", stiffness: 500, damping: 50 }}
+      >
         <motion.div
           className="relative pl-8 pr-16 cursor-pointer select-none h-full group"
-          whileHover={"hover"}>
+          whileHover={"hover"}
+        >
           <button className="relative h-full flex items-center z-10">
             <CommonText
               level="h2"
-              className={`text-primary group-hover:text-paper transition-colors`}>
+              className={`text-primary group-hover:text-paper transition-colors`}
+            >
               {PROJECT_NAME}
             </CommonText>
           </button>
@@ -117,7 +124,8 @@ function CommonHeader() {
                 transition: { type: "spring", stiffness: 100, damping: 30 },
               },
             }}
-            initial={{ gap: 0 }}>
+            initial={{ gap: 0 }}
+          >
             <motion.div
               className={`bg-primary w-[80%] h-full shrink-0`}
               variants={curtainVariants}

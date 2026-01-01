@@ -29,7 +29,8 @@ function UserView({ userData }: UserViewProps) {
       ref={ref}
       id={MAIN_PAGE_IDs.USER}
       className="relative "
-      style={{ scrollMarginTop: VIEW_TOP_MARGIN }}>
+      style={{ scrollMarginTop: VIEW_TOP_MARGIN }}
+    >
       <MainViewController
         ref={ref}
         viewId={MAIN_PAGE_IDs.USER}
