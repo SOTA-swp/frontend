@@ -1,7 +1,9 @@
 "use client";
+import ModalContent from "@/components/modal/ModalContent";
+import ModalTitle from "@/components/modal/ModalTitle";
 import Popover from "@/components/popover/Popover";
 
-type NotifiactionProps = {
+type NotificationProps = {
   open: boolean;
   anchorEl: HTMLElement | null;
   handleClose: () => void;
@@ -11,17 +13,18 @@ export default function Notification({
   open,
   anchorEl,
   handleClose,
-}: NotifiactionProps) {
+}: NotificationProps) {
   return (
     <>
       <Popover
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        placement="bottom"
-      >
-        {/* 中身は空 */}
-        <div style={{ width: 280, height: 100 }} />
+        placement="bottom-start"
+        flipEnabled={false}>
+        <ModalContent closeModal={handleClose}>
+          <ModalTitle>通知一覧</ModalTitle>
+        </ModalContent>
       </Popover>
     </>
   );

@@ -13,12 +13,13 @@ export default function ModalContent({
   children,
 }: ModalContentProps) {
   return (
-    <motion.div className="relative flex flex-col justify-between max-w-[800px] min-w-[700px] max-h-[500px] min-h-[400px] bg-paper rounded-lg shadow-2xl">
+    <motion.div className="relative flex flex-col justify-between max-w-200 min-w-175 max-h-125 min-h-100 bg-paper rounded-lg shadow-2xl">
       <IconButton
         onClick={closeModal}
         icon={<MdClose />}
         className="absolute top-4 right-4"
         variant={"iconOnly"}
+        color={"gray"}
         style={{ zIndex: LAYER.MODAL + 1 }}
       />
       {children}
