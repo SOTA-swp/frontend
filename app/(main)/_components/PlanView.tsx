@@ -11,19 +11,25 @@ import MainViewController from "./MainViewController";
 import PlanBlock from "./PlanBlock";
 import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
 import { useAddPlanModal } from "../_hooks/useAddPlanModal";
+import { User } from "@/types/user";
+import { useAppStore } from "@/store/AppStoreProvider";
 
 export interface PlanViewProps {
   viewId: (typeof MAIN_PAGE_IDs)["PLANS"] | (typeof MAIN_PAGE_IDs)["FAVORITES"];
   plans: PlanWithDetails[];
+  userId: User["id"];
 }
 
-function PlanView({ viewId, plans }: PlanViewProps) {
+function PlanView({ viewId, plans, userId }: PlanViewProps) {
   const openPlanCardId = useOpenPlanCardStore((state) => state.openPlanCardId);
   const setOpenPlanCardId = useOpenPlanCardStore(
     (state) => state.setOpenPlanCardId
   );
   const ref = useRef<HTMLElement>(null);
   const { handleOpenAddPlanModal } = useAddPlanModal();
+  const user = useAppStore((state) => state.user);
+
+  const isMe = user?.id === userId;
 
   return (
     <motion.section
@@ -47,7 +53,7 @@ function PlanView({ viewId, plans }: PlanViewProps) {
             <MdFavorite />
           )
         }>
-        {viewId === MAIN_PAGE_IDs.PLANS && (
+        {viewId === MAIN_PAGE_IDs.PLANS && isMe && (
           <AddButton onClick={handleOpenAddPlanModal} className="aspect-video">
             新規作成
           </AddButton>
