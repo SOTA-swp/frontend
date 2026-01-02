@@ -5,8 +5,8 @@ import { createMockUser, User } from "@/types/user";
 import { PLAN_LIMIT } from "./_consts/PLAN_LIMIT";
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
-import { AddPlanFormData, addPlanFormSchema } from "./_components/AddPlanModal";
 import { cookies } from "next/headers";
+import { AddPlanFormData, AddPlanFormSchema } from "./_types";
 
 // TODO: 実際のAPIが完成したら置き換える
 export async function getUserData(userId: string): Promise<
@@ -64,7 +64,7 @@ export async function createPlan(
   const successMessage = "計画を作成しました";
 
   try {
-    const result = addPlanFormSchema.safeParse(data);
+    const result = AddPlanFormSchema.safeParse(data);
     if (!result.success) {
       return {
         ok: false,

@@ -5,19 +5,11 @@ import ModalContent from "@/components/modal/ModalContent";
 import ModalTitle from "@/components/modal/ModalTitle";
 import TextField from "@/components/TextField";
 import PATH from "@/consts/PATH";
-import { PlanSchema } from "@/types/plan";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import z from "zod";
 import { createPlan } from "../actions";
-
-export const addPlanFormSchema = PlanSchema.pick({
-  title: true,
-  description: true,
-});
-
-export type AddPlanFormData = z.infer<typeof addPlanFormSchema>;
+import { AddPlanFormData, AddPlanFormSchema } from "../_types";
 
 interface AddPlanModalProps {
   closeModal: () => void;
@@ -29,7 +21,7 @@ function AddPlanModal({ closeModal }: AddPlanModalProps) {
     formState: { errors },
     handleSubmit,
   } = useForm<AddPlanFormData>({
-    resolver: zodResolver(addPlanFormSchema),
+    resolver: zodResolver(AddPlanFormSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -39,8 +31,9 @@ function AddPlanModal({ closeModal }: AddPlanModalProps) {
 
   const onsubmit = async (data: AddPlanFormData) => {
     const res = await createPlan(data);
+
     if (!res.ok) {
-      alert(`計画の作成に失敗しました`);
+      alert(res.message);
       return;
     }
     router.push(PATH.PLAN_EDIT(res.newPlan?.id || ""));
