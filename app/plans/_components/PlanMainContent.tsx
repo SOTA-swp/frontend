@@ -5,19 +5,21 @@ import MapView from "./MapView";
 import NodeView from "./NodeView";
 import PlanInfo from "./PlanInfo";
 import { VIEW_MODE, ViewModeNames, ViewModeType } from "../_consts/viewMode";
-import {  useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import IdeaSpaceView from "./IdeaSpaceView";
 import ViewGroupWrapper from "./ViewGroupWrapper";
 import HomeButton from "./HomeButton";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { usePlanStore } from "../_store/hook";
+import { PlanCollaborator } from "./PlanCollaborator";
 
 interface PlanMainContentProps {
   readOnly?: boolean;
+  planId?: string;
 }
 
-function PlanMainContent({ readOnly = false }: PlanMainContentProps) {
+function PlanMainContent({ readOnly = false, planId }: PlanMainContentProps) {
   const setReadOnly = usePlanStore((state) => state.setReadOnly);
   const [viewMode, setViewMode] = useState<ViewModeType>(VIEW_MODE.TIMELINE);
   useMemo(() => {
@@ -30,6 +32,7 @@ function PlanMainContent({ readOnly = false }: PlanMainContentProps) {
 
   return (
     <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}>
+      {planId && <PlanCollaborator planId={planId} />}
       <div className="flex flex-col p-4 gap-4">
         <HomeButton />
         <PlanInfo />

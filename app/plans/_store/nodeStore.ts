@@ -1,8 +1,10 @@
+import * as Y from "yjs";
 import { NodeData } from "@/types/node";
-import { arrayMove } from "@dnd-kit/sortable";
 import { StateCreator } from "zustand";
 import { PARENT_ID_ROOT } from "../_util/createNode";
 import { PermissionStore } from "./permissionStore";
+import { YjsStore } from "./yjsStore";
+import { PLAN_NODES_KEY, PLAN_STRUCTURE_KEY } from "../_consts/yjsKeys";
 
 export interface NodeState {
   nodes: Record<NodeData["id"], NodeData>;
@@ -47,38 +49,43 @@ export const defaultNodeStore: NodeState = {
   closeNodeIds: [],
 };
 
-// ancestorId が targetId の祖先ノードであるかを判定する再帰関数
-const isDescendant = (
-  structure: NodeState["structure"],
-  ancestorId: NodeData["id"],
-  targetId: NodeData["id"]
-): boolean => {
-  const children = structure[ancestorId] || [];
-  if (children.includes(targetId)) return true;
-  return children.some((childId) => isDescendant(structure, childId, targetId));
-};
-
-const findParentId = (
-  structure: NodeState["structure"],
-  nodeId: NodeData["id"]
-): NodeData["id"] | null => {
-  for (const parentId in structure) {
-    if (structure[parentId].includes(nodeId)) {
-      return parentId;
+const findParentIdInYjs = (
+  yStructure: Y.Map<Y.Array<string>>,
+  nodeId: string
+): string | null => {
+  for (const key of yStructure.keys()) {
+    const arr = yStructure.get(key);
+    if (arr) {
+      let found = false;
+      arr.forEach((id) => {
+        if (id === nodeId) found = true;
+      });
+      if (found) return key;
     }
   }
   return null;
 };
 
-const isReadOnly = (state: NodeStore & PermissionStore) => state.isReadOnly;
+const findIndexInYArray = (
+  yArray: Y.Array<string>,
+  targetId: string
+): number => {
+  let index = 0;
+  for (const item of yArray) {
+    if (item === targetId) return index;
+    index++;
+  }
+  return -1;
+};
 
 export const createNodeSlice: StateCreator<
-  NodeStore & PermissionStore,
+  NodeStore & PermissionStore & YjsStore,
   [],
   [],
   NodeStore
-> = (set) => ({
+> = (set, get) => ({
   ...defaultNodeStore,
+
   setNodes: (nodeList) => {
     const nodesMap: Record<string, NodeData> = nodeList.reduce(
       (acc, nodes) => {
@@ -89,183 +96,244 @@ export const createNodeSlice: StateCreator<
     );
     set({ nodes: nodesMap });
   },
+
   setStructure: (structure) => set({ structure }),
+
   moveNode: (activeId, overId) => {
-    set((state) => {
-      if (isReadOnly(state)) return state;
-      const structure = { ...state.structure };
+    const { ydoc, isReadOnly } = get();
+    if (!ydoc || isReadOnly) return;
 
-      if (isDescendant(structure, activeId, overId)) {
-        return state;
-      }
+    const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
 
-      const activeParentId = findParentId(structure, activeId);
-      const overParentId = findParentId(structure, overId);
+    // 依存関係のチェック用ヘルパー関数
+    const isDescendantYjs = (ancestorId: string, targetId: string): boolean => {
+      const children = yStructure.get(ancestorId);
+      if (!children) return false;
+      let found = false;
+      children.forEach((childId) => {
+        if (childId === targetId) found = true;
+      });
+      if (found) return true;
 
-      if (!activeParentId || !overParentId) return state;
+      let foundRecursive = false;
+      children.forEach((childId) => {
+        if (isDescendantYjs(childId, targetId)) foundRecursive = true;
+      });
+      return foundRecursive;
+    };
 
-      if (activeParentId === overId) return state;
+    ydoc.transact(() => {
+      if (isDescendantYjs(activeId, overId)) return;
+
+      const activeParentId = findParentIdInYjs(yStructure, activeId);
+      const overParentId = findParentIdInYjs(yStructure, overId);
+
+      if (!activeParentId || !overParentId) return;
+      if (activeParentId === overId) return;
+
+      const activeParentArray = yStructure.get(activeParentId);
+      const overParentArray = yStructure.get(overParentId);
+
+      if (!activeParentArray || !overParentArray) return;
 
       if (activeParentId === overParentId) {
-        const children = structure[activeParentId];
-        const oldIndex = children.indexOf(activeId);
-        const newIndex = children.indexOf(overId);
-        structure[activeParentId] = arrayMove(children, oldIndex, newIndex);
-        return { structure: { ...structure } };
+        const oldIndex = findIndexInYArray(activeParentArray, activeId);
+        const newIndex = findIndexInYArray(activeParentArray, overId);
+        if (oldIndex !== -1 && newIndex !== -1) {
+          activeParentArray.delete(oldIndex, 1);
+          activeParentArray.insert(newIndex, [activeId]);
+        }
+      } else {
+        const oldIndex = findIndexInYArray(activeParentArray, activeId);
+        if (oldIndex !== -1) {
+          activeParentArray.delete(oldIndex, 1);
+        }
+
+        const overIndex = findIndexInYArray(overParentArray, overId);
+        if (overIndex !== -1) {
+          // 前に挿入するか後に挿入するかを決定
+          // structure[overParentId] = [...newChildren.slice(0, overIndex), activeId, ...newChildren.slice(overIndex)];
+          // これで overIndex に挿入されて、overId が右にずれる。
+          overParentArray.insert(overIndex, [activeId]);
+        } else {
+          // Fallback
+          overParentArray.push([activeId]);
+        }
       }
-
-      structure[activeParentId] = structure[activeParentId].filter(
-        (id) => id !== activeId
-      );
-
-      const newChildren = structure[overParentId];
-      const overIndex = newChildren.indexOf(overId);
-      structure[overParentId] = [
-        ...newChildren.slice(0, overIndex),
-        activeId,
-        ...newChildren.slice(overIndex),
-      ];
-      return { structure: { ...structure } };
     });
   },
+
   moveNodeStep: (id, direction) => {
-    set((state) => {
-      if (isReadOnly(state)) return state;
-      const structure = { ...state.structure };
-      const parentId = findParentId(structure, id);
-      if (!parentId) return state;
-      const siblings = structure[parentId];
-      const index = siblings.indexOf(id);
-      if (index === -1) return state;
+    const { ydoc, isReadOnly } = get();
+    if (!ydoc || isReadOnly) return;
+
+    const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
+
+    ydoc.transact(() => {
+      const parentId = findParentIdInYjs(yStructure, id);
+      if (!parentId) return;
+      const parentArray = yStructure.get(parentId);
+      if (!parentArray) return;
+
+      const index = findIndexInYArray(parentArray, id);
+      if (index === -1) return;
+
       const newIndex = direction === "up" ? index - 1 : index + 1;
 
-      // 上限、下限にいる場合、親を超えて移動する
-      if (newIndex < 0 || newIndex >= siblings.length) {
-        const grandParentId = findParentId(structure, parentId);
-        if (!grandParentId) return state;
-        const parentSiblings = structure[grandParentId];
-        const parentIndex = parentSiblings.indexOf(parentId);
-        if (parentIndex === -1) return state;
-        structure[parentId] = siblings.filter((sid) => sid !== id);
-        // 親の上に移動
+      if (newIndex < 0 || newIndex >= parentArray.length) {
+        // 先祖ノードに移動
+        const grandParentId = findParentIdInYjs(yStructure, parentId);
+        if (!grandParentId) return;
+        const grandParentArray = yStructure.get(grandParentId);
+        if (!grandParentArray) return;
+
+        const parentIndex = findIndexInYArray(grandParentArray, parentId);
+        if (parentIndex === -1) return;
+
+        parentArray.delete(index, 1);
+
         if (newIndex < 0) {
-          structure[grandParentId] = [
-            ...parentSiblings.slice(0, parentIndex),
-            id,
-            ...parentSiblings.slice(parentIndex),
-          ];
+          grandParentArray.insert(parentIndex, [id]);
         } else {
-          // 親の下に移動
-          structure[grandParentId] = [
-            ...parentSiblings.slice(0, parentIndex + 1),
-            id,
-            ...parentSiblings.slice(parentIndex + 1),
-          ];
+          grandParentArray.insert(parentIndex + 1, [id]);
         }
-        return { structure: { ...structure } };
       } else {
-        // 同じ親内での移動
-        structure[parentId] = arrayMove(siblings, index, newIndex);
-        return { structure: { ...structure } };
+        // 入れ替え
+        parentArray.delete(index, 1);
+        parentArray.insert(newIndex, [id]);
       }
     });
   },
+
   setNestNode: (parentId, childId) => {
-    set((state) => {
-      if (isReadOnly(state)) return state;
-      // console.log(`setNestNode: ${parentId}, ${childId}`);
-      if (parentId === childId) {
-        return state;
-      }
-      if (isDescendant(state.structure, childId, parentId)) {
-        return state;
-      }
-      if (state.structure[parentId]?.includes(childId)) {
-        return state;
-      }
-      const structure = { ...state.structure };
-      Object.keys(structure).forEach((pid) => {
-        structure[pid] = structure[pid].filter((cid) => cid !== childId);
+    const { ydoc, isReadOnly } = get();
+    if (!ydoc || isReadOnly) return;
+
+    const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
+
+    // 子孫をチェックするヘルパー関数
+    const isDescendantYjs = (ancestorId: string, targetId: string): boolean => {
+      const children = yStructure.get(ancestorId);
+      if (!children) return false;
+      let found = false;
+      children.forEach((childId) => {
+        if (childId === targetId) found = true;
       });
-      if (parentId && !structure[parentId]) {
-        structure[parentId] = [];
+      if (found) return true;
+
+      let foundRecursive = false;
+      children.forEach((childId) => {
+        if (isDescendantYjs(childId, targetId)) foundRecursive = true;
+      });
+      return foundRecursive;
+    };
+
+    ydoc.transact(() => {
+      if (parentId === childId) return;
+      if (isDescendantYjs(childId, parentId)) return;
+
+      const parentArray = yStructure.get(parentId);
+      // すでに親子関係がある場合は何もしない
+      if (parentArray && findIndexInYArray(parentArray, childId) !== -1) return;
+
+      // 古い親から削除
+      const oldParentId = findParentIdInYjs(yStructure, childId);
+      if (oldParentId) {
+        const oldParentArray = yStructure.get(oldParentId);
+        if (oldParentArray) {
+          const index = findIndexInYArray(oldParentArray, childId);
+          if (index !== -1) oldParentArray.delete(index, 1);
+        }
       }
-      structure[parentId] = [...structure[parentId], childId];
-      return { structure };
+
+      // 新しい親に追加
+      let newParentArray = yStructure.get(parentId);
+      if (!newParentArray) {
+        newParentArray = new Y.Array();
+        yStructure.set(parentId, newParentArray);
+      }
+      newParentArray.push([childId]);
     });
   },
+
   addNode: (
     node,
     parentId = PARENT_ID_ROOT,
     order = Number.MAX_SAFE_INTEGER
   ) => {
-    set((state) => {
-      if (isReadOnly(state)) return state;
-      const newNodes = {
-        ...state.nodes,
-        [node.id]: node,
-      };
-      const newStructure = { ...state.structure };
-      if (!newStructure[parentId]) {
-        newStructure[parentId] = [];
+    const { ydoc, isReadOnly } = get();
+    if (!ydoc || isReadOnly) return;
+
+    const yNodes = ydoc.getMap<NodeData>(PLAN_NODES_KEY);
+    const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
+
+    ydoc.transact(() => {
+      yNodes.set(node.id, node);
+
+      let parentArray = yStructure.get(parentId);
+      if (!parentArray) {
+        parentArray = new Y.Array();
+        yStructure.set(parentId, parentArray);
       }
-      newStructure[parentId] = [
-        ...newStructure[parentId].toSpliced(order, 0, node.id),
-      ];
-      // console.log("structure: ", newStructure);
-      return {
-        nodes: newNodes,
-        structure: newStructure,
-      };
+
+      const targetIndex =
+        order >= 0 && order <= parentArray.length ? order : parentArray.length;
+      parentArray.insert(targetIndex, [node.id]);
     });
   },
-  updateNode: (id, updateFields) => {
-    // console.log("updateNode", id, updateFields);
-    set((state) => {
-      if (isReadOnly(state)) return state;
-      return {
-        nodes: {
-          ...state.nodes,
-          [id]: {
-            ...state.nodes[id],
-            ...updateFields,
-          },
-        },
-      };
+
+  updateNode: (id, updatedFields) => {
+    const { ydoc, isReadOnly } = get();
+    if (!ydoc || isReadOnly) return;
+
+    const yNodes = ydoc.getMap<NodeData>(PLAN_NODES_KEY);
+    ydoc.transact(() => {
+      const current = yNodes.get(id);
+      if (current) {
+        yNodes.set(id, { ...current, ...updatedFields });
+      }
     });
   },
+
   removeNode: (id) => {
-    set((state) => {
-      if (isReadOnly(state)) return state;
-      const newNodes = { ...state.nodes };
-      delete newNodes[id];
-      const newStructure = { ...state.structure };
+    const { ydoc, isReadOnly } = get();
+    if (!ydoc || isReadOnly) return;
 
-      const delChildrenList: NodeData["id"][] = [id];
+    const yNodes = ydoc.getMap<NodeData>(PLAN_NODES_KEY);
+    const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
 
-      // 子ノードも再帰的に検索してリストに加える関数
-      const searchDeleteChildren = (id: NodeData["id"]) => {
-        const children = newStructure[id] || [];
-        children.forEach((childId) => {
-          delChildrenList.push(childId);
-          searchDeleteChildren(childId);
-        });
+    ydoc.transact(() => {
+      // 子ノードも含めて削除するためのIDリストを収集
+      const toDelete = [id];
+      const findChildren = (parentId: string) => {
+        const children = yStructure.get(parentId);
+        if (children) {
+          children.forEach((childId) => {
+            toDelete.push(childId);
+            findChildren(childId);
+          });
+        }
       };
-      searchDeleteChildren(id);
+      findChildren(id);
 
-      // 構造体から親のノードの参照のみ削除(どこにいるかわからないので全探索)
-      Object.keys(newStructure).forEach((parentId) => {
-        newStructure[parentId] = newStructure[parentId].filter(
-          (childId) => childId !== id
-        );
-      });
-      // 削除対象ノードとその子ノードを構造体から削除
-      delChildrenList.forEach((delId) => {
-        delete newNodes[delId];
-        delete newStructure[delId];
-      });
+      // 構造から削除
+      // まずは親ノードから自身を削除
+      const parentId = findParentIdInYjs(yStructure, id);
+      if (parentId) {
+        const parentArray = yStructure.get(parentId);
+        if (parentArray) {
+          const index = findIndexInYArray(parentArray, id);
+          if (index !== -1) {
+            parentArray.delete(index, 1);
+          }
+        }
+      }
 
-      return { nodes: newNodes, structure: newStructure };
+      // 全ノードとその構造エントリを削除
+      toDelete.forEach((delId) => {
+        yNodes.delete(delId);
+        yStructure.delete(delId);
+      });
     });
   },
 

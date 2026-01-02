@@ -3,11 +3,13 @@ import { createNodeSlice, NodeStore } from "./nodeStore";
 import { createLocationSlice, LocationStore } from "./locationStore";
 import { createPlanInfoSlice, PlanInfoStore } from "./planInfoStore";
 import { createPermissionSlice, PermissionStore } from "./permissionStore";
+import { createYjsSlice, YjsStore } from "./yjsStore";
 
 export type PlanStore = NodeStore &
   LocationStore &
   PlanInfoStore &
-  PermissionStore;
+  PermissionStore &
+  YjsStore;
 
 export const createPlanStore = (initData?: Partial<PlanStore>) => {
   return create<PlanStore>((...a) => ({
@@ -15,6 +17,7 @@ export const createPlanStore = (initData?: Partial<PlanStore>) => {
     ...createNodeSlice(...a),
     ...createLocationSlice(...a),
     ...createPlanInfoSlice(...a),
+    ...createYjsSlice(...a),
     ...initData,
   }));
 };
