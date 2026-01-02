@@ -10,6 +10,7 @@ import { useRef } from "react";
 import MainViewController from "./MainViewController";
 import PlanBlock from "./PlanBlock";
 import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
+import { useAddPlanModal } from "../_hooks/useAddPlanModal";
 
 export interface PlanViewProps {
   viewId: (typeof MAIN_PAGE_IDs)["PLANS"] | (typeof MAIN_PAGE_IDs)["FAVORITES"];
@@ -22,6 +23,7 @@ function PlanView({ viewId, plans }: PlanViewProps) {
     (state) => state.setOpenPlanCardId
   );
   const ref = useRef<HTMLElement>(null);
+  const { handleOpenAddPlanModal } = useAddPlanModal();
 
   return (
     <motion.section
@@ -46,7 +48,9 @@ function PlanView({ viewId, plans }: PlanViewProps) {
           )
         }>
         {viewId === MAIN_PAGE_IDs.PLANS && (
-          <AddButton className="aspect-video">新規作成</AddButton>
+          <AddButton onClick={handleOpenAddPlanModal} className="aspect-video">
+            新規作成
+          </AddButton>
         )}
         {plans.map((plan) => {
           const wrapId = `${viewId}-${plan.planData.id}`;
