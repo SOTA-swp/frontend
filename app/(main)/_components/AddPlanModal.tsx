@@ -75,10 +75,16 @@ function AddPlanModal({ closeModal }: AddPlanModalProps) {
         />
       </div>
       <ModalAction>
-        <CommonButton modal variant="outline" onClick={closeModal}>
+        <CommonButton
+          type="button"
+          modal
+          variant="outline"
+          onClick={closeModal}>
           キャンセル
         </CommonButton>
-        <CommonButton modal>作成</CommonButton>
+        <CommonButton type="submit" modal>
+          作成
+        </CommonButton>
       </ModalAction>
     </ModalContent>
   );

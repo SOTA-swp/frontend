@@ -24,6 +24,7 @@ export default function ModalContent<T extends ElementType>({
       <IconButton
         onClick={closeModal}
         icon={<MdClose />}
+        type="button"
         className="absolute top-4 right-4"
         variant={"iconOnly"}
         color={"gray"}
