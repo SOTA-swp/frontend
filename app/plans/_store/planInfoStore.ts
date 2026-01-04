@@ -1,24 +1,33 @@
 import { Plan } from "@/types/plan";
 import { StateCreator } from "zustand";
 import { PermissionStore } from "./permissionStore";
+import { VIEW_MODE, ViewMode } from "../_consts/viewMode";
 
-export type PlanInfoStoreState = Plan;
-
-export interface PlanInfoActions {
-  setPlanInfo: (planInfo: Partial<Plan>) => void;
-  updatePlanInfo: (updatedFields: Partial<Plan>) => void;
+export interface PlanStoreState {
+  planInfo: Plan;
+  viewMode: ViewMode;
 }
 
-export type PlanInfoStore = PlanInfoStoreState & PlanInfoActions;
+export interface PlanActions {
+  setPlanInfo: (planInfo: Partial<Plan>) => void;
+  updatePlanInfo: (updatedFields: Partial<Plan>) => void;
 
-export const defaultPlanInfoStore: PlanInfoStoreState = {
-  id: "",
-  title: "",
-  description: "",
-  createdAt: "",
-  updatedAt: "",
-  creatorId: "",
-  isPublic: false,
+  setViewMode: (viewMode: ViewMode) => void;
+}
+
+export type PlanInfoStore = PlanStoreState & PlanActions;
+
+export const defaultStore: PlanStoreState = {
+  planInfo: {
+    id: "",
+    title: "",
+    description: "",
+    createdAt: "",
+    updatedAt: "",
+    creatorId: "",
+    isPublic: false,
+  },
+  viewMode: VIEW_MODE.TIMELINE,
 };
 
 const isReadOnly = (state: PlanInfoStore & PermissionStore) => state.isReadOnly;
@@ -29,10 +38,14 @@ export const createPlanInfoSlice: StateCreator<
   [],
   PlanInfoStore
 > = (set) => ({
-  ...defaultPlanInfoStore,
+  ...defaultStore,
+
   setPlanInfo: (planInfo) => {
-    set({ ...planInfo });
+    set((state) => ({
+      planInfo: { ...state.planInfo, ...planInfo },
+    }));
   },
+
   updatePlanInfo: (updatedFields) => {
     set((state) => {
       if (isReadOnly(state)) return state;
@@ -41,5 +54,9 @@ export const createPlanInfoSlice: StateCreator<
         ...updatedFields,
       };
     });
+  },
+
+  setViewMode: (viewMode) => {
+    set({ viewMode });
   },
 });

@@ -3,9 +3,9 @@ export const VIEW_MODE = {
   IDEA_SPACE: "idea_space",
 } as const;
 
-export type ViewModeType = (typeof VIEW_MODE)[keyof typeof VIEW_MODE];
+export type ViewMode = (typeof VIEW_MODE)[keyof typeof VIEW_MODE];
 
-export const ViewModeNames: Record<ViewModeType, string> = {
+export const ViewModeNames: Record<ViewMode, string> = {
   [VIEW_MODE.TIMELINE]: "タイムライン",
   [VIEW_MODE.IDEA_SPACE]: "アイデアスペース",
 } as const;

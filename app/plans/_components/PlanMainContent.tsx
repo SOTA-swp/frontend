@@ -4,7 +4,7 @@ import Tab from "@/components/Tab";
 import MapView from "./MapView";
 import NodeView from "./NodeView";
 import PlanInfo from "./PlanInfo";
-import { VIEW_MODE, ViewModeNames, ViewModeType } from "../_consts/viewMode";
+import { VIEW_MODE, ViewModeNames, ViewMode } from "../_consts/viewMode";
 import { useMemo, useState } from "react";
 import { AnimatePresence } from "motion/react";
 import IdeaSpaceView from "./IdeaSpaceView";
@@ -21,13 +21,13 @@ interface PlanMainContentProps {
 
 function PlanMainContent({ readOnly = false, planId }: PlanMainContentProps) {
   const setReadOnly = usePlanStore((state) => state.setReadOnly);
-  const [viewMode, setViewMode] = useState<ViewModeType>(VIEW_MODE.TIMELINE);
+  const [viewMode, setViewMode] = useState<ViewMode>(VIEW_MODE.TIMELINE);
   useMemo(() => {
     setReadOnly(readOnly);
   }, [readOnly, setReadOnly]);
 
   const handleChangeViewMode = (newMode: string) => {
-    setViewMode(newMode as ViewModeType);
+    setViewMode(newMode as ViewMode);
   };
 
   return (

@@ -5,13 +5,13 @@ import { MdEdit } from "react-icons/md";
 import QuickMenu from "./QuickMenu";
 
 function PlanInfo() {
-  const planTitle = usePlanStore((state) => state.title);
-  const planDescription = usePlanStore((state) => state.description);
-  const isPublic = usePlanStore((state) => state.isPublic);
+  const planTitle = usePlanStore((state) => state.planInfo.title);
+  const planDescription = usePlanStore((state) => state.planInfo.description);
+  const isPublic = usePlanStore((state) => state.planInfo.isPublic);
   const isReadOnly = usePlanStore((state) => state.isReadOnly);
 
   return (
-    <div className="my-3 py-2 pl-4 max-w-[1200px] border-l-2 border-accent">
+    <div className="my-3 py-2 pl-4 max-w-300 border-l-2 border-accent">
       <QuickMenu />
       <div className="flex items-center gap-6">
         <h2 className="text-2xl font-bold">{planTitle}</h2>

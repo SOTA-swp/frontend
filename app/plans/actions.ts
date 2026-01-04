@@ -12,8 +12,10 @@ export const getPlan = async (
   // TODO: 予定を取得する処理を実装する
 
   return {
-    ...createMockPlan(),
-    id: planId,
+    planInfo: {
+      ...createMockPlan(),
+      id: planId,
+    },
     nodes: MOCK_NODES.reduce(
       (acc, node) => {
         acc[node.id] = node;

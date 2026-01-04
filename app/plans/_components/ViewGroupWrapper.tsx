@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
-import { VIEW_MODE, ViewModeType } from "../_consts/viewMode";
+import { VIEW_MODE, ViewMode } from "../_consts/viewMode";
 import { motion } from "motion/react";
 
 interface ViewGroupWrapperProps {
-  viewMode: ViewModeType;
+  viewMode: ViewMode;
   children: ReactNode;
 }
 
@@ -16,7 +16,7 @@ function ViewGroupWrapper({ viewMode, children }: ViewGroupWrapperProps) {
       initial={{ opacity: 0, x: xInitial }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: xInitial }}
-      transition={{duration: 0.4, ease: "easeInOut" }}>
+      transition={{ duration: 0.4, ease: "easeInOut" }}>
       {children}
     </motion.div>
   );
