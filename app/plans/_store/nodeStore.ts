@@ -26,6 +26,8 @@ export interface NodeActions {
   addNode: (node: NodeData, parentId?: NodeData["id"], order?: number) => void;
   updateNode: (id: string, updatedFields: Partial<NodeData>) => void;
   removeNode: (id: string) => void;
+
+  // ノードを別のノードの子にする関数
   setNestNode: (parentId: NodeData["id"], childId: NodeData["id"]) => void;
 
   // ノードの中の編集中要素をセットする関数
@@ -49,23 +51,34 @@ export const defaultNodeStore: NodeState = {
   closeNodeIds: [],
 };
 
+/**
+ * Yjs構造から親IDを見つける
+ *
+ * @param yStructure
+ * @param nodeId
+ * @returns
+ */
 const findParentIdInYjs = (
   yStructure: Y.Map<Y.Array<string>>,
   nodeId: string
 ): string | null => {
-  for (const key of yStructure.keys()) {
-    const arr = yStructure.get(key);
-    if (arr) {
-      let found = false;
-      arr.forEach((id) => {
-        if (id === nodeId) found = true;
-      });
-      if (found) return key;
-    }
+  for (const [parentId, children] of yStructure.entries()) {
+    let found = false;
+    children.forEach((id) => {
+      if (id === nodeId) found = true;
+    });
+    if (found) return parentId;
   }
   return null;
 };
 
+/**
+ * Y.Array内でのインデックスを見つける
+ *
+ * @param yArray
+ * @param targetId
+ * @returns
+ */
 const findIndexInYArray = (
   yArray: Y.Array<string>,
   targetId: string
@@ -76,6 +89,35 @@ const findIndexInYArray = (
     index++;
   }
   return -1;
+};
+
+/**
+ * 依存関係にあるかどうかをYjs構造でチェック
+ *
+ * @param yStructure
+ * @param ancestorId
+ * @param targetId
+ * @returns
+ */
+const isDescendantYjs = (
+  yStructure: Y.Map<Y.Array<string>>,
+  ancestorId: string,
+  targetId: string
+): boolean => {
+  const children = yStructure.get(ancestorId);
+  if (!children) return false;
+
+  let found = false;
+  children.forEach((childId) => {
+    if (childId === targetId) found = true;
+  });
+  if (found) return true;
+
+  let foundRecursive = false;
+  children.forEach((childId) => {
+    if (isDescendantYjs(yStructure, childId, targetId)) foundRecursive = true;
+  });
+  return foundRecursive;
 };
 
 export const createNodeSlice: StateCreator<
@@ -105,25 +147,8 @@ export const createNodeSlice: StateCreator<
 
     const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
 
-    // 依存関係のチェック用ヘルパー関数
-    const isDescendantYjs = (ancestorId: string, targetId: string): boolean => {
-      const children = yStructure.get(ancestorId);
-      if (!children) return false;
-      let found = false;
-      children.forEach((childId) => {
-        if (childId === targetId) found = true;
-      });
-      if (found) return true;
-
-      let foundRecursive = false;
-      children.forEach((childId) => {
-        if (isDescendantYjs(childId, targetId)) foundRecursive = true;
-      });
-      return foundRecursive;
-    };
-
     ydoc.transact(() => {
-      if (isDescendantYjs(activeId, overId)) return;
+      if (isDescendantYjs(yStructure, activeId, overId)) return;
 
       const activeParentId = findParentIdInYjs(yStructure, activeId);
       const overParentId = findParentIdInYjs(yStructure, overId);
@@ -211,26 +236,9 @@ export const createNodeSlice: StateCreator<
 
     const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
 
-    // 子孫をチェックするヘルパー関数
-    const isDescendantYjs = (ancestorId: string, targetId: string): boolean => {
-      const children = yStructure.get(ancestorId);
-      if (!children) return false;
-      let found = false;
-      children.forEach((childId) => {
-        if (childId === targetId) found = true;
-      });
-      if (found) return true;
-
-      let foundRecursive = false;
-      children.forEach((childId) => {
-        if (isDescendantYjs(childId, targetId)) foundRecursive = true;
-      });
-      return foundRecursive;
-    };
-
     ydoc.transact(() => {
       if (parentId === childId) return;
-      if (isDescendantYjs(childId, parentId)) return;
+      if (isDescendantYjs(yStructure, childId, parentId)) return;
 
       const parentArray = yStructure.get(parentId);
       // すでに親子関係がある場合は何もしない
@@ -276,8 +284,7 @@ export const createNodeSlice: StateCreator<
         yStructure.set(parentId, parentArray);
       }
 
-      const targetIndex =
-        order >= 0 && order <= parentArray.length ? order : parentArray.length;
+      const targetIndex = Math.min(Math.max(order, 0), parentArray.length);
       parentArray.insert(targetIndex, [node.id]);
     });
   },
@@ -343,6 +350,7 @@ export const createNodeSlice: StateCreator<
 
   closeNode: (id) =>
     set((state) => ({ closeNodeIds: [...state.closeNodeIds, id] })),
+
   openNode: (id) => {
     set((state) => ({
       closeNodeIds: state.closeNodeIds.filter((nodeId) => nodeId !== id),
