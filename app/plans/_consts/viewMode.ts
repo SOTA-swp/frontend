@@ -1,6 +1,6 @@
 export const VIEW_MODE = {
   TIMELINE: "timeline",
-  IDEA_SPACE: "idea_space",
+  IDEA_SPACE: "idea-space",
 } as const;
 
 export type ViewMode = (typeof VIEW_MODE)[keyof typeof VIEW_MODE];
