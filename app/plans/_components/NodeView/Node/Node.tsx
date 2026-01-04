@@ -98,6 +98,7 @@ function Node({
     <>
       <AddNodeBar parentId={parentId} order={order} />
       <div
+        id={id}
         ref={setNodeRef}
         style={style}
         onMouseOver={handleMouseOver}

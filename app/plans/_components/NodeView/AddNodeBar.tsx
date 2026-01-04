@@ -4,7 +4,7 @@ import { NODE_TYPE_ITEMS } from "./NODE_ITEMS";
 import { motion } from "motion/react";
 import { NodeData, NodeType } from "@/types/node";
 import { usePlanStore } from "@/app/plans/_store/hook";
-import { createNode } from "@/app/plans/_util/createNode";
+import { useAddNode } from "../../_hooks/useAddNode";
 
 interface AddNodeBarProps {
   parentId: NodeData["id"];
@@ -17,17 +17,12 @@ function AddNodeBar({
   order,
   notAnimation = false,
 }: AddNodeBarProps) {
-  const addNode = usePlanStore((state) => state.addNode);
   const isReadOnly = usePlanStore((state) => state.isReadOnly);
+  const { handleAddNode } = useAddNode(false);
 
   if (isReadOnly) {
     return null;
   }
-
-  const handleAddNode = (type: NodeType) => {
-    const newNode = createNode(type);
-    addNode(newNode, parentId, order);
-  };
 
   return (
     <motion.div
@@ -65,7 +60,7 @@ function AddNodeBar({
             }}
             transition={{ type: "spring", stiffness: 500, damping: 20 }}>
             <IconButton
-              onClick={() => handleAddNode(type as NodeType)}
+              onClick={() => handleAddNode(type as NodeType, parentId, order)}
               title={`${title}を追加`}
               icon={icon}
               color={notAnimation ? "gray" : "primary"}

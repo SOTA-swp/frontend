@@ -6,16 +6,15 @@ import IconButton from "@/components/IconButton";
 import AddButton from "../AddButton";
 import { usePlanStore } from "../../_store/hook";
 import { NODE_TYPES, NodeType } from "@/types/node";
-import { createNode } from "../../_util/createNode";
 import { NODE_TYPE_ITEMS } from "./NODE_ITEMS";
-import { scrollToBottom } from "@/utils/scroll";
+import { useAddNode } from "../../_hooks/useAddNode";
 
 export const NODE_VIEW_ID = "node-view";
 
 function NodeViewAddButton() {
   const [addMode, setAddMode] = useState<NodeType>(NODE_TYPES.PROCESS);
-  const addNode = usePlanStore((state) => state.addNode);
   const isReadOnly = usePlanStore((state) => state.isReadOnly);
+  const { handleAddNode } = useAddNode(true);
 
   if (isReadOnly) {
     return null;
@@ -23,12 +22,6 @@ function NodeViewAddButton() {
 
   const handleModeChange = (mode: NodeType) => {
     setAddMode(mode);
-  };
-
-  const handleAddNode = () => {
-    const newNode = createNode(addMode);
-    addNode(newNode);
-    scrollToBottom(NODE_VIEW_ID);
   };
 
   const addButtonChildrenNodes: ReactNode[] = Object.entries(
@@ -44,7 +37,10 @@ function NodeViewAddButton() {
     />
   ));
   return (
-    <AddButton onClick={handleAddNode} childButtons={addButtonChildrenNodes} />
+    <AddButton
+      onClick={() => handleAddNode(addMode)}
+      childButtons={addButtonChildrenNodes}
+    />
   );
 }
 
