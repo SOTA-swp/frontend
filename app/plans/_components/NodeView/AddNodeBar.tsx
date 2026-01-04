@@ -31,6 +31,7 @@ function AddNodeBar({
 
   return (
     <motion.div
+      initial={"close"}
       animate={notAnimation ? "open" : "close"}
       whileHover={"open"}
       variants={{ close: { opacity: 0 }, open: { opacity: 1 } }}
