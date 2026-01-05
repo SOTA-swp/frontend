@@ -2,7 +2,7 @@ import { User } from "@/types/user";
 import { ApiRoutes } from "api-contract";
 import { StateCreator } from "zustand";
 
-type AuthUser = Pick<User, "id" | "name" | "email">;
+type AuthUser = Pick<User, "id" | "username" | "email">;
 
 export interface AuthStoreState {
   user: AuthUser | null;

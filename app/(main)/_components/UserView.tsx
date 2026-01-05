@@ -29,8 +29,7 @@ function UserView({ userData }: UserViewProps) {
       ref={ref}
       id={MAIN_PAGE_IDs.USER}
       className="relative "
-      style={{ scrollMarginTop: VIEW_TOP_MARGIN }}
-    >
+      style={{ scrollMarginTop: VIEW_TOP_MARGIN }}>
       <MainViewController
         ref={ref}
         viewId={MAIN_PAGE_IDs.USER}
@@ -48,7 +47,7 @@ function UserView({ userData }: UserViewProps) {
             </div>
             <div>
               <h1 className="text-2xl font-bold">
-                {isMe ? user?.id : userData.name}
+                {isMe ? user?.id : userData.username}
               </h1>
               <p className="text-text-secondary">
                 {createDate.toLocaleDateString()}から利用しています
