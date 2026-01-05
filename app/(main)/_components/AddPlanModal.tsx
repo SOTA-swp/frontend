@@ -31,12 +31,15 @@ function AddPlanModal({ closeModal }: AddPlanModalProps) {
   const router = useRouter();
 
   const onsubmit = async (data: AddPlanFormData) => {
+    const toastId = toast.loading("計画を作成中...");
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // デモ用の遅延
     const res = await createPlan(data);
 
     if (!res.ok) {
-      toast.error(res.message);
+      toast.error(`計画の作成に失敗しました: ${res.message}`, { id: toastId });
       return;
     }
+    toast.success("計画を作成しました！", { id: toastId });
     router.push(PATH.PLAN_EDIT(res.newPlan?.id || ""));
     closeModal();
   };

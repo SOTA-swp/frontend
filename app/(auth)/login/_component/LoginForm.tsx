@@ -25,18 +25,30 @@ function LoginForm() {
   const refetch = useAppStore((state) => state.refetch);
 
   const onSubmit = async (data: LoginFormData) => {
+    const toastId = toast.loading("ログイン中...");
     const res = await fetchWrapper.post(ApiRoutes.auth.login, data);
+
+    // ログイン処理が失敗した場合
     if (!res.ok) {
       const message = (await res.json())?.message || res.statusText;
-      toast.error(`ログインに失敗しました: ${message}`);
+      toast.error(`ログインに失敗しました: ${message}`, { id: toastId });
       return;
     }
+
+    // ログイン処理が成功した場合、ユーザーデータを再取得
     const ok = await refetch();
+
     if (ok) {
+      // ユーザーデータの再取得が成功した場合、ユーザーページへ遷移
+      toast.success("ログインに成功しました！ ユーザーページへ移動します...", {
+        id: toastId,
+      });
       router.push(PATH.USER());
     } else {
+      // 失敗した場合、エラートーストを表示してログインページへ遷移
       toast.error(
-        "ユーザーデータの取得に失敗しました。再度ログインページへ移動します。"
+        "ユーザーデータの取得に失敗しました。再度ログインページへ移動します。",
+        { id: toastId }
       );
       router.push(PATH.LOGIN);
     }

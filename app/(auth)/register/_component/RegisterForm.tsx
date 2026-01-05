@@ -27,13 +27,19 @@ function RegisterForm() {
   const router = useRouter();
 
   const onSubmit = async (data: RegisterFormData) => {
+    const toastId = toast.loading("登録中...");
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // デモ用の遅延
+
     const res = await fetchWrapper.post(ApiRoutes.auth.register, data);
     if (!res.ok) {
       const message = (await res.json())?.message || res.statusText;
-      toast.error(`登録に失敗しました: ${message}`);
+      toast.error(`登録に失敗しました: ${message}`, { id: toastId });
       return;
     }
-    router.push(PATH.USER());
+    toast.success("登録に成功しました！ ログインページへ移動します...", {
+      id: toastId,
+    });
+    router.push(PATH.LOGIN);
   };
 
   return (
