@@ -13,7 +13,7 @@ import { MdAdd, MdSearch, MdNotifications, MdLogout } from "react-icons/md";
 import PATH from "@/consts/PATH";
 import Notification from "../_components/Notification";
 import usePopover from "@/components/popover/usePopover";
-import { useAddPlanModal } from "../_hooks/useAddPlanModal";
+import AddPlanModal from "./AddPlanModal";
 
 const curtainVariants: Variants = {
   hover: {
@@ -27,7 +27,11 @@ function CommonHeader() {
   const logout = useAppStore((state) => state.logout);
   const [scrolled, setScrolled] = React.useState(false);
   const { handleOpen: notificationsOpen, ...notificationsProps } = usePopover(); // 通知用
-  const { handleOpenAddPlanModal } = useAddPlanModal();
+  const openModal = useAppStore((state) => state.openModal);
+
+  const handleOpenAddPlanModal: MouseEventHandler = () => {
+    openModal(<AddPlanModal />);
+  };
 
   const isLoggedIn = !!userData;
 

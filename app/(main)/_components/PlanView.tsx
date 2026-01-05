@@ -10,9 +10,9 @@ import { useRef } from "react";
 import MainViewController from "./MainViewController";
 import PlanBlock from "./PlanBlock";
 import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
-import { useAddPlanModal } from "../_hooks/useAddPlanModal";
 import { User } from "@/types/user";
 import { useAppStore } from "@/store/AppStoreProvider";
+import AddPlanModal from "./AddPlanModal";
 
 export interface PlanViewProps {
   viewId: (typeof MAIN_PAGE_IDs)["PLANS"] | (typeof MAIN_PAGE_IDs)["FAVORITES"];
@@ -26,10 +26,14 @@ function PlanView({ viewId, plans, userId }: PlanViewProps) {
     (state) => state.setOpenPlanCardId
   );
   const ref = useRef<HTMLElement>(null);
-  const { handleOpenAddPlanModal } = useAddPlanModal();
+  const openModal = useAppStore((state) => state.openModal);
   const user = useAppStore((state) => state.user);
 
   const isMe = user?.id === userId;
+
+  const handleOpenAddPlanModal = () => {
+    openModal(<AddPlanModal />);
+  };
 
   return (
     <motion.section

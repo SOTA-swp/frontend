@@ -11,12 +11,10 @@ import { useForm } from "react-hook-form";
 import { createPlan } from "../actions";
 import { AddPlanFormData, AddPlanFormSchema } from "../_types";
 import { toast } from "sonner";
+import { useAppStore } from "@/store/AppStoreProvider";
 
-interface AddPlanModalProps {
-  closeModal: () => void;
-}
-
-function AddPlanModal({ closeModal }: AddPlanModalProps) {
+function AddPlanModal() {
+  const closeModal = useAppStore((state) => state.closeModal);
   const {
     register,
     formState: { errors },
