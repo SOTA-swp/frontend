@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
 import ComponentColor from "@/types/componentColor";
 import ComponentSize from "@/types/componentSize";
 import { cva, VariantProps } from "class-variance-authority";
+import clsx from "clsx";
 import Link from "next/link";
 import React from "react";
 
@@ -134,11 +134,14 @@ function CommonButton({
   icon,
   children,
   className,
+  disabled,
   ...props
 }: CommonButtonProps) {
-  const commonClassName = cn(
+  const commonClassName = clsx(
     CommonButtonStyles({ size, variant, color, modal }),
     className,
+    disabled &&
+      "opacity-50! pointer-events-none! border! border-border! text-text-secondary! bg-paper! ",
     icon ? "justify-between" : "justify-center",
     fullWidth && "w-full"
   );
