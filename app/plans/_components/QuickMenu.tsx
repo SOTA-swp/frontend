@@ -12,7 +12,7 @@ import {
 import { usePlanStore } from "../_store/hook";
 import { useAppStore } from "@/store/AppStoreProvider";
 import EditPlanInfoModal from "./EditPlanInfoModal";
-import ExportModal from "@/app/(main)/_components/ExportModal";
+import ExportModal from "@/app/plans/ExportModal";
 
 interface QuickMenuItem {
   id: string;
