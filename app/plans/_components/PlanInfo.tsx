@@ -3,12 +3,20 @@ import { usePlanStore } from "../_store/hook";
 import IconButton from "@/components/IconButton";
 import { MdEdit } from "react-icons/md";
 import QuickMenu from "./QuickMenu";
+import { useAppStore } from "@/store/AppStoreProvider";
+import EditPlanInfoModal from "./EditPlanInfoModal";
 
 function PlanInfo() {
+  const planId = usePlanStore((state) => state.planInfo.id);
   const planTitle = usePlanStore((state) => state.planInfo.title);
   const planDescription = usePlanStore((state) => state.planInfo.description);
   const isPublic = usePlanStore((state) => state.planInfo.isPublic);
   const isReadOnly = usePlanStore((state) => state.isReadOnly);
+  const openModal = useAppStore((state) => state.openModal);
+
+  const handleOpenEditPlanInfoModal = () => {
+    openModal(<EditPlanInfoModal planId={planId} />);
+  };
 
   return (
     <div className="my-3 py-2 pl-4 max-w-300 border-l-2 border-accent">
@@ -25,6 +33,7 @@ function PlanInfo() {
           {/* TODO: 編集モーダルを開く */}
           {!isReadOnly && (
             <IconButton
+              onClick={handleOpenEditPlanInfoModal}
               title="編集する"
               variant={"iconOnly"}
               color={"gray"}

@@ -90,3 +90,38 @@ export async function createPlan(
     return { ok: false, newPlan: null, message: failedMessage("不明なエラー") };
   }
 }
+
+// TODO: APIの定義がされたらちゃんと実装する
+interface EditPlanResult {
+  ok: boolean;
+  message: string;
+}
+export async function editPlan(
+  planId: string,
+  data: Partial<AddPlanFormData>
+): Promise<EditPlanResult> {
+  const failedMessage = (message: string) =>
+    `計画の編集に失敗しました: ${message}`;
+  const successMessage = "計画を編集しました";
+  try {
+    const cookie = (await cookies()).toString();
+    const res = await fetchWrapper.put(
+      ApiRoutes.plan.edit(planId),
+      data,
+      true,
+      {
+        credentials: "include",
+        headers: {
+          Cookie: cookie,
+        },
+      }
+    );
+    const ok = res.ok;
+    const message = ok
+      ? successMessage
+      : failedMessage(res.statusText || "不明なエラー");
+    return { ok, message };
+  } catch (_) {
+    return { ok: false, message: failedMessage("不明なエラー") };
+  }
+}
