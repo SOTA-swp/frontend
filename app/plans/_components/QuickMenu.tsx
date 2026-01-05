@@ -12,7 +12,7 @@ import {
 import { usePlanStore } from "../_store/hook";
 import { useAppStore } from "@/store/AppStoreProvider";
 import EditPlanInfoModal from "./EditPlanInfoModal";
-import AddExportModal from "@/app/(main)/_components/AddExportModal";
+import ExportModal from "@/app/(main)/_components/ExportModal";
 
 interface QuickMenuItem {
   id: string;
@@ -65,7 +65,7 @@ function QuickMenu() {
         icon: <MdUpload />,
         label: "エクスポート",
         isEditOnly: false,
-        onClick: () => openModal(<AddExportModal />),
+        onClick: () => openModal(<ExportModal />),
       },
       {
         id: "group",

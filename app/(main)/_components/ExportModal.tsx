@@ -5,7 +5,7 @@ import ModalContent from "@/components/modal/ModalContent";
 import ModalTitle from "@/components/modal/ModalTitle";
 import { useAppStore } from "@/store/AppStoreProvider";
 
-function AddExportModal() {
+function ExportModal() {
     const closeModal = useAppStore((state) => state.closeModal);
 
     return (
@@ -27,4 +27,4 @@ function AddExportModal() {
     );
 }
 
-export default AddExportModal;
+export default ExportModal;
