@@ -19,7 +19,7 @@ export default function ModalContent<T extends ElementType>({
 
   return (
     <Component
-      className="relative flex flex-col max-w-200 min-w-175 max-h-125 min-h-100 bg-paper rounded-lg shadow-2xl"
+      className="relative flex flex-col max-w-200 min-w-175 max-h-125 min-h-100 overflow-y-auto bg-paper rounded-lg shadow-2xl"
       {...props}>
       <IconButton
         onClick={closeModal}
