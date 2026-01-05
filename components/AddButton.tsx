@@ -1,3 +1,5 @@
+"use client";
+
 import clsx from "clsx";
 import { HTMLAttributes, ReactNode } from "react";
 import { MdAdd } from "react-icons/md";

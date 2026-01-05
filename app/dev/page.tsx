@@ -28,6 +28,7 @@ import { useAppStore } from "@/store/AppStoreProvider";
 import ModalContent from "@/components/modal/ModalContent";
 import ModalTitle from "@/components/modal/ModalTitle";
 import ModalAction from "@/components/modal/ModalAction";
+import { toast } from "sonner";
 
 export interface DevPageProps {
   a: undefined;
@@ -276,6 +277,27 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
             <Popover open={open} anchorEl={anchorEl} onClose={handleClose}>
               ポップオーバー
             </Popover>
+          </div>
+          <div className="flex gap-2 p-4">
+            <CommonButton
+              onClick={() => {
+                toast.success("トースト通知だよ！");
+              }}>
+              トースト
+            </CommonButton>
+            <CommonButton
+              onClick={() => toast.error("エラー通知だよ！")}
+              color="error">
+              エラートースト
+            </CommonButton>
+            <CommonButton onClick={() => toast.info("情報トーストだよ！")}>
+              情報トースト
+            </CommonButton>
+            <CommonButton
+              onClick={() => toast.warning("警告トーストだよ！")}
+              color="accent">
+              警告トースト
+            </CommonButton>
           </div>
           <div className="flex p-4">
             <NodeThree />
