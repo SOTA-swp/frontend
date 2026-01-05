@@ -12,6 +12,7 @@ import { createPlan } from "../actions";
 import { AddPlanFormData, AddPlanFormSchema } from "../_types";
 import { toast } from "sonner";
 import { useAppStore } from "@/store/AppStoreProvider";
+import { useState } from "react";
 
 function AddPlanModal() {
   const closeModal = useAppStore((state) => state.closeModal);
@@ -27,14 +28,20 @@ function AddPlanModal() {
     },
   });
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const onsubmit = async (data: AddPlanFormData) => {
+    if (loading) return;
+    setLoading(true);
     const toastId = toast.loading("計画を作成中...");
     await new Promise((resolve) => setTimeout(resolve, 1000)); // デモ用の遅延
     const res = await createPlan(data);
 
     if (!res.ok) {
-      toast.error(`計画の作成に失敗しました: ${res.message}`, { id: toastId });
+      toast.error(`計画の作成に失敗しました: ${res.message}`, {
+        id: toastId,
+      });
+      setLoading(false); // 失敗したときのみローディングを解除
       return;
     }
     toast.success("計画を作成しました！", { id: toastId });
