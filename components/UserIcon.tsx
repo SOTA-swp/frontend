@@ -27,11 +27,11 @@ function UserIcon({
         {
           // <img src={userData.picture} className="w-9 h-9" />
         }
-        <p>{getFirstChar(userData?.name || "ユーザー名")}</p>
+        <p>{getFirstChar(userData?.username || "ユーザー名")}</p>
       </div>
       <div className="min-w-0">
         <CommonText className="truncate">
-          {userData?.name || "ユーザー名"}
+          {userData?.username || "ユーザー名"}
         </CommonText>
         {enableEmail && (
           <CommonText className="text-xs text-text-secondary text-nowrap truncate">

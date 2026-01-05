@@ -7,7 +7,6 @@ import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
 import { cookies } from "next/headers";
 import { AddPlanFormData, AddPlanFormSchema } from "./_types";
-import { string } from "zod";
 
 // TODO: 実際のAPIが完成したら置き換える
 export async function getUserData(userId: string): Promise<
@@ -88,7 +87,7 @@ export async function createPlan(
       : failedMessage(res.statusText || "不明なエラー");
     return { ok, newPlan, message };
   } catch (e) {
-    return { ok: false, newPlan: null, message: failedMessage(e) };
+    return { ok: false, newPlan: null, message: failedMessage(String(e)) };
   }
 }
 
