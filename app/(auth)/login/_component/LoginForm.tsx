@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
 import { useAppStore } from "@/store/AppStoreProvider";
+import { toast } from "sonner";
 
 function LoginForm() {
   const {
@@ -26,14 +27,15 @@ function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     const res = await fetchWrapper.post(ApiRoutes.auth.login, data);
     if (!res.ok) {
-      alert(`ログインに失敗しました: ${res.statusText}`);
+      const message = (await res.json())?.message || res.statusText;
+      toast.error(`ログインに失敗しました: ${message}`);
       return;
     }
     const ok = await refetch();
     if (ok) {
       router.push(PATH.USER());
     } else {
-      alert(
+      toast.error(
         "ユーザーデータの取得に失敗しました。再度ログインページへ移動します。"
       );
       router.push(PATH.LOGIN);

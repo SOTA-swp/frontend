@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { createPlan } from "../actions";
 import { AddPlanFormData, AddPlanFormSchema } from "../_types";
+import { toast } from "sonner";
 
 interface AddPlanModalProps {
   closeModal: () => void;
@@ -33,7 +34,7 @@ function AddPlanModal({ closeModal }: AddPlanModalProps) {
     const res = await createPlan(data);
 
     if (!res.ok) {
-      alert(res.message);
+      toast.error(res.message);
       return;
     }
     router.push(PATH.PLAN_EDIT(res.newPlan?.id || ""));

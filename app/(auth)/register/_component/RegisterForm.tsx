@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import PATH from "@/consts/PATH";
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
+import { toast } from "sonner";
 
 function RegisterForm() {
   const {
@@ -28,7 +29,8 @@ function RegisterForm() {
   const onSubmit = async (data: RegisterFormData) => {
     const res = await fetchWrapper.post(ApiRoutes.auth.register, data);
     if (!res.ok) {
-      alert(`登録に失敗しました: ${res.statusText}`);
+      const message = (await res.json())?.message || res.statusText;
+      toast.error(`登録に失敗しました: ${message}`);
       return;
     }
     router.push(PATH.USER());
