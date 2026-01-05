@@ -19,7 +19,7 @@ function RegisterForm() {
   } = useForm<RegisterFormData>({
     resolver: zodResolver(RegisterFormSchema),
     defaultValues: {
-      name: "",
+      username: "",
       email: "",
       password: "",
     },
@@ -48,9 +48,9 @@ function RegisterForm() {
       onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-col items-center gap-12 w-125">
         <TextField
-          {...register("name")}
-          helperText={errors.name?.message}
-          error={!!errors.name}
+          {...register("username")}
+          helperText={errors.username?.message}
+          error={!!errors.username}
           label="name"
           labelName="名前"
           placeholder="名前を入力"

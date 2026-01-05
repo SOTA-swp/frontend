@@ -2,7 +2,7 @@ import { UserSchema } from "@/types/user";
 import z from "zod";
 
 export const RegisterFormSchema = UserSchema.pick({
-  name: true,
+  username: true,
   email: true,
 }).extend({
   password: z
