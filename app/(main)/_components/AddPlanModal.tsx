@@ -34,6 +34,7 @@ function AddPlanModal() {
     if (loading) return;
     setLoading(true);
     const toastId = toast.loading("計画を作成中...");
+    // TODO: デモ用の遅延を消す
     await new Promise((resolve) => setTimeout(resolve, 1000)); // デモ用の遅延
     const res = await createPlan(data);
 
