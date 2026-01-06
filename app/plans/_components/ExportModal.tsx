@@ -4,6 +4,7 @@ import ModalAction from "@/components/modal/ModalAction";
 import ModalContent from "@/components/modal/ModalContent";
 import ModalTitle from "@/components/modal/ModalTitle";
 import { useAppStore } from "@/store/AppStoreProvider";
+import PDF from "@/app/plans/_components/PDF";
 
 function ExportModal() {
     const closeModal = useAppStore((state) => state.closeModal);
@@ -19,9 +20,11 @@ function ExportModal() {
                 <CommonButton type="button" modal variant="outline" onClick={closeModal}>
                     キャンセル
                 </CommonButton>
-                <CommonButton type="submit" modal>
-                    エクスポート
-                </CommonButton>
+                <PDF>
+                    <CommonButton type="submit" modal>
+                        エクスポート
+                    </CommonButton>
+                </PDF>
             </ModalAction>
         </ModalContent>
     );
