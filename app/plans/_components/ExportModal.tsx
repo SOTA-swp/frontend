@@ -16,16 +16,21 @@ function ExportModal() {
             <div className="px-6 py-0 text-lg text-text-secondary">
                 <p>この計画をPDFにエクスポートします。</p>
             </div>
-            <ModalAction>
-                <CommonButton type="button" modal variant="outline" onClick={closeModal}>
-                    キャンセル
-                </CommonButton>
-                <PDF>
+            <div className="flex justify-center py-2">
+                <PDF previewClassName="border border-border rounded-md w-fit">
+                    <div />
+                </PDF>
+            </div>
+                <ModalAction>
+                    <CommonButton type="button" modal variant="outline" onClick={closeModal}>
+                        キャンセル
+                    </CommonButton>
                     <CommonButton type="submit" modal>
                         エクスポート
                     </CommonButton>
-                </PDF>
-            </ModalAction>
+                </ModalAction>
+            
+            
         </ModalContent>
     );
 }
