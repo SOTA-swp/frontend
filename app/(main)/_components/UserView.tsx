@@ -4,24 +4,32 @@ import { MAIN_PAGE_IDs } from "../_consts/MAIN_PAGE_IDs";
 import { UserInfoBlock } from "@/components/UserInfoBlock";
 import PROJECT_NAME from "@/consts/PROJECT_NAME";
 import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
-import { useRef } from "react";
+import { use, useRef } from "react";
 import MainViewController from "./MainViewController";
 import { useAppStore } from "@/store/AppStoreProvider";
 
-export interface UserViewProps {
-  userData: User & {
-    favoritesCount: number;
-    favoredCount: number;
-    createdCount: number;
-  };
-}
+export type UserViewProps = {
+  userData: Promise<
+    | (User & {
+        favoritesCount: number;
+        favoredCount: number;
+        createdCount: number;
+      })
+    | null
+  >;
+};
 
 function UserView({ userData }: UserViewProps) {
-  const createDate = new Date(userData.createdAt);
+  const userDataResolved = use(userData);
+  const createDate = new Date(userDataResolved?.createdAt || "");
   const ref = useRef<HTMLElement>(null);
   const user = useAppStore((state) => state.user);
 
-  const isMe = user?.id === userData.id;
+  if (!userDataResolved) {
+    return null;
+  }
+
+  const isMe = user?.id === userDataResolved.id;
   console.log(user);
 
   return (
@@ -42,12 +50,12 @@ function UserView({ userData }: UserViewProps) {
             <div className="flex items-center rounded-full border-2 border-accent shrink-0">
               {
                 // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-                <img src={userData.picture} className="w-20 h-20" />
+                <img src={userDataResolved.picture} className="w-20 h-20" />
               }
             </div>
             <div>
               <h1 className="text-2xl font-bold">
-                {isMe ? user?.id : userData.username}
+                {userDataResolved.username}
               </h1>
               <p className="text-text-secondary">
                 {createDate.toLocaleDateString()}から利用しています
@@ -56,13 +64,19 @@ function UserView({ userData }: UserViewProps) {
           </div>
         </div>
         <div className="flex gap-4">
-          <UserInfoBlock title={"作った計画"} sum={userData.createdCount} />
+          <UserInfoBlock
+            title={"作った計画"}
+            sum={userDataResolved.createdCount}
+          />
           <UserInfoBlock title={`${PROJECT_NAME}歴`} sum={0} />
           <UserInfoBlock
             title={"いいねされた数"}
-            sum={userData.favoritesCount}
+            sum={userDataResolved.favoritesCount}
           />
-          <UserInfoBlock title={"いいねした数"} sum={userData.favoredCount} />
+          <UserInfoBlock
+            title={"いいねした数"}
+            sum={userDataResolved.favoredCount}
+          />
         </div>
       </div>
     </section>
