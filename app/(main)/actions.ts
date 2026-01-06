@@ -6,7 +6,7 @@ import { PLAN_LIMIT } from "./_consts/PLAN_LIMIT";
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
 import { cookies } from "next/headers";
-import { AddPlanFormData, AddPlanFormSchema } from "./_types";
+import { AddPlanFormData, AddPlanFormSchema, EditUserFormData } from "./_types";
 
 // TODO: 実際のAPIが完成したら置き換える
 export async function getUserData(userId: string): Promise<
@@ -123,5 +123,33 @@ export async function editPlan(
     return { ok, message };
   } catch (_) {
     return { ok: false, message: failedMessage("不明なエラー") };
+  }
+}
+
+interface EditUserResult {
+  ok: boolean;
+  message: string;
+}
+export async function editUser(
+  data: EditUserFormData
+): Promise<EditUserResult> {
+  const failedMessage = (message: string) =>
+    `ユーザー情報の編集に失敗しました: ${message}`;
+  const successMessage = "ユーザー情報を編集しました";
+  try {
+    const cookie = (await cookies()).toString();
+    const res = await fetchWrapper.put(ApiRoutes.auth.me, data, true, {
+      credentials: "include",
+      headers: {
+        Cookie: cookie,
+      },
+    });
+    const ok = res.ok;
+    const message = ok
+      ? successMessage
+      : failedMessage(res.statusText || "不明なエラー");
+    return { ok, message };
+  } catch (e) {
+    return { ok: false, message: failedMessage(String(e)) };
   }
 }

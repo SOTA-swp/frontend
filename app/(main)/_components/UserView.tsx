@@ -7,6 +7,9 @@ import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
 import { use, useRef } from "react";
 import MainViewController from "./MainViewController";
 import { useAppStore } from "@/store/AppStoreProvider";
+import IconButton from "@/components/IconButton";
+import { MdEdit } from "react-icons/md";
+import UserEditModal from "./UserEditModal";
 
 export type UserViewProps = {
   userData: Promise<
@@ -24,13 +27,17 @@ function UserView({ userData }: UserViewProps) {
   const createDate = new Date(userDataResolved?.createdAt || "");
   const ref = useRef<HTMLElement>(null);
   const user = useAppStore((state) => state.user);
+  const openModal = useAppStore((state) => state.openModal);
 
   if (!userDataResolved) {
     return null;
   }
 
   const isMe = user?.id === userDataResolved.id;
-  console.log(user);
+
+  const handleEditName = () => {
+    openModal(<UserEditModal />);
+  };
 
   return (
     <section
@@ -54,9 +61,26 @@ function UserView({ userData }: UserViewProps) {
               }
             </div>
             <div>
-              <h1 className="text-2xl font-bold">
-                {userDataResolved.username}
-              </h1>
+              <div className="flex gap-2 items-center">
+                <h1 className="text-2xl font-bold">
+                  {userDataResolved.username}
+                  {isMe && (
+                    <span className="text-[1rem] text-text-secondary">
+                      {" "}
+                      (あなた)
+                    </span>
+                  )}
+                </h1>
+                {isMe && (
+                  <IconButton
+                    onClick={handleEditName}
+                    icon={<MdEdit />}
+                    size={"sm"}
+                    variant={"iconOnly"}
+                    color={"gray"}
+                  />
+                )}
+              </div>
               <p className="text-text-secondary">
                 {createDate.toLocaleDateString()}から利用しています
               </p>

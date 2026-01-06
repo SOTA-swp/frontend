@@ -16,8 +16,8 @@ const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {
     const res = await fetchWrapper.get(url, true, {
       headers: { Cookie: (await cookies()).toString() || "" },
       next: { revalidate: 10 },
+      cache: "no-store",
     });
-    console.log(res);
     if (!res.ok) {
       return null;
     }
