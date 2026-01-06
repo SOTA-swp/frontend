@@ -1,5 +1,10 @@
 export const fetchWrapper = {
-  get: async (url: string, options: RequestInit = {}) => {
+  get: async (
+    url: string,
+    useSever: boolean = false,
+    options: RequestInit = {}
+  ) => {
+    url = `${useSever ? process.env.API_ROUTE : ""}${url}`;
     const response = await fetch(url, {
       ...options,
       method: "GET",
