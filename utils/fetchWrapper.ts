@@ -71,4 +71,22 @@ export const fetchWrapper = {
     });
     return response;
   },
+  patch: async (
+    url: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    body: any,
+    useServer: boolean = false,
+    options: RequestInit = {}
+  ) => {
+    const response = await fetch(formatUrl(url, useServer), {
+      ...options,
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+      body: JSON.stringify(body),
+    });
+    return response;
+  },
 };
