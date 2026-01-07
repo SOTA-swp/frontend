@@ -17,8 +17,9 @@ import {
 import IconButton from "./IconButton";
 import { startTransition, useOptimistic } from "react";
 import { addLike, removeLike } from "@/lib/api/likes";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { PLAN_ROLE } from "@/app/plans/_consts/planRole";
+import PATH from "@/consts/PATH";
 
 const MOTION_ELEMENTS = {
   CONTAINER: "container",
@@ -60,6 +61,7 @@ function PlanCard({
     })
   );
   const path = usePathname();
+  const router = useRouter();
 
   const getId = (key: string | number) => {
     return `plan-card-${layoutId}-${planData.id}-${key}`;
@@ -80,6 +82,10 @@ function PlanCard({
         console.error("いいねの更新に失敗しました");
       }
     });
+  };
+
+  const handlePlanEdit = () => {
+    router.push(PATH.PLAN_EDIT(planData.id));
   };
 
   const likeContent = (
@@ -245,7 +251,10 @@ function PlanCard({
                           </GrowIconButton>
                         )}
                         {role === PLAN_ROLE.MEMBER && (
-                          <GrowIconButton icon={<MdEdit />} absolute>
+                          <GrowIconButton
+                            onClick={handlePlanEdit}
+                            icon={<MdEdit />}
+                            absolute>
                             計画を編集
                           </GrowIconButton>
                         )}
@@ -256,6 +265,7 @@ function PlanCard({
                 <IconButton
                   onClick={onClose}
                   icon={<MdClose />}
+                  color={"gray"}
                   variant={"iconOnly"}
                   className="absolute top-2 right-2"
                 />
