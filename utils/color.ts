@@ -7,5 +7,6 @@ export const getHueFromString = (str: string, min = 0, max = 360): number => {
   hash = Math.imul(hash ^ (hash >>> 16), 0x85ebca6b);
   hash = Math.imul(hash ^ (hash >>> 13), 0xc2b2ae35);
   hash ^= hash >>> 16;
-  return (hash % (max - min)) + min;
+  const range = max - min;
+  return (Math.abs(hash) % range) + min;
 };

@@ -13,6 +13,8 @@ import {
   MdDownload,
   MdEdit,
   MdEditNote,
+  MdKeyboardArrowDown,
+  MdNavigateNext,
 } from "react-icons/md";
 import IconButton from "../../../components/IconButton";
 import { startTransition, useOptimistic } from "react";
@@ -21,6 +23,9 @@ import { usePathname, useRouter } from "next/navigation";
 import { PLAN_ROLE } from "@/app/plans/_consts/planRole";
 import PATH from "@/consts/PATH";
 import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
+import { getHueFromString } from "@/utils/color";
+import Link from "next/link";
+import { getFirstChar } from "@/utils/removeEmoji";
 
 const MOTION_ELEMENTS = {
   CONTAINER: "container",
@@ -28,6 +33,7 @@ const MOTION_ELEMENTS = {
   INFO: "info",
   TITLE: "title",
   FAVORITE: "favorite",
+  CHAR: "char",
 } as const;
 
 type MotionElement = (typeof MOTION_ELEMENTS)[keyof typeof MOTION_ELEMENTS];
@@ -94,11 +100,26 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
 
   const likeContent = (
     <FavoriteCounter
-      onClick={handleLike}
+      onClick={(e) => {
+        e.stopPropagation();
+        handleLike();
+      }}
       count={optimisticLike.count}
       hasLiked={optimisticLike.hasLiked}
     />
   );
+
+  const hue = getHueFromString(planData.id, 100, 250);
+  const background = `linear-gradient(45deg, hsl(${hue}, 60%, 60%), hsl(${hue + 40}, 70%, 70%))`;
+
+  const linkHref =
+    role === PLAN_ROLE.OWNER || role === PLAN_ROLE.MEMBER
+      ? PATH.PLAN_EDIT(planData.id)
+      : PATH.PLAN_VIEW(planData.id);
+  const linkMessage =
+    role === PLAN_ROLE.OWNER || role === PLAN_ROLE.MEMBER ? "編集へ" : "閲覧へ";
+
+  const firstChar = getFirstChar(planData.title);
 
   return (
     <>
@@ -106,18 +127,49 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
         // 大きめのカード
         <motion.div
           layoutId={getId(MOTION_ELEMENTS.CONTAINER)}
-          whileHover={{ scale: 1.02 }}
-          className="relative  bg-paper cursor-pointer rounded-lg aspect-video">
-          <motion.button
+          className="relative flex flex-col bg-paper cursor-pointer rounded-lg aspect-video overflow-clip ">
+          <motion.div
             layoutId={getId(MOTION_ELEMENTS.IMAGE)}
-            // TODO: サムネイルの仕様が決まったら修正
-            style={{ backgroundImage: `url(${"/mock/img/thumbnail.jpg"})` }}
-            className="absolute inset-0 bg-cover bg-center rounded-lg "
-          />
+            style={{ background: background }}
+            className="absolute inset-0 bg-cover bg-center rounded-lg overflow-hidden "></motion.div>
+
+          {/* 上部 */}
+          <motion.div
+            whileHover={"hover"}
+            className="relative z-10 flex-1 flex items-center justify-center text-paper text-5xl overflow-clip ">
+            <Link href={linkHref} className="absolute inset-0" />
+
+            {/* 文字部分 */}
+            <div className="flex-1 flex items-center justify-center">
+              <motion.div
+                layoutId={getId(MOTION_ELEMENTS.CHAR)}
+                className="flex items-center justify-center">
+                {firstChar}
+              </motion.div>
+            </div>
+
+            {/* ホバー時に出てくるメッセージ */}
+            <motion.div
+              initial={{ opacity: 0, width: 0 }}
+              variants={{ hover: { opacity: 1, width: "" } }}
+              transition={{ type: "spring", stiffness: 500, damping: 30 }}
+              className="bg-primary h-full shadow-md">
+              <div className="flex h-full flex-col items-center justify-center p-2">
+                <MdNavigateNext className="text-[2rem]" />
+                <p className="whitespace-nowrap text-sm">{linkMessage}</p>
+              </div>
+            </motion.div>
+
+            <div className="absolute p-2 bottom-0 text-2xl opacity-80">
+              <MdKeyboardArrowDown />
+            </div>
+          </motion.div>
+
+          {/* 下部 */}
           <motion.button
             onClick={handleOpen}
             layoutId={getId(MOTION_ELEMENTS.INFO)}
-            className="absolute bottom-0 left-0 w-full flex items-end justify-between bg-paper border border-primary p-2 pl-3 rounded-lg"
+            className="relative z-10 flex items-end justify-between bg-paper border border-primary p-2 pl-3 rounded-b-lg"
             whileHover={{
               paddingTop: "18px",
               transition: { type: "spring", stiffness: 400, damping: 20 },
@@ -128,14 +180,14 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
               </p>
               <motion.h3
                 layoutId={getId(MOTION_ELEMENTS.TITLE)}
-                className="text-text-primary truncate mt-1">
+                className="text-text-primary truncate mt-1 pr-16">
                 {planData.title}
               </motion.h3>
             </div>
           </motion.button>
           <motion.div
             layoutId={getId(MOTION_ELEMENTS.FAVORITE)}
-            className="absolute top-2 right-2">
+            className="absolute z-10 p-3 bottom-0 right-0">
             {likeContent}
           </motion.div>
         </motion.div>
@@ -145,15 +197,26 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
           onClick={handleOpen}
           layoutId={getId(MOTION_ELEMENTS.CONTAINER)}
           whileHover={{ scale: 1.05 }}
-          className="relative w-62.5 h-20 bg-paper rounded-lg border border-border">
+          className="relative flex w-62.5 h-20 bg-paper rounded-lg border border-border">
           <motion.div
             layoutId={getId(MOTION_ELEMENTS.IMAGE)}
-            style={{ backgroundImage: `url(${"/mock/img/thumbnail.jpg"})` }}
+            style={{ background: background }}
             className="absolute inset-0 bg-cover bg-center rounded-lg "
           />
+
+          {/* 文字部分 */}
+          <div className="relative z-10 w-[30%] flex items-center justify-center">
+            <motion.div
+              layoutId={getId(MOTION_ELEMENTS.CHAR)}
+              className="flex items-center justify-center text-2xl text-paper">
+              {firstChar}
+            </motion.div>
+          </div>
+
+          {/* 詳細部分 */}
           <motion.div
             layoutId={getId(MOTION_ELEMENTS.INFO)}
-            className="absolute top-0 right-0 flex flex-col text-start px-2 justify-center w-[60%] h-full bg-paper rounded-r-lg rounded-l-none">
+            className="relative z-10 flex-1 flex flex-col text-start px-2 justify-center w-[60%] h-full bg-paper rounded-r-lg rounded-l-none">
             <p className="text-[12px] text-text-secondary truncate">
               {subTimestamp(planData.createdAt)}
             </p>
@@ -194,20 +257,43 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
               <motion.div
                 onClick={(e) => e.stopPropagation()}
                 layoutId={getId(MOTION_ELEMENTS.CONTAINER)}
-                className="relative min-w-200 max-w-225 min-h-112.5 max-h-125"
+                className="relative min-w-200 max-w-225 min-h-112.5 max-h-125 flex flex-col "
                 style={{ zIndex: LAYER.CARD + 1 }}>
                 <motion.div
                   layoutId={getId(MOTION_ELEMENTS.IMAGE)}
-                  style={{
-                    // TODO: サムネイルの仕様が決まったら修正
-                    backgroundImage: `url(${"/mock/img/thumbnail.jpg"})`,
-                  }}
-                  className="absolute inset-0 bg-cover bg-center rounded-lg border border-primary"
+                  style={{ background: background }}
+                  className="absolute inset-0 bg-cover bg-center rounded-lg"
                 />
+
+                <motion.div
+                  whileHover={"hover"}
+                  className="relative flex-1 flex items-center justify-center overflow-clip select-none">
+                  <Link href={linkHref} className="absolute z-10 inset-0" />
+                  <motion.div className="flex-1 flex items-center justify-center">
+                    <motion.div
+                      layoutId={getId(MOTION_ELEMENTS.CHAR)}
+                      variants={{
+                        hover: {
+                          x: -100,
+                        },
+                      }}
+                      className="text-7xl text-paper">
+                      {firstChar}
+                    </motion.div>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 100 }}
+                    variants={{ hover: { opacity: 1, x: 0 } }}
+                    className="absolute flex flex-col items-center justify-center right-5 bg-primary text-paper shadow-md w-[15%] aspect-square rounded-full">
+                    <MdNavigateNext className="text-5xl" />
+                    <p>{linkMessage}</p>
+                  </motion.div>
+                </motion.div>
+
                 <motion.div
                   onClick={(e) => e.stopPropagation()}
                   layoutId={getId(MOTION_ELEMENTS.INFO)}
-                  className="absolute bottom-3 inset-x-3 bg-paper/80 backdrop-blur-md p-4 rounded-lg border border-primary shadow-lg ">
+                  className="m-3 mt-0 bg-paper/80 backdrop-blur-md p-4 rounded-lg border border-primary shadow-lg ">
                   <div className="flex justify-between">
                     <div className="flex items-end gap-2">
                       <p className="text-[14px] text-text-secondary truncate">
@@ -271,7 +357,7 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
                   icon={<MdClose />}
                   color={"gray"}
                   variant={"iconOnly"}
-                  className="absolute top-2 right-2"
+                  className="absolute top-2 right-2 z-20"
                 />
               </motion.div>
             </motion.div>
