@@ -17,9 +17,17 @@ import { Switch } from "@/components/ui/switch";
 
 interface EditPlanInfoModalProps {
   planId: string;
+  planData?: EditPlanFormData;
+  onEdit?: (data: EditPlanFormData) => void;
+  path?: string;
 }
 
-function EditPlanInfoModal({ planId }: EditPlanInfoModalProps) {
+function EditPlanInfoModal({
+  planId,
+  planData,
+  onEdit,
+  path,
+}: EditPlanInfoModalProps) {
   const closeModal = useAppStore((state) => state.closeModal);
 
   // TODO: デフォルトはどうなるか？webソケットで最新情報を取ってくるのか？API叩くのか？
@@ -35,15 +43,17 @@ function EditPlanInfoModal({ planId }: EditPlanInfoModalProps) {
       title: "",
       description: "",
       isPublic: false,
+      ...(planData || {}),
     },
   });
 
   const onSubmit = async (data: EditPlanFormData) => {
+    onEdit?.(data);
     const toastId = toast.loading("計画情報を更新中...");
 
     // TODO: APIできたら消す
     await new Promise((resolve) => setTimeout(resolve, 1000)); // デモ用の遅延
-    const res = await editPlan(planId, data);
+    const res = await editPlan(planId, data, path);
 
     if (!res.ok) {
       toast.error(`計画情報の更新に失敗しました: ${res.message}`, {

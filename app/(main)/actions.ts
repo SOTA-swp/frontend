@@ -105,14 +105,15 @@ interface EditPlanResult {
 }
 export async function editPlan(
   planId: string,
-  data: Partial<AddPlanFormData>
+  data: Partial<AddPlanFormData>,
+  path?: string
 ): Promise<EditPlanResult> {
   const failedMessage = (message: string) =>
     `計画の編集に失敗しました: ${message}`;
   const successMessage = "計画を編集しました";
   try {
     const cookie = (await cookies()).toString();
-    const res = await fetchWrapper.put(
+    const res = await fetchWrapper.patch(
       ApiRoutes.plan.edit(planId),
       data,
       true,
@@ -127,6 +128,11 @@ export async function editPlan(
     const message = ok
       ? successMessage
       : failedMessage(res.statusText || "不明なエラー");
+
+    if (ok && path) {
+      revalidatePath(path);
+    }
+
     return { ok, message };
   } catch (_) {
     return { ok: false, message: failedMessage("不明なエラー") };
