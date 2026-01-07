@@ -2,13 +2,8 @@
 import Chip from "@/components/Chip";
 import PlanCard from "@/app/(main)/_components/PlanCard";
 import { PlanWithDetails } from "@/types/plan";
-import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
 
 function Top({ data }: { data: PlanWithDetails[] }) {
-  const openPlanCardId = useOpenPlanCardStore((state) => state.openPlanCardId);
-  const setOpenPlanCardId = useOpenPlanCardStore(
-    (state) => state.setOpenPlanCardId
-  );
   return (
     <div className="relative flex flex-col py-3">
       <span className="relative flex ml-4 -mb-4 z-10">
@@ -20,14 +15,7 @@ function Top({ data }: { data: PlanWithDetails[] }) {
 
           return (
             <span key={wrapId} className="shrink-0">
-              <PlanCard
-                open={openPlanCardId === wrapId}
-                onOpen={() => setOpenPlanCardId(wrapId)}
-                onClose={() => setOpenPlanCardId(null)}
-                variant="mini"
-                data={plan}
-                layoutId={"top"}
-              />
+              <PlanCard variant="mini" data={plan} layoutId={"top"} />
             </span>
           );
         })}

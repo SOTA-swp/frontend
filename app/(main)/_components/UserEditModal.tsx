@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { editUser } from "../actions";
 import { toast } from "sonner";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 interface UserEditModalProps {
   onEdit?: (data: EditUserFormData) => void;
@@ -32,7 +32,6 @@ function UserEditModal({ onEdit }: UserEditModalProps) {
       username: preUsername,
     },
   });
-  const router = useRouter();
   const path = usePathname();
 
   const onSubmit = async (data: EditUserFormData) => {

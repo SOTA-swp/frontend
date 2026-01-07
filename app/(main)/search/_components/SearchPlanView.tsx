@@ -13,7 +13,6 @@ import CommonButton from "@/components/CommonButton";
 import { getPlans } from "../../actions";
 import { useSearchParams } from "next/navigation";
 import { PLAN_LIMIT } from "../../_consts/PLAN_LIMIT";
-import { useOpenPlanCardStore } from "../../_store/OpenPlanCardStoreProvider";
 
 function MoreButton({
   maxSize,
@@ -45,10 +44,6 @@ function SearchPlanView({
 }) {
   const params = useSearchParams();
   const q = params.get("q") || "";
-  const openPlanCardId = useOpenPlanCardStore((state) => state.openPlanCardId);
-  const setOpenPlanCardId = useOpenPlanCardStore(
-    (state) => state.setOpenPlanCardId
-  );
 
   const [popularPlans, setPopularPlans] = useState(
     initialPlans ? initialPlans.popularPlans.planData : []
@@ -67,14 +62,6 @@ function SearchPlanView({
     setNewPlans((prev) => [...prev, ...morePlans.planData]);
   };
 
-  const handleOpenPlanCard = (planId: string) => {
-    setOpenPlanCardId(planId);
-  };
-
-  const handleClosePlanCard = () => {
-    setOpenPlanCardId(null);
-  };
-
   return (
     <section className="mt-16 flex flex-col gap-16">
       <PlanBlock
@@ -88,15 +75,11 @@ function SearchPlanView({
           />
         }>
         {popularPlans.map((plan) => {
-          const wrapId = `search-popular-${plan.planData.id}`;
           return (
             <PlanCard
               key={plan.planData.id}
               data={plan}
               layoutId="search-popular"
-              open={openPlanCardId === wrapId}
-              onOpen={() => handleOpenPlanCard(wrapId)}
-              onClose={handleClosePlanCard}
             />
           );
         })}
@@ -112,19 +95,9 @@ function SearchPlanView({
             onClick={handleLoadingMoreNew}
           />
         }>
-        {newPlans.map((plan) => {
-          const wrapId = `search-new-${plan.planData.id}`;
-          return (
-            <PlanCard
-              key={plan.planData.id}
-              data={plan}
-              layoutId="search-new"
-              open={openPlanCardId === wrapId}
-              onOpen={() => handleOpenPlanCard(wrapId)}
-              onClose={handleClosePlanCard}
-            />
-          );
-        })}
+        {newPlans.map((plan) => (
+          <PlanCard key={plan.planData.id} data={plan} layoutId="search-new" />
+        ))}
       </PlanBlock>
     </section>
   );

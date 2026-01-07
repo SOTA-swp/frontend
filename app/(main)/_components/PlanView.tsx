@@ -9,7 +9,6 @@ import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
 import { use, useRef } from "react";
 import MainViewController from "./MainViewController";
 import PlanBlock from "./PlanBlock";
-import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
 import { User } from "@/types/user";
 import { useAppStore } from "@/store/AppStoreProvider";
 import AddPlanModal from "./AddPlanModal";
@@ -21,10 +20,6 @@ export interface PlanViewProps {
 }
 
 function PlanView({ viewId, plans, userId }: PlanViewProps) {
-  const openPlanCardId = useOpenPlanCardStore((state) => state.openPlanCardId);
-  const setOpenPlanCardId = useOpenPlanCardStore(
-    (state) => state.setOpenPlanCardId
-  );
   const ref = useRef<HTMLElement>(null);
   const openModal = useAppStore((state) => state.openModal);
   const user = useAppStore((state) => state.user);
@@ -67,21 +62,9 @@ function PlanView({ viewId, plans, userId }: PlanViewProps) {
             新規作成
           </AddButton>
         )}
-        {resolvedPlans.map((plan) => {
-          const wrapId = `${viewId}-${plan.planData.id}`;
-          const handleOpen = () => setOpenPlanCardId(wrapId);
-          const handleClose = () => setOpenPlanCardId(null);
-          return (
-            <PlanCard
-              key={plan.planData.id}
-              data={plan}
-              layoutId={viewId}
-              onOpen={handleOpen}
-              onClose={handleClose}
-              open={openPlanCardId === wrapId}
-            />
-          );
-        })}
+        {resolvedPlans.map((plan) => (
+          <PlanCard key={plan.planData.id} data={plan} layoutId={viewId} />
+        ))}
       </PlanBlock>
     </motion.section>
   );

@@ -20,6 +20,7 @@ import { addLike, removeLike } from "@/lib/api/likes";
 import { usePathname, useRouter } from "next/navigation";
 import { PLAN_ROLE } from "@/app/plans/_consts/planRole";
 import PATH from "@/consts/PATH";
+import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
 
 const MOTION_ELEMENTS = {
   CONTAINER: "container",
@@ -29,27 +30,22 @@ const MOTION_ELEMENTS = {
   FAVORITE: "favorite",
 } as const;
 
+type MotionElement = (typeof MOTION_ELEMENTS)[keyof typeof MOTION_ELEMENTS];
+
 type PlanCardProps = {
   variant?: "default" | "mini";
-  open?: boolean;
   data: PlanWithDetails;
   layoutId?: string;
-  onJump?: () => void;
-  onClose?: () => void;
-  onOpen?: () => void;
 };
 
-function PlanCard({
-  open = false,
-  variant = "default",
-  data,
-  layoutId,
-  onJump,
-  onClose,
-  onOpen,
-}: PlanCardProps) {
+function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
   const { planData, creatorData } = data;
   const { role } = planData;
+  const wrapId = `${layoutId}-${planData.id}`;
+  const open = useOpenPlanCardStore((state) => state.openPlanCardId === wrapId);
+  const setOpenPlanCardId = useOpenPlanCardStore(
+    (state) => state.setOpenPlanCardId
+  );
   const [optimisticLike, addOptimisticLike] = useOptimistic(
     {
       count: planData.favorites,
@@ -63,8 +59,16 @@ function PlanCard({
   const path = usePathname();
   const router = useRouter();
 
-  const getId = (key: string | number) => {
+  const getId = (key: MotionElement) => {
     return `plan-card-${layoutId}-${planData.id}-${key}`;
+  };
+
+  const handleOpen = () => {
+    setOpenPlanCardId(wrapId);
+  };
+
+  const handleClose = () => {
+    setOpenPlanCardId(null);
   };
 
   // TODO: レスポンスが返るようになったらちゃんとUIに反映されているか確認する
@@ -105,14 +109,13 @@ function PlanCard({
           whileHover={{ scale: 1.02 }}
           className="relative  bg-paper cursor-pointer rounded-lg aspect-video">
           <motion.button
-            onClick={onJump}
             layoutId={getId(MOTION_ELEMENTS.IMAGE)}
             // TODO: サムネイルの仕様が決まったら修正
             style={{ backgroundImage: `url(${"/mock/img/thumbnail.jpg"})` }}
             className="absolute inset-0 bg-cover bg-center rounded-lg "
           />
           <motion.button
-            onClick={onOpen}
+            onClick={handleOpen}
             layoutId={getId(MOTION_ELEMENTS.INFO)}
             className="absolute bottom-0 left-0 w-full flex items-end justify-between bg-paper border border-primary p-2 pl-3 rounded-lg"
             whileHover={{
@@ -139,7 +142,7 @@ function PlanCard({
       ) : (
         // 小さめのカード
         <motion.button
-          onClick={onOpen}
+          onClick={handleOpen}
           layoutId={getId(MOTION_ELEMENTS.CONTAINER)}
           whileHover={{ scale: 1.05 }}
           className="relative w-62.5 h-20 bg-paper rounded-lg border border-border">
@@ -187,7 +190,7 @@ function PlanCard({
               key={"card"}
               className="fixed inset-0 flex items-center justify-center"
               style={{ zIndex: LAYER.CARD + 1 }}
-              onClick={onClose}>
+              onClick={handleClose}>
               <motion.div
                 onClick={(e) => e.stopPropagation()}
                 layoutId={getId(MOTION_ELEMENTS.CONTAINER)}
@@ -250,7 +253,8 @@ function PlanCard({
                             基本情報を編集
                           </GrowIconButton>
                         )}
-                        {role === PLAN_ROLE.MEMBER && (
+                        {(role === PLAN_ROLE.OWNER ||
+                          role === PLAN_ROLE.MEMBER) && (
                           <GrowIconButton
                             onClick={handlePlanEdit}
                             icon={<MdEdit />}
@@ -263,7 +267,7 @@ function PlanCard({
                   </div>
                 </motion.div>
                 <IconButton
-                  onClick={onClose}
+                  onClick={handleClose}
                   icon={<MdClose />}
                   color={"gray"}
                   variant={"iconOnly"}
