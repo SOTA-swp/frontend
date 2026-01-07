@@ -10,6 +10,7 @@ import { useAppStore } from "@/store/AppStoreProvider";
 import IconButton from "@/components/IconButton";
 import { MdEdit } from "react-icons/md";
 import UserEditModal from "./UserEditModal";
+import UserIcon from "@/components/UserIcon";
 
 export type UserViewProps = {
   userData: Promise<
@@ -54,12 +55,13 @@ function UserView({ userData }: UserViewProps) {
       <div className="relative flex flex-col gap-6 w-full p-8">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <div className="flex items-center rounded-full border-2 border-accent shrink-0">
+            {/* <div className="flex items-center rounded-full border-2 border-accent shrink-0">
               {
                 // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
                 <img src={userDataResolved.picture} className="w-20 h-20" />
               }
-            </div>
+            </div> */}
+            <UserIcon username={userDataResolved.username} size="xl" />
             <div>
               <div className="flex gap-2 items-center">
                 <h1 className="text-2xl font-bold">

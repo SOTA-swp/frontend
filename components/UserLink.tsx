@@ -6,6 +6,7 @@ import clsx from "clsx";
 import { getFirstChar } from "@/utils/removeEmoji";
 import Link from "next/link";
 import PATH from "@/consts/PATH";
+import UserIcon from "./UserIcon";
 
 interface UserLinkProps extends React.HTMLAttributes<HTMLButtonElement> {
   userData: Partial<User> | null;
@@ -23,12 +24,7 @@ function UserLink({
 }: UserLinkProps) {
   const content = (
     <>
-      <div className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-accent shrink-0">
-        {
-          // <img src={userData.picture} className="w-9 h-9" />
-        }
-        <p>{getFirstChar(userData?.username || "ユーザー名")}</p>
-      </div>
+      <UserIcon username={userData?.username || "?"} />
       <div className="min-w-0">
         <CommonText className="truncate">
           {userData?.username || "ユーザー名"}
