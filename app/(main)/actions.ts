@@ -8,6 +8,7 @@ import { ApiRoutes } from "api-contract";
 import { cookies } from "next/headers";
 import { AddPlanFormData, AddPlanFormSchema, EditUserFormData } from "./_types";
 import { revalidatePath } from "next/cache";
+import { PLAN_ROLE } from "../plans/_consts/planRole";
 
 // TODO: 実際のAPIが完成したら置き換える
 export async function getUserData(userId: string): Promise<
@@ -48,6 +49,7 @@ export async function getPlans(
         planData: {
           favorites: 999,
           hasLiked: false,
+          role: PLAN_ROLE.OWNER,
           ...createMockPlan(i + 1 + page * limit),
         },
         creatorData: createMockUser(i + 1 + page * limit),

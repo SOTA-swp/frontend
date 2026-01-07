@@ -18,6 +18,7 @@ import IconButton from "./IconButton";
 import { startTransition, useOptimistic } from "react";
 import { addLike, removeLike } from "@/lib/api/likes";
 import { usePathname } from "next/navigation";
+import { PLAN_ROLE } from "@/app/plans/_consts/planRole";
 
 const MOTION_ELEMENTS = {
   CONTAINER: "container",
@@ -47,6 +48,7 @@ function PlanCard({
   onOpen,
 }: PlanCardProps) {
   const { planData, creatorData } = data;
+  const { role } = planData;
   const [optimisticLike, addOptimisticLike] = useOptimistic(
     {
       count: planData.favorites,
@@ -224,23 +226,29 @@ function PlanCard({
                     />
                     {/* TODO: 削除・編集ができるようになったらモーダルの表示につなげる */}
                     <div className="flex gap-8">
-                      <GrowIconButton
-                        icon={<MdDelete />}
-                        color="error"
-                        absolute>
-                        計画を削除
-                      </GrowIconButton>
+                      {role === PLAN_ROLE.OWNER && (
+                        <GrowIconButton
+                          icon={<MdDelete />}
+                          color="error"
+                          absolute>
+                          計画を削除
+                        </GrowIconButton>
+                      )}
                       <div className="flex gap-2">
                         {/* TODO: 権限の仕様が決まったら権限に応じて閲覧を追加、編集を削除する */}
                         <GrowIconButton icon={<MdDownload />} absolute>
                           計画をインポート
                         </GrowIconButton>
-                        <GrowIconButton icon={<MdEditNote />} absolute>
-                          基本情報を編集
-                        </GrowIconButton>
-                        <GrowIconButton icon={<MdEdit />} absolute>
-                          計画を編集
-                        </GrowIconButton>
+                        {role === PLAN_ROLE.OWNER && (
+                          <GrowIconButton icon={<MdEditNote />} absolute>
+                            基本情報を編集
+                          </GrowIconButton>
+                        )}
+                        {role === PLAN_ROLE.MEMBER && (
+                          <GrowIconButton icon={<MdEdit />} absolute>
+                            計画を編集
+                          </GrowIconButton>
+                        )}
                       </div>
                     </div>
                   </div>

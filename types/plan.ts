@@ -1,5 +1,6 @@
 import z from "zod";
 import { UserMinimal } from "./user";
+import { PlanRole } from "@/app/plans/_consts/planRole";
 
 export const PlanSchema = z.object({
   id: z.string(),
@@ -18,7 +19,7 @@ export const PlanSchema = z.object({
 export type Plan = z.infer<typeof PlanSchema>;
 
 export interface PlanWithDetails {
-  planData: Plan & { favorites: number; hasLiked: boolean };
+  planData: Plan & { favorites: number; hasLiked: boolean; role: PlanRole };
   creatorData: UserMinimal;
 }
 

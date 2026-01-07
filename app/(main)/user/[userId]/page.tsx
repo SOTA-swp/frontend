@@ -10,6 +10,7 @@ import { Plan, PlanWithDetails } from "@/types/plan";
 import { getMe } from "@/lib/api/auth";
 import { fetchUserById } from "@/lib/api/users";
 import { getLike } from "@/lib/api/likes";
+import { PlanRole } from "@/app/plans/_consts/planRole";
 
 // ユーザーデータを取得する関数
 const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {
@@ -47,7 +48,7 @@ const getPlans = async (
       return null;
     }
 
-    const plans: Plan[] = await res.json();
+    const plans: (Plan & { role: PlanRole })[] = await res.json();
     return Promise.all(
       plans.map(async (plan) => {
         const creator = me || (await fetchUserById(plan.creatorId));

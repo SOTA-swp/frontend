@@ -187,7 +187,7 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
             </GrowIconButton>
           </div>
           <motion.div layout className="flex gap-4 p-4 items-end">
-            {Array.from({ length: 5 }).map((_, i) => (
+            {/* {Array.from({ length: 5 }).map((_, i) => (
               <PlanCard
                 open={planOpen === i}
                 key={i}
@@ -203,7 +203,7 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
                 onOpen={() => setPlanOpen(i)}
                 onClose={() => setPlanOpen(-1)}
               />
-            ))}
+            ))} */}
           </motion.div>
           <div className="flex gap-2 p-4">
             <CommonButton
