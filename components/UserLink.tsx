@@ -7,20 +7,20 @@ import { getFirstChar } from "@/utils/removeEmoji";
 import Link from "next/link";
 import PATH from "@/consts/PATH";
 
-interface UserIconProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface UserLinkProps extends React.HTMLAttributes<HTMLButtonElement> {
   userData: Partial<User> | null;
   enableEmail?: boolean;
   rightIcon?: boolean;
   enableLink?: boolean;
 }
 
-function UserIcon({
+function UserLink({
   userData,
   enableEmail = true,
   rightIcon = true,
   enableLink = true,
   ...props
-}: UserIconProps) {
+}: UserLinkProps) {
   const content = (
     <>
       <div className="w-10 h-10 flex items-center justify-center rounded-full border-2 border-accent shrink-0">
@@ -61,4 +61,4 @@ function UserIcon({
   return <button {...props} className={commonStyle}></button>;
 }
 
-export default UserIcon;
+export default UserLink;

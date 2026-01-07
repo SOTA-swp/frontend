@@ -3,7 +3,7 @@ import React, { MouseEventHandler, ReactNode } from "react";
 import CommonText from "../../../components/CommonText";
 import PROJECT_NAME from "@/consts/PROJECT_NAME";
 import IconButton from "../../../components/IconButton";
-import UserIcon from "../../../components/UserIcon";
+import UserLink from "../../../components/UserLink";
 import { motion, Variants } from "motion/react";
 import LAYER from "@/consts/LAYER";
 import clsx from "clsx";
@@ -163,7 +163,7 @@ function CommonHeader() {
           )}
           {isLoggedIn && (
             <li className="flex items-center">
-              <UserIcon userData={userData} />
+              <UserLink userData={userData} />
             </li>
           )}
         </ul>

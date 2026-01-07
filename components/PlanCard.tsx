@@ -5,7 +5,7 @@ import FavoriteCounter from "./FavoriteCounter";
 import subTimestamp from "@/utils/subTimestamp";
 import LAYER from "@/consts/LAYER";
 import Chip from "./Chip";
-import UserIcon from "./UserIcon";
+import UserLink from "./UserLink";
 import GrowIconButton from "./GrowIconButton";
 import {
   MdClose,
@@ -180,7 +180,7 @@ function PlanCard({
                   </motion.h3>
                   <p className="text-text-secondary">{planData.description}</p>
                   <div className="mt-6 flex justify-between">
-                    <UserIcon
+                    <UserLink
                       enableEmail={false}
                       rightIcon={false}
                       userData={creatorData}
