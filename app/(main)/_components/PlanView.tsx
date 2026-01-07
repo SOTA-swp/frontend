@@ -6,7 +6,7 @@ import AddButton from "@/components/AddButton";
 import PlanCard from "@/components/PlanCard";
 import { motion } from "motion/react";
 import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
-import { useRef } from "react";
+import { use, useRef } from "react";
 import MainViewController from "./MainViewController";
 import PlanBlock from "./PlanBlock";
 import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
@@ -16,7 +16,7 @@ import AddPlanModal from "./AddPlanModal";
 
 export interface PlanViewProps {
   viewId: (typeof MAIN_PAGE_IDs)["PLANS"] | (typeof MAIN_PAGE_IDs)["FAVORITES"];
-  plans: PlanWithDetails[];
+  plans: Promise<PlanWithDetails[] | null>;
   userId: User["id"];
 }
 
@@ -28,12 +28,17 @@ function PlanView({ viewId, plans, userId }: PlanViewProps) {
   const ref = useRef<HTMLElement>(null);
   const openModal = useAppStore((state) => state.openModal);
   const user = useAppStore((state) => state.user);
+  const resolvedPlans = use(plans);
 
   const isMe = user?.id === userId || userId === "me";
 
   const handleOpenAddPlanModal = () => {
     openModal(<AddPlanModal />);
   };
+
+  if (!resolvedPlans) {
+    return null;
+  }
 
   return (
     <motion.section
@@ -62,7 +67,7 @@ function PlanView({ viewId, plans, userId }: PlanViewProps) {
             新規作成
           </AddButton>
         )}
-        {plans.map((plan) => {
+        {resolvedPlans.map((plan) => {
           const wrapId = `${viewId}-${plan.planData.id}`;
           const handleOpen = () => setOpenPlanCardId(wrapId);
           const handleClose = () => setOpenPlanCardId(null);

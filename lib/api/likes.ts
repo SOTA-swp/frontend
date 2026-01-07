@@ -1,0 +1,99 @@
+"use server";
+import { Plan } from "@/types/plan";
+import { fetchWrapper } from "@/utils/fetchWrapper";
+import { ApiRoutes } from "api-contract";
+import { cookies } from "next/headers";
+
+type LikeResponse = {
+  count: number;
+  hasLiked: boolean;
+} | null;
+
+/**
+ * いいね情報を取得する
+ * @param planId
+ * @returns
+ */
+export const getLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
+  try {
+    const cookie = (await cookies()).toString();
+    const res = await fetchWrapper.get(
+      ApiRoutes.plan.likeStatus(planId),
+      true,
+      {
+        headers: { Cookie: cookie },
+        next: { revalidate: 10 },
+      }
+    );
+    if (!res.ok) {
+      return null;
+    }
+    const data = await res.json();
+    return {
+      count: data.count,
+      hasLiked: data.hasLiked,
+    };
+  } catch (_) {
+    return null;
+  }
+};
+
+/**
+ * 計画にいいねをする
+ * @param planId
+ * @returns
+ */
+export const addLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
+  try {
+    const cookie = (await cookies()).toString();
+    const res = await fetchWrapper.post(
+      ApiRoutes.plan.likes(planId),
+      { planId },
+      true,
+      {
+        credentials: "include",
+        headers: {
+          Cookie: cookie,
+        },
+      }
+    );
+    console.log(res);
+    if (!res.ok) {
+      return null;
+    }
+    const data = await res.json();
+    return {
+      count: data.count,
+      hasLiked: data.hasLiked,
+    };
+  } catch (_) {
+    return null;
+  }
+};
+
+/**
+ * 計画のいいねを解除する
+ * @param planId
+ * @returns
+ */
+export const removeLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
+  try {
+    const cookie = (await cookies()).toString();
+    const res = await fetchWrapper.delete(ApiRoutes.plan.likes(planId), true, {
+      credentials: "include",
+      headers: {
+        Cookie: cookie,
+      },
+    });
+    if (!res.ok) {
+      return null;
+    }
+    const data = await res.json();
+    return {
+      count: data.count,
+      hasLiked: data.hasLiked,
+    };
+  } catch (_) {
+    return null;
+  }
+};

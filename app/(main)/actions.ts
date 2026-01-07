@@ -44,7 +44,11 @@ export async function getPlans(
     size: 100,
     planData: Array.from({ length: limit })
       .map((_, i) => ({
-        planData: { favorites: 999, ...createMockPlan(i + 1 + page * limit) },
+        planData: {
+          favorites: 999,
+          hasLiked: false,
+          ...createMockPlan(i + 1 + page * limit),
+        },
         creatorData: createMockUser(i + 1 + page * limit),
       }))
       .slice(0, Math.max(0, 100 - page * limit)),

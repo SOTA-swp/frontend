@@ -1,11 +1,14 @@
+const formatUrl = (url: string, useServer: boolean) => {
+  return `${useServer ? process.env.API_ROUTE : ""}${url}`;
+};
+
 export const fetchWrapper = {
   get: async (
     url: string,
-    useSever: boolean = false,
+    useServer: boolean = false,
     options: RequestInit = {}
   ) => {
-    url = `${useSever ? process.env.API_ROUTE : ""}${url}`;
-    const response = await fetch(url, {
+    const response = await fetch(formatUrl(url, useServer), {
       ...options,
       method: "GET",
       headers: {
@@ -22,8 +25,7 @@ export const fetchWrapper = {
     useServer: boolean = false,
     options: RequestInit = {}
   ) => {
-    url = `${useServer ? process.env.API_ROUTE : ""}${url}`;
-    const response = await fetch(url, {
+    const response = await fetch(formatUrl(url, useServer), {
       ...options,
       method: "POST",
       headers: {
@@ -42,8 +44,7 @@ export const fetchWrapper = {
     useServer: boolean = false,
     options: RequestInit = {}
   ) => {
-    url = `${useServer ? process.env.API_ROUTE : ""}${url}`;
-    const response = await fetch(url, {
+    const response = await fetch(formatUrl(url, useServer), {
       ...options,
       method: "PUT",
       headers: {
@@ -53,6 +54,21 @@ export const fetchWrapper = {
       body: JSON.stringify(body),
     });
 
+    return response;
+  },
+  delete: async (
+    url: string,
+    useServer: boolean = false,
+    options: RequestInit = {}
+  ) => {
+    const response = await fetch(formatUrl(url, useServer), {
+      ...options,
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+    });
     return response;
   },
 };

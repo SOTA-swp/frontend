@@ -1,12 +1,15 @@
 import { MAIN_PAGE_IDs } from "../../_consts/MAIN_PAGE_IDs";
 import UserView, { UserViewProps } from "../../_components/UserView";
 import PlanView from "../../_components/PlanView";
-import { getPlans } from "../../actions";
 import { User } from "@/types/user";
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
 import { Suspense } from "react";
 import { cookies } from "next/headers";
+import { Plan, PlanWithDetails } from "@/types/plan";
+import { getMe } from "@/lib/api/auth";
+import { fetchUserById } from "@/lib/api/users";
+import { getLike } from "@/lib/api/likes";
 
 // ユーザーデータを取得する関数
 const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {
@@ -15,7 +18,6 @@ const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {
   try {
     const res = await fetchWrapper.get(url, true, {
       headers: { Cookie: (await cookies()).toString() || "" },
-      next: { revalidate: 10 },
       cache: "no-store",
     });
     if (!res.ok) {
@@ -23,6 +25,51 @@ const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {
     }
     const user: User = await res.json();
     return { ...user, favoritesCount: 0, favoredCount: 0, createdCount: 0 };
+  } catch (_) {
+    return null;
+  }
+};
+
+// プランデータを取得する関数
+const getPlans = async (
+  userId: User["id"]
+): Promise<PlanWithDetails[] | null> => {
+  try {
+    const me = await getMe();
+    const isMe = userId === "me" || (me && me.id === userId);
+    // TODO: 他のユーザーのプラン取得APIができたらそちらを使う↓
+    const url = isMe ? ApiRoutes.auth.plans : ApiRoutes.auth.plans;
+    const res = await fetchWrapper.get(url, true, {
+      headers: { Cookie: (await cookies()).toString() || "" },
+      next: { revalidate: 10 },
+    });
+    if (!res.ok) {
+      return null;
+    }
+
+    const plans: Plan[] = await res.json();
+    console.log("Fetched plans:", plans);
+    return Promise.all(
+      plans.map(async (plan) => {
+        const creator = me || (await fetchUserById(plan.creatorId));
+        const likes = await getLike(plan.id);
+        if (!creator || !likes) {
+          return null;
+        }
+        return {
+          planData: {
+            ...plan,
+            favorites: likes?.count || 0,
+            hasLiked: likes?.hasLiked || false,
+          },
+          creatorData: creator,
+        };
+      })
+    ).then((results) =>
+      results.filter(
+        (item): item is Exclude<typeof item, null> => item !== null
+      )
+    );
   } catch (_) {
     return null;
   }
@@ -37,22 +84,23 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
 
   return (
     <main className="relative flex-1 ">
-      {/* TODO: 実際のAPIが完成したら置き換える */}
+      {/* TODO: スケルトンをちゃんと作る */}
       <Suspense fallback={<div>Loading user data...</div>}>
         <UserView userData={getUserData(userId)} />
       </Suspense>
 
+      {/*  */}
       <Suspense fallback={<div>Loading plans...</div>}>
         <PlanView
           viewId={MAIN_PAGE_IDs.PLANS}
-          plans={(await getPlans("", 0)).planData}
+          plans={getPlans(userId)}
           userId={userId}
         />
       </Suspense>
       <Suspense fallback={<div>Loading favorite plans...</div>}>
         <PlanView
           viewId={MAIN_PAGE_IDs.FAVORITES}
-          plans={(await getPlans("", 0)).planData}
+          plans={getPlans(userId)}
           userId={userId}
         />
       </Suspense>

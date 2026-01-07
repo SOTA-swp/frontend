@@ -1,5 +1,5 @@
 import z from "zod";
-import { User } from "./user";
+import { UserMinimal } from "./user";
 
 export const PlanSchema = z.object({
   id: z.string(),
@@ -18,8 +18,8 @@ export const PlanSchema = z.object({
 export type Plan = z.infer<typeof PlanSchema>;
 
 export interface PlanWithDetails {
-  planData: Plan & { favorites: number };
-  creatorData: User;
+  planData: Plan & { favorites: number; hasLiked: boolean };
+  creatorData: UserMinimal;
 }
 
 export const createMockPlan = (num: number = 0): Plan => ({

@@ -15,6 +15,9 @@ import {
   MdEditNote,
 } from "react-icons/md";
 import IconButton from "./IconButton";
+import { startTransition, useOptimistic } from "react";
+import { addLike, removeLike } from "@/lib/api/likes";
+import { add } from "@dnd-kit/utilities";
 
 const MOTION_ELEMENTS = {
   CONTAINER: "container",
@@ -44,10 +47,49 @@ function PlanCard({
   onOpen,
 }: PlanCardProps) {
   const { planData, creatorData } = data;
+  const [optimisticLike, addOptimisticLike] = useOptimistic(
+    {
+      count: planData.favorites,
+      hasLiked: planData.hasLiked,
+    },
+    (state, newIsLiked: boolean) => ({
+      count: state.count + (newIsLiked ? 1 : -1),
+      hasLiked: newIsLiked,
+    })
+  );
 
   const getId = (key: string | number) => {
     return `plan-card-${layoutId}-${planData.id}-${key}`;
   };
+
+  // TODO: レスポンスが返るようになったらちゃんとUIに反映されているか確認する
+  const handleLike = async () => {
+    const nextIsLiked = !optimisticLike.hasLiked;
+    startTransition(async () => {
+      addOptimisticLike(nextIsLiked);
+      try {
+        let res = null;
+        if (nextIsLiked) {
+          res = await addLike(planData.id);
+        } else {
+          res = await removeLike(planData.id);
+        }
+        if (!res) {
+          addOptimisticLike(!nextIsLiked); // 元に戻す
+        }
+      } catch (_) {
+        addOptimisticLike(!nextIsLiked); // 元に戻す
+      }
+    });
+  };
+
+  const likeContent = (
+    <FavoriteCounter
+      onClick={handleLike}
+      count={optimisticLike.count}
+      hasLiked={optimisticLike.hasLiked}
+    />
+  );
 
   return (
     <>
@@ -86,8 +128,7 @@ function PlanCard({
           <motion.div
             layoutId={getId(MOTION_ELEMENTS.FAVORITE)}
             className="absolute top-2 right-2">
-            {/* TODO: いいねしたときの処理をどこから渡すか考える */}
-            <FavoriteCounter count={planData.favorites} />
+            {likeContent}
           </motion.div>
         </motion.div>
       ) : (
@@ -96,7 +137,7 @@ function PlanCard({
           onClick={onOpen}
           layoutId={getId(MOTION_ELEMENTS.CONTAINER)}
           whileHover={{ scale: 1.05 }}
-          className="relative w-[250px] h-20 bg-paper rounded-lg border border-border">
+          className="relative w-62.5 h-20 bg-paper rounded-lg border border-border">
           <motion.div
             layoutId={getId(MOTION_ELEMENTS.IMAGE)}
             style={{ backgroundImage: `url(${"/mock/img/thumbnail.jpg"})` }}
@@ -145,7 +186,7 @@ function PlanCard({
               <motion.div
                 onClick={(e) => e.stopPropagation()}
                 layoutId={getId(MOTION_ELEMENTS.CONTAINER)}
-                className="relative min-w-[800px] max-w-[900px] min-h-[450px] max-h-[500px]"
+                className="relative min-w-200 max-w-225 min-h-112.5 max-h-125"
                 style={{ zIndex: LAYER.CARD + 1 }}>
                 <motion.div
                   layoutId={getId(MOTION_ELEMENTS.IMAGE)}
@@ -169,8 +210,7 @@ function PlanCard({
                       </Chip>
                     </div>
                     <motion.div layoutId={getId(MOTION_ELEMENTS.FAVORITE)}>
-                      {/* TODO: いいねしたときの処理をどこから渡すか考える */}
-                      <FavoriteCounter count={planData.favorites} />
+                      {likeContent}
                     </motion.div>
                   </div>
                   <motion.h3

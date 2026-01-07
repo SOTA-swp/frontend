@@ -4,11 +4,11 @@ import CommonText from "./CommonText";
 import clsx from "clsx";
 
 function FavoriteCounter({
-  clicked = false,
+  hasLiked = false,
   count = 9999,
   ...props
 }: {
-  clicked?: boolean;
+  hasLiked?: boolean;
   count?: number;
 } & React.HTMLAttributes<HTMLButtonElement>) {
   return (
@@ -18,7 +18,7 @@ function FavoriteCounter({
         "flex items-center gap-1 text-paper bg-accent pl-2 pr-3 py-1 rounded-full tabular-nums hover:scale-110 active:scale-90 transition-all",
         props.className
       )}>
-      {clicked ? <MdFavorite /> : <MdFavoriteBorder />}
+      {hasLiked ? <MdFavorite /> : <MdFavoriteBorder />}
 
       <CommonText className="text-paper">{count}</CommonText>
     </button>

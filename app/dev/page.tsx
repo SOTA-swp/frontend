@@ -113,7 +113,7 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
           </div>
           <div className="flex gap-2 p-4">
             <FavoriteCounter
-              clicked={favoriteCount % 2 === 1}
+              hasLiked={favoriteCount % 2 === 1}
               count={favoriteCount}
               onClick={() => setFavoriteCount(favoriteCount + 1)}
             />
