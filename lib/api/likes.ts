@@ -17,14 +17,10 @@ type LikeResponse = {
 export const getLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
   try {
     const cookie = (await cookies()).toString();
-    const res = await fetchWrapper.get(
-      ApiRoutes.plan.likeStatus(planId),
-      true,
-      {
-        headers: { Cookie: cookie },
-        next: { revalidate: 10 },
-      }
-    );
+    const res = await fetchWrapper.get(ApiRoutes.like.likestate(planId), true, {
+      headers: { Cookie: cookie },
+      next: { revalidate: 10 },
+    });
     if (!res.ok) {
       return null;
     }
@@ -47,7 +43,7 @@ export const addLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
   try {
     const cookie = (await cookies()).toString();
     const res = await fetchWrapper.post(
-      ApiRoutes.plan.likes(planId),
+      ApiRoutes.like.like(planId),
       { planId },
       true,
       {
@@ -79,7 +75,7 @@ export const addLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
 export const removeLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
   try {
     const cookie = (await cookies()).toString();
-    const res = await fetchWrapper.delete(ApiRoutes.plan.likes(planId), true, {
+    const res = await fetchWrapper.delete(ApiRoutes.like.like(planId), true, {
       credentials: "include",
       headers: {
         Cookie: cookie,
