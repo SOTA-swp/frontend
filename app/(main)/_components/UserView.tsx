@@ -4,7 +4,7 @@ import { MAIN_PAGE_IDs } from "../_consts/MAIN_PAGE_IDs";
 import { UserInfoBlock } from "@/components/UserInfoBlock";
 import PROJECT_NAME from "@/consts/PROJECT_NAME";
 import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
-import { use, useRef } from "react";
+import { startTransition, use, useOptimistic, useRef } from "react";
 import MainViewController from "./MainViewController";
 import { useAppStore } from "@/store/AppStoreProvider";
 import IconButton from "@/components/IconButton";
@@ -25,6 +25,10 @@ export type UserViewProps = {
 
 function UserView({ userData }: UserViewProps) {
   const userDataResolved = use(userData);
+  const [optimisticName, setOptimisticName] = useOptimistic(
+    userDataResolved?.username,
+    (state, newName: User["username"]) => newName
+  );
   const createDate = new Date(userDataResolved?.createdAt || "");
   const ref = useRef<HTMLElement>(null);
   const user = useAppStore((state) => state.user);
@@ -37,7 +41,15 @@ function UserView({ userData }: UserViewProps) {
   const isMe = user?.id === userDataResolved.id;
 
   const handleEditName = () => {
-    openModal(<UserEditModal />);
+    openModal(
+      <UserEditModal
+        onEdit={(data) => {
+          startTransition(() => {
+            setOptimisticName(data.username);
+          });
+        }}
+      />
+    );
   };
 
   return (
@@ -65,7 +77,7 @@ function UserView({ userData }: UserViewProps) {
             <div>
               <div className="flex gap-2 items-center">
                 <h1 className="text-2xl font-bold">
-                  {userDataResolved.username}
+                  {optimisticName}
                   {isMe && (
                     <span className="text-[1rem] text-text-secondary">
                       {" "}

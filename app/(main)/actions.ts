@@ -7,6 +7,7 @@ import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
 import { cookies } from "next/headers";
 import { AddPlanFormData, AddPlanFormSchema, EditUserFormData } from "./_types";
+import { revalidatePath } from "next/cache";
 
 // TODO: 実際のAPIが完成したら置き換える
 export async function getUserData(userId: string): Promise<
@@ -135,7 +136,8 @@ interface EditUserResult {
   message: string;
 }
 export async function editUser(
-  data: EditUserFormData
+  data: EditUserFormData,
+  path: string
 ): Promise<EditUserResult> {
   const failedMessage = (message: string) =>
     `ユーザー情報の編集に失敗しました: ${message}`;
@@ -152,6 +154,11 @@ export async function editUser(
     const message = ok
       ? successMessage
       : failedMessage(res.statusText || "不明なエラー");
+
+    if (ok) {
+      revalidatePath(path);
+    }
+
     return { ok, message };
   } catch (e) {
     return { ok: false, message: failedMessage(String(e)) };

@@ -11,9 +11,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { editUser } from "../actions";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-function UserEditModal() {
+interface UserEditModalProps {
+  onEdit?: (data: EditUserFormData) => void;
+}
+
+function UserEditModal({ onEdit }: UserEditModalProps) {
   const closeModal = useAppStore((state) => state.closeModal);
   const refetch = useAppStore((state) => state.refetch);
   const preUsername = useAppStore((state) => state.user?.username) || "";
@@ -29,10 +33,12 @@ function UserEditModal() {
     },
   });
   const router = useRouter();
+  const path = usePathname();
 
   const onSubmit = async (data: EditUserFormData) => {
-    const { ok, message } = await editUser(data);
+    const { ok, message } = await editUser(data, path);
     const toastId = toast.loading("保存中...");
+    onEdit?.(data);
     await new Promise((resolve) => setTimeout(resolve, 1000)); // デモ用の遅延
 
     if (!ok) {
@@ -42,7 +48,7 @@ function UserEditModal() {
     toast.success("名前を変更しました！", { id: toastId });
     await refetch();
     closeModal();
-    router.refresh();
+    // router.refresh();
   };
 
   return (
