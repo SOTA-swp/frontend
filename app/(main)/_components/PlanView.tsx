@@ -29,7 +29,7 @@ function PlanView({ viewId, plans, userId }: PlanViewProps) {
   const openModal = useAppStore((state) => state.openModal);
   const user = useAppStore((state) => state.user);
 
-  const isMe = user?.id === userId;
+  const isMe = user?.id === userId || userId === "me";
 
   const handleOpenAddPlanModal = () => {
     openModal(<AddPlanModal />);
@@ -57,7 +57,7 @@ function PlanView({ viewId, plans, userId }: PlanViewProps) {
             <MdFavorite />
           )
         }>
-        {viewId === MAIN_PAGE_IDs.PLANS && isMe && (
+        {viewId === MAIN_PAGE_IDs.PLANS && isMe && user && (
           <AddButton onClick={handleOpenAddPlanModal} className="aspect-video">
             新規作成
           </AddButton>
