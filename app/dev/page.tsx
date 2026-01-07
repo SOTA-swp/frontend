@@ -193,7 +193,11 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
                 key={i}
                 variant={i % 2 === 0 ? "default" : "mini"}
                 data={{
-                  planData: { favorites: 100, ...createMockPlan(i) },
+                  planData: {
+                    hasLiked: false,
+                    favorites: 100,
+                    ...createMockPlan(i),
+                  },
                   creatorData: createMockUser(i),
                 }}
                 onOpen={() => setPlanOpen(i)}
