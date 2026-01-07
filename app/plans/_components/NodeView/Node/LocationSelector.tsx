@@ -22,7 +22,6 @@ function LocationSelector({ nodeId, onClose }: LocationSelectorProps) {
     e.preventDefault();
     updateNode(nodeId, { locationId });
     onClose?.();
-    console.log("Selected location:", locationId);
   };
 
   const handleMoveToIdeaSpace = () => {

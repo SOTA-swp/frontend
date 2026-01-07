@@ -48,7 +48,6 @@ const getPlans = async (
     }
 
     const plans: Plan[] = await res.json();
-    console.log("Fetched plans:", plans);
     return Promise.all(
       plans.map(async (plan) => {
         const creator = me || (await fetchUserById(plan.creatorId));
