@@ -17,7 +17,7 @@ import {
 import IconButton from "./IconButton";
 import { startTransition, useOptimistic } from "react";
 import { addLike, removeLike } from "@/lib/api/likes";
-import { add } from "@dnd-kit/utilities";
+import { usePathname } from "next/navigation";
 
 const MOTION_ELEMENTS = {
   CONTAINER: "container",
@@ -57,6 +57,7 @@ function PlanCard({
       hasLiked: newIsLiked,
     })
   );
+  const path = usePathname();
 
   const getId = (key: string | number) => {
     return `plan-card-${layoutId}-${planData.id}-${key}`;
@@ -68,17 +69,13 @@ function PlanCard({
     startTransition(async () => {
       addOptimisticLike(nextIsLiked);
       try {
-        let res = null;
         if (nextIsLiked) {
-          res = await addLike(planData.id);
+          await addLike(planData.id, path);
         } else {
-          res = await removeLike(planData.id);
-        }
-        if (!res) {
-          addOptimisticLike(!nextIsLiked); // 元に戻す
+          await removeLike(planData.id, path);
         }
       } catch (_) {
-        addOptimisticLike(!nextIsLiked); // 元に戻す
+        console.error("いいねの更新に失敗しました");
       }
     });
   };

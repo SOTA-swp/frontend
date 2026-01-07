@@ -2,6 +2,7 @@
 import { Plan } from "@/types/plan";
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 type LikeResponse = {
@@ -39,7 +40,10 @@ export const getLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
  * @param planId
  * @returns
  */
-export const addLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
+export const addLike = async (
+  planId: Plan["id"],
+  path: string
+): Promise<LikeResponse> => {
   try {
     const cookie = (await cookies()).toString();
     const res = await fetchWrapper.post(
@@ -53,11 +57,14 @@ export const addLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
         },
       }
     );
-    console.log(res);
     if (!res.ok) {
       return null;
     }
+
     const data = await res.json();
+
+    revalidatePath(path);
+
     return {
       count: data.count,
       hasLiked: data.hasLiked,
@@ -72,7 +79,10 @@ export const addLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
  * @param planId
  * @returns
  */
-export const removeLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
+export const removeLike = async (
+  planId: Plan["id"],
+  path: string
+): Promise<LikeResponse> => {
   try {
     const cookie = (await cookies()).toString();
     const res = await fetchWrapper.delete(ApiRoutes.like.like(planId), true, {
@@ -85,6 +95,9 @@ export const removeLike = async (planId: Plan["id"]): Promise<LikeResponse> => {
       return null;
     }
     const data = await res.json();
+
+    revalidatePath(path);
+
     return {
       count: data.count,
       hasLiked: data.hasLiked,
