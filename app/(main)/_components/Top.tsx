@@ -1,6 +1,6 @@
 "use client";
 import Chip from "@/components/Chip";
-import PlanCard from "@/components/PlanCard";
+import PlanCard from "@/app/(main)/_components/PlanCard";
 import { PlanWithDetails } from "@/types/plan";
 import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
 

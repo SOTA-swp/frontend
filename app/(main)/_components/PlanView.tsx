@@ -3,7 +3,7 @@ import { PlanWithDetails } from "@/types/plan";
 import { MAIN_PAGE_IDs } from "../_consts/MAIN_PAGE_IDs";
 import { MdAirplanemodeActive, MdFavorite } from "react-icons/md";
 import AddButton from "@/components/AddButton";
-import PlanCard from "@/components/PlanCard";
+import PlanCard from "@/app/(main)/_components/PlanCard";
 import { motion } from "motion/react";
 import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
 import { use, useRef } from "react";

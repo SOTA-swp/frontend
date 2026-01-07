@@ -1,12 +1,12 @@
 "use client";
 import { PlanWithDetails } from "@/types/plan";
 import { AnimatePresence, motion } from "motion/react";
-import FavoriteCounter from "./FavoriteCounter";
+import FavoriteCounter from "../../../components/FavoriteCounter";
 import subTimestamp from "@/utils/subTimestamp";
 import LAYER from "@/consts/LAYER";
-import Chip from "./Chip";
-import UserLink from "./UserLink";
-import GrowIconButton from "./GrowIconButton";
+import Chip from "../../../components/Chip";
+import UserLink from "../../../components/UserLink";
+import GrowIconButton from "../../../components/GrowIconButton";
 import {
   MdClose,
   MdDelete,
@@ -14,7 +14,7 @@ import {
   MdEdit,
   MdEditNote,
 } from "react-icons/md";
-import IconButton from "./IconButton";
+import IconButton from "../../../components/IconButton";
 import { startTransition, useOptimistic } from "react";
 import { addLike, removeLike } from "@/lib/api/likes";
 import { usePathname, useRouter } from "next/navigation";

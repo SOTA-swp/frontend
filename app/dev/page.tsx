@@ -5,7 +5,7 @@ import EmojiIcon from "@/components/EmojiIcon";
 import FavoriteCounter from "@/components/FavoriteCounter";
 import GrowIconButton from "@/components/GrowIconButton";
 import IconButton from "@/components/IconButton";
-import PlanCard from "@/components/PlanCard";
+import PlanCard from "@/app/(main)/_components/PlanCard";
 import Popover from "@/components/popover/Popover";
 import usePopover from "@/components/popover/usePopover";
 import SectionTitle from "@/components/SectionTitle";

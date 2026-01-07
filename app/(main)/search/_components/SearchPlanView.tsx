@@ -8,7 +8,7 @@ import {
 import PlanBlock from "../../_components/PlanBlock";
 import { useState } from "react";
 import { PlanWithDetails } from "@/types/plan";
-import PlanCard from "@/components/PlanCard";
+import PlanCard from "@/app/(main)/_components/PlanCard";
 import CommonButton from "@/components/CommonButton";
 import { getPlans } from "../../actions";
 import { useSearchParams } from "next/navigation";
