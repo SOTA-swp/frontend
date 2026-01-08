@@ -53,6 +53,7 @@ function InvitationForm({ planId }: InvitationFormProps) {
           type="email"
           label="メールアドレス"
           placeholder="example@gmail.com"
+          autoSave="off"
           {...register("email")}
           fullWidth
           className="flex-1"

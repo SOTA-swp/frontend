@@ -236,7 +236,8 @@ interface RespondToInvitationResult {
 }
 export async function respondToInvitation(
   invitationId: string,
-  accept: boolean
+  accept: boolean,
+  path?: string
 ): Promise<RespondToInvitationResult> {
   const failedMessage = (message: string) =>
     `招待への対応に失敗しました: ${message}`;
@@ -259,6 +260,10 @@ export async function respondToInvitation(
     const message = ok
       ? successMessage
       : failedMessage(res.statusText || "不明なエラー");
+
+    if (ok && path) {
+      revalidatePath(path);
+    }
     return { ok, message };
   } catch (e) {
     return { ok: false, message: failedMessage(String(e)) };

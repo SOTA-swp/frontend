@@ -13,6 +13,7 @@ import { respondToInvitation } from "../../actions";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import clsx from "clsx";
+import { usePathname } from "next/navigation";
 
 interface NotificationProps {
   data: NotificationData;
@@ -25,6 +26,7 @@ function NotificationItem({ data }: NotificationProps) {
   } = useForm({ mode: "onSubmit" });
   const acceptedRef = useRef(false);
   const { type, triggerUser, plan, isRead } = data;
+  const path = usePathname();
 
   const userLink = (
     <Link
@@ -51,13 +53,17 @@ function NotificationItem({ data }: NotificationProps) {
     const { invitation } = data;
     if (!invitation) {
       toast.error("不正なリクエストです", { id: toastId });
-      return;
+      throw new Error("No invitation data");
     }
 
-    const { ok, message } = await respondToInvitation(invitation.id, accepted);
+    const { ok, message } = await respondToInvitation(
+      invitation.id,
+      accepted,
+      path
+    );
     if (!ok) {
       toast.error(`操作に失敗しました: ${message}`, { id: toastId });
-      return;
+      throw new Error("Failed to respond to invitation");
     }
     toast.success("操作が完了しました！", { id: toastId });
   };
