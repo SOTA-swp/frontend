@@ -39,7 +39,7 @@ const getPlans = async (
     const me = await getMe();
     const isMe = userId === "me" || (me && me.id === userId);
     // TODO: 他のユーザーのプラン取得APIができたらそちらを使う↓
-    const url = isMe ? ApiRoutes.auth.plans : ApiRoutes.auth.plans;
+    const url = isMe ? ApiRoutes.auth.plans : ApiRoutes.auth.userplan(userId);
     const res = await fetchWrapper.get(url, true, {
       headers: { Cookie: (await cookies()).toString() || "" },
       next: { revalidate: 10 },

@@ -203,3 +203,71 @@ export async function deletePlan(
     return { ok: false, message: failedMessage(String(e)) };
   }
 }
+
+interface RespondToInvitationResult {
+  ok: boolean;
+  message: string;
+}
+export async function respondToInvitation(
+  invitationId: string,
+  accept: boolean
+): Promise<RespondToInvitationResult> {
+  const failedMessage = (message: string) =>
+    `招待への対応に失敗しました: ${message}`;
+  const successMessage = accept ? "招待を承認しました" : "招待を拒否しました";
+  try {
+    const cookie = (await cookies()).toString();
+    const res = await fetchWrapper.patch(
+      ApiRoutes.invitation.respond(invitationId),
+      { accept, invitationId },
+      true,
+      {
+        credentials: "include",
+        headers: {
+          Cookie: cookie,
+        },
+      }
+    );
+
+    const ok = res.ok;
+    const message = ok
+      ? successMessage
+      : failedMessage(res.statusText || "不明なエラー");
+    return { ok, message };
+  } catch (e) {
+    return { ok: false, message: failedMessage(String(e)) };
+  }
+}
+
+interface MarkNotificationReadResult {
+  ok: boolean;
+  message: string;
+}
+export async function markNotificationRead(
+  ids: string[]
+): Promise<MarkNotificationReadResult> {
+  const failedMessage = (message: string) =>
+    `通知の既読処理に失敗しました: ${message}`;
+  const successMessage = "通知を既読にしました";
+  try {
+    const cookie = (await cookies()).toString();
+    const res = await fetchWrapper.patch(
+      ApiRoutes.notification.default,
+      { ids },
+      true,
+      {
+        credentials: "include",
+        headers: {
+          Cookie: cookie,
+        },
+      }
+    );
+    const ok = res.ok;
+    const message = ok
+      ? successMessage
+      : failedMessage(res.statusText || "不明なエラー");
+    return { ok, message };
+  } catch (e) {
+    return { ok: false, message: failedMessage(String(e)) };
+  }
+}

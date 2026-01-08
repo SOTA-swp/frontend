@@ -77,13 +77,18 @@ function GrowIconButton({
   children,
   ...props
 }: GrowIconButtonProps) {
+  const { disabled } = props;
+
   return (
     <motion.div
-      className="relative flex select-none rounded-full"
+      className={clsx(
+        "relative flex select-none rounded-full",
+        disabled && "pointer-events-none! opacity-50!"
+      )}
       whileHover="parentHover">
       <motion.button
         {...props}
-        whileHover="hover"
+        whileHover={"hover"}
         variants={
           absolute
             ? {

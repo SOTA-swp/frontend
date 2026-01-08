@@ -15,7 +15,7 @@ export const UserSchema = z.object({
 
 export type User = z.infer<typeof UserSchema>;
 
-export type UserMinimal = Pick<User, "id" | "username" | "picture">;
+export type UserMinimal = Pick<User, "id" | "username" | "email">;
 
 export const createMockUser = (num: number = 0): User => ({
   id: `mock-user-id${num}`,

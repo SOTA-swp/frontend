@@ -11,9 +11,9 @@ import HEADER_HEIGHT from "../_consts/HEADER_HIGHT";
 import { useAppStore } from "@/store/AppStoreProvider";
 import { MdAdd, MdSearch, MdNotifications, MdLogout } from "react-icons/md";
 import PATH from "@/consts/PATH";
-import Notification from "../_components/Notification";
 import usePopover from "@/components/popover/usePopover";
 import AddPlanModal from "./AddPlanModal";
+import NotificationPopover from "./notification/NotificationPopover";
 
 const curtainVariants: Variants = {
   hover: {
@@ -169,7 +169,7 @@ function CommonHeader() {
         </ul>
       </motion.div>
 
-      <Notification {...notificationsProps} />
+      <NotificationPopover {...notificationsProps} />
     </nav>
   );
 }
