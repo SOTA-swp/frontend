@@ -6,9 +6,19 @@ import { PLAN_LIMIT } from "./_consts/PLAN_LIMIT";
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
 import { cookies } from "next/headers";
-import { AddPlanFormData, AddPlanFormSchema, EditUserFormData } from "./_types";
+import {
+  AddPlanFormData,
+  AddPlanFormSchema,
+  EditUserFormData,
+  EditUserFormSchema,
+} from "./_types";
 import { revalidatePath } from "next/cache";
 import { PLAN_ROLE } from "../plans/_consts/planRole";
+import z from "zod";
+import {
+  EditPlanFormData,
+  EditPlanFormSchema,
+} from "../plans/_types/EditPlanFormData";
 
 // TODO: 実際のAPIが完成したら置き換える
 export async function getUserData(userId: string): Promise<
@@ -111,6 +121,14 @@ export async function editPlan(
     `計画の編集に失敗しました: ${message}`;
   const successMessage = "計画を編集しました";
   try {
+    const result = EditPlanFormSchema.safeParse(data);
+    if (!result.success) {
+      return {
+        ok: false,
+        message: failedMessage(result.error.message),
+      };
+    }
+
     const cookie = (await cookies()).toString();
     const res = await fetchWrapper.patch(
       ApiRoutes.plan.edit(planId),
@@ -150,6 +168,14 @@ export async function editUser(
     `ユーザー情報の編集に失敗しました: ${message}`;
   const successMessage = "ユーザー情報を編集しました";
   try {
+    const result = EditUserFormSchema.safeParse(data);
+    if (!result.success) {
+      return {
+        ok: false,
+        message: failedMessage(result.error.message),
+      };
+    }
+
     const cookie = (await cookies()).toString();
     const res = await fetchWrapper.put(ApiRoutes.auth.me, data, true, {
       credentials: "include",

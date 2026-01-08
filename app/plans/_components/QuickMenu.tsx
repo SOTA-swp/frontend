@@ -2,7 +2,7 @@ import GrowIconButton from "@/components/GrowIconButton";
 import LAYER from "@/consts/LAYER";
 import clsx from "clsx";
 import { motion, Variants } from "motion/react";
-import { ReactNode, useMemo, useState } from "react";
+import { MouseEventHandler, ReactNode, useMemo, useState } from "react";
 import {
   MdEditNote,
   MdGroup,
@@ -13,13 +13,15 @@ import { usePlanStore } from "../_store/hook";
 import { useAppStore } from "@/store/AppStoreProvider";
 import EditPlanInfoModal from "./EditPlanInfoModal";
 import ExportModal from "@/app/plans/_components/ExportModal";
+import usePopover from "@/components/popover/usePopover";
+import MemberPopover from "./Member/MemberPopover";
 
 interface QuickMenuItem {
   id: string;
   icon: ReactNode;
   label: string;
   isEditOnly: boolean; // 編集モード時のみ表示
-  onClick: () => void;
+  onClick: MouseEventHandler;
 }
 
 const containerVariants: Variants = {
@@ -50,6 +52,7 @@ function QuickMenu() {
   const isReadOnly = usePlanStore((state) => state.isReadOnly);
   const planId = usePlanStore((state) => state.planInfo.id);
   const openModal = useAppStore((state) => state.openModal);
+  const { handleOpen: memberPopoverOpen, ...memberPopoverProps } = usePopover();
 
   const items = useMemo<QuickMenuItem[]>(
     () => [
@@ -70,12 +73,12 @@ function QuickMenu() {
       {
         id: "group",
         icon: <MdGroup />,
-        label: "グループ",
+        label: "メンバー",
         isEditOnly: false,
-        onClick: () => {},
+        onClick: memberPopoverOpen,
       },
     ],
-    [planId, openModal]
+    [planId, openModal, memberPopoverOpen]
   );
 
   const handleToggleOpen = () => {
@@ -134,6 +137,7 @@ function QuickMenu() {
           </div>
         </motion.ul>
       </div>
+      <MemberPopover {...memberPopoverProps} />
     </nav>
   );
 }
