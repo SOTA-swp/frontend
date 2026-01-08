@@ -1,4 +1,5 @@
 import ComponentColor from "@/types/componentColor";
+import ComponentSize from "@/types/componentSize";
 import { cva, VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import { HTMLMotionProps, motion } from "motion/react";
@@ -12,13 +13,21 @@ const iconButtonStyles = cva("", {
       accent: "text-accent border-accent hover:bg-accent",
       error: "text-error border-error hover:bg-error",
     } satisfies Record<ComponentColor, string>,
+    size: {
+      xs: "text-base p-.5",
+      sm: "text-xl p-1",
+      md: "text-2xl p-2",
+      lg: "text-3xl p-3",
+      xl: "text-4xl p-4",
+    } satisfies Record<ComponentSize, string>,
   },
   defaultVariants: {
     color: "primary",
+    size: "md",
   },
 });
 
-const labelStyle = cva(
+const labelColorStyle = cva(
   "absolute ml-2 px-0 h-full overflow-hidden left-full flex items-center whitespace-nowrap text-paper rounded-l-lg rounded-r-4xl opacity-0 max-w-0 z-20 border pointer-events-none",
   {
     variants: {
@@ -27,13 +36,32 @@ const labelStyle = cva(
         gray: "bg-text-secondary border-border",
         accent: "bg-accent border-accent",
         error: "bg-error border-error",
-      },
+      } satisfies Record<ComponentColor, string>,
+    },
+    defaultVariants: {
+      color: "primary",
     },
   }
 );
 
+const labelSizeStyle = cva("", {
+  variants: {
+    size: {
+      xs: "text-xs",
+      sm: "text-sm",
+      md: "text-base",
+      lg: "text-lg",
+      xl: "text-xl",
+    } satisfies Record<ComponentSize, string>,
+  },
+  defaultVariants: {
+    size: "md",
+  },
+});
+
 interface GrowIconButtonProps
-  extends Omit<HTMLMotionProps<"button">, "color">,
+  extends
+    Omit<HTMLMotionProps<"button">, "color">,
     VariantProps<typeof iconButtonStyles> {
   color?: ComponentColor;
   icon?: React.ReactNode;
@@ -43,6 +71,7 @@ interface GrowIconButtonProps
 
 function GrowIconButton({
   color = "primary",
+  size,
   icon,
   absolute = false,
   children,
@@ -67,10 +96,10 @@ function GrowIconButton({
             : {}
         }
         className={clsx(
-          "relative flex items-center text-2xl p-2 border bg-paper hover:text-paper active:scale-95 transition-all",
+          "relative flex items-center p-2 border bg-paper hover:text-paper active:scale-95 transition-all",
           !absolute && "rounded-full",
           absolute && "rounded-4xl",
-          iconButtonStyles({ color })
+          iconButtonStyles({ color, size })
         )}>
         {icon}
         {!absolute && (
@@ -83,7 +112,10 @@ function GrowIconButton({
                 marginRight: "8px",
               },
             }}
-            className="relative w-0 overflow-hidden text-[1rem] whitespace-nowrap opacity-0">
+            className={clsx(
+              "relative w-0 overflow-hidden whitespace-nowrap opacity-0",
+              labelSizeStyle({ size })
+            )}>
             {children}
           </motion.p>
         )}
@@ -99,7 +131,10 @@ function GrowIconButton({
               transition: { delay: 0.2 },
             },
           }}
-          className={labelStyle({ color })}>
+          className={clsx(
+            labelColorStyle({ color }),
+            labelSizeStyle({ size })
+          )}>
           {children}
         </motion.p>
       )}
