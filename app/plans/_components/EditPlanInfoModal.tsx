@@ -29,11 +29,9 @@ function EditPlanInfoModal({
   path,
 }: EditPlanInfoModalProps) {
   const closeModal = useAppStore((state) => state.closeModal);
-
-  // TODO: デフォルトはどうなるか？webソケットで最新情報を取ってくるのか？API叩くのか？
   const {
     register,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, isSubmitting, isSubmitSuccessful },
     handleSubmit,
     control,
   } = useForm<EditPlanFormData>({
@@ -48,15 +46,13 @@ function EditPlanInfoModal({
   });
 
   const onSubmit = async (data: EditPlanFormData) => {
-    onEdit?.(data);
     const toastId = toast.loading("計画情報を更新中...");
+    onEdit?.(data);
 
-    // TODO: APIできたら消す
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // デモ用の遅延
-    const res = await editPlan(planId, data, path);
+    const { ok, message } = await editPlan(planId, data, path);
 
-    if (!res.ok) {
-      toast.error(`計画情報の更新に失敗しました: ${res.message}`, {
+    if (!ok) {
+      toast.error(`計画情報の更新に失敗しました: ${message}`, {
         id: toastId,
       });
       return;
@@ -130,7 +126,12 @@ function EditPlanInfoModal({
         <CommonButton
           type="submit"
           modal
-          disabled={Object.keys(errors).length > 0 || !isDirty}>
+          disabled={
+            !isDirty ||
+            isSubmitting ||
+            isSubmitSuccessful ||
+            Object.keys(errors).length > 0
+          }>
           更新
         </CommonButton>
       </ModalAction>

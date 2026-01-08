@@ -12,41 +12,36 @@ import { createPlan } from "../actions";
 import { AddPlanFormData, AddPlanFormSchema } from "../_types";
 import { toast } from "sonner";
 import { useAppStore } from "@/store/AppStoreProvider";
-import { useState } from "react";
 
 function AddPlanModal() {
   const closeModal = useAppStore((state) => state.closeModal);
   const {
     register,
-    formState: { errors },
+    formState: { errors, isDirty, isSubmitting, isSubmitSuccessful },
     handleSubmit,
   } = useForm<AddPlanFormData>({
     resolver: zodResolver(AddPlanFormSchema),
+    mode: "onChange",
     defaultValues: {
       title: "",
       description: "",
     },
   });
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
 
   const onsubmit = async (data: AddPlanFormData) => {
-    if (loading) return;
-    setLoading(true);
     const toastId = toast.loading("計画を作成中...");
-    // TODO: デモ用の遅延を消す
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // デモ用の遅延
-    const res = await createPlan(data);
+    const { ok, message, newPlan } = await createPlan(data);
 
-    if (!res.ok) {
-      toast.error(`計画の作成に失敗しました: ${res.message}`, {
+    if (!ok) {
+      toast.error(`計画の作成に失敗しました: ${message}`, {
         id: toastId,
       });
-      setLoading(false); // 失敗したときのみローディングを解除
       return;
     }
+
     toast.success("計画を作成しました！", { id: toastId });
-    router.push(PATH.PLAN_EDIT(res.newPlan?.id || ""));
+    router.push(PATH.PLAN_EDIT(newPlan?.id || ""));
     closeModal();
   };
 
@@ -85,7 +80,15 @@ function AddPlanModal() {
           onClick={closeModal}>
           キャンセル
         </CommonButton>
-        <CommonButton type="submit" modal>
+        <CommonButton
+          type="submit"
+          modal
+          disabled={
+            !isDirty ||
+            isSubmitting ||
+            isSubmitSuccessful ||
+            Object.keys(errors).length > 0
+          }>
           作成
         </CommonButton>
       </ModalAction>

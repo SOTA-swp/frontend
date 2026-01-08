@@ -23,7 +23,7 @@ function UserEditModal({ onEdit }: UserEditModalProps) {
   const preUsername = useAppStore((state) => state.user?.username) || "";
   const {
     register,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isDirty, isSubmitting, isSubmitSuccessful },
     handleSubmit,
   } = useForm<EditUserFormData>({
     resolver: zodResolver(EditUserFormSchema),
@@ -35,10 +35,10 @@ function UserEditModal({ onEdit }: UserEditModalProps) {
   const path = usePathname();
 
   const onSubmit = async (data: EditUserFormData) => {
-    const { ok, message } = await editUser(data, path);
     const toastId = toast.loading("保存中...");
     onEdit?.(data);
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // デモ用の遅延
+
+    const { ok, message } = await editUser(data, path);
 
     if (!ok) {
       toast.error(`名前の変更に失敗しました: ${message}`, { id: toastId });
@@ -85,7 +85,12 @@ function UserEditModal({ onEdit }: UserEditModalProps) {
         <CommonButton
           type="submit"
           modal
-          disabled={!isDirty || isSubmitting || Object.keys(errors).length > 0}>
+          disabled={
+            !isDirty ||
+            isSubmitting ||
+            isSubmitSuccessful ||
+            Object.keys(errors).length > 0
+          }>
           保存
         </CommonButton>
       </ModalAction>
