@@ -98,7 +98,6 @@ export async function createPlan(
   }
 }
 
-// TODO: APIの定義がされたらちゃんと実装する
 interface EditPlanResult {
   ok: boolean;
   message: string;
@@ -167,6 +166,38 @@ export async function editUser(
       revalidatePath(path);
     }
 
+    return { ok, message };
+  } catch (e) {
+    return { ok: false, message: failedMessage(String(e)) };
+  }
+}
+
+interface DeletePlanResult {
+  ok: boolean;
+  message: string;
+}
+export async function deletePlan(
+  planId: string,
+  path?: string
+): Promise<DeletePlanResult> {
+  const failedMessage = (message: string) =>
+    `計画の削除に失敗しました: ${message}`;
+  const successMessage = "計画を削除しました";
+  try {
+    const cookie = (await cookies()).toString();
+    const res = await fetchWrapper.delete(ApiRoutes.plan.edit(planId), true, {
+      credentials: "include",
+      headers: {
+        Cookie: cookie,
+      },
+    });
+    const ok = res.ok;
+    const message = ok
+      ? successMessage
+      : failedMessage(res.statusText || "不明なエラー");
+    if (ok && path) {
+      revalidatePath(path);
+    }
     return { ok, message };
   } catch (e) {
     return { ok: false, message: failedMessage(String(e)) };

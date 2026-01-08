@@ -29,6 +29,7 @@ import { getFirstChar } from "@/utils/removeEmoji";
 import { useAppStore } from "@/store/AppStoreProvider";
 import EditPlanInfoModal from "@/app/plans/_components/EditPlanInfoModal";
 import { EditPlanFormData } from "@/app/plans/_types/EditPlanFormData";
+import RemovePlanModal from "./RemovePlanModal";
 
 const MOTION_ELEMENTS = {
   CONTAINER: "container",
@@ -122,6 +123,10 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
         path={path}
       />
     );
+  };
+
+  const handlePlanDelete = () => {
+    openModal(<RemovePlanModal planId={planData.id} planTitle={title} />);
   };
 
   const likeContent = (
@@ -363,10 +368,10 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
                       rightIcon={false}
                       userData={creatorData}
                     />
-                    {/* TODO: 削除・編集ができるようになったらモーダルの表示につなげる */}
                     <div className="flex gap-8">
                       {role === PLAN_ROLE.OWNER && (
                         <GrowIconButton
+                          onClick={handlePlanDelete}
                           icon={<MdDelete />}
                           color="error"
                           absolute>
@@ -374,7 +379,6 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
                         </GrowIconButton>
                       )}
                       <div className="flex gap-2">
-                        {/* TODO: 権限の仕様が決まったら権限に応じて閲覧を追加、編集を削除する */}
                         <GrowIconButton icon={<MdDownload />} absolute>
                           計画をインポート
                         </GrowIconButton>
