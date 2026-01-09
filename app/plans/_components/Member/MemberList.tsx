@@ -44,7 +44,7 @@ function MemberList({ planId }: MemberListProps) {
   const owner = active.find((member) => member.role === PLAN_ROLE.OWNER);
   const me = active.find((member) => member.id === myData?.id);
   const others = active.filter(
-    (member) => member.role !== PLAN_ROLE.OWNER && member.id !== myData?.id
+    (member) => [owner?.id, me?.id].includes(member.id) === false
   );
 
   const activeMembers = [owner, me, ...others].filter(
