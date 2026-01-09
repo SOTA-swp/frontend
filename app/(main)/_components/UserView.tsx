@@ -115,11 +115,11 @@ function UserView({ userData }: UserViewProps) {
             sum={userDataResolved.createdCount}
           />
           <UserInfoBlock
-            title={"いいねされた数"}
+            title={"いいねした数"}
             sum={userDataResolved.favoritesCount}
           />
           <UserInfoBlock
-            title={"いいねした数"}
+            title={"いいねされた数"}
             sum={userDataResolved.favoredCount}
           />
         </div>
