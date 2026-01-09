@@ -2,7 +2,7 @@
 import { PlanWithDetails } from "@/types/plan";
 import { AnimatePresence, motion } from "motion/react";
 import FavoriteCounter from "../../../components/FavoriteCounter";
-import subTimestamp from "@/utils/subTimestamp";
+import { formatDataDisplay } from "@/utils/data";
 import LAYER from "@/consts/LAYER";
 import Chip from "../../../components/Chip";
 import UserLink from "../../../components/UserLink";
@@ -213,7 +213,7 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
                 }}>
                 <div className="text-start min-w-0">
                   <p className="text-[12px] text-text-secondary truncate">
-                    {subTimestamp(planData.createdAt)}
+                    {formatDataDisplay(planData.createdAt)}
                   </p>
                   <motion.h3
                     layoutId={getId(MOTION_ELEMENTS.TITLE)}
@@ -256,7 +256,7 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
                 layoutId={getId(MOTION_ELEMENTS.INFO)}
                 className="relative z-10 flex-1 flex flex-col text-start px-2 justify-center w-[60%] h-full bg-paper rounded-r-lg rounded-l-none">
                 <p className="text-[12px] text-text-secondary truncate">
-                  {subTimestamp(planData.createdAt)}
+                  {formatDataDisplay(planData.createdAt)}
                 </p>
                 <motion.h3
                   layoutId={getId(MOTION_ELEMENTS.TITLE)}
@@ -335,7 +335,7 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
                   <div className="flex justify-between">
                     <div className="flex items-end gap-2">
                       <p className="text-[14px] text-text-secondary truncate">
-                        {subTimestamp(planData.createdAt)}
+                        {formatDataDisplay(planData.createdAt)}
                       </p>
                       <Chip
                         variant="outline"

@@ -1,6 +1,6 @@
 type data = {
   title: string;
-  sum: number;
+  sum: number | string;
 };
 
 export function UserInfoBlock(props: data) {

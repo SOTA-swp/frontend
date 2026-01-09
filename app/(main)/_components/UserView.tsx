@@ -11,6 +11,7 @@ import IconButton from "@/components/IconButton";
 import { MdEdit } from "react-icons/md";
 import UserEditModal from "./UserEditModal";
 import UserIcon from "@/components/UserIcon";
+import { formatDataDisplay, subTimestamp } from "@/utils/data";
 
 export type UserViewProps = {
   userData: Promise<
@@ -103,10 +104,16 @@ function UserView({ userData }: UserViewProps) {
         </div>
         <div className="flex gap-4">
           <UserInfoBlock
+            title={`${PROJECT_NAME}歴`}
+            sum={subTimestamp(
+              userDataResolved.createdAt,
+              new Date().toString()
+            )}
+          />
+          <UserInfoBlock
             title={"作った計画"}
             sum={userDataResolved.createdCount}
           />
-          <UserInfoBlock title={`${PROJECT_NAME}歴`} sum={0} />
           <UserInfoBlock
             title={"いいねされた数"}
             sum={userDataResolved.favoritesCount}

@@ -12,18 +12,33 @@ import { PlanRole } from "@/consts/PLAN_ROLE";
 
 // ユーザーデータを取得する関数
 const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {
-  const url = userId === "me" ? ApiRoutes.auth.me : ApiRoutes.auth.user(userId);
+  if (userId === "me") {
+    const me = await getMe();
+    userId = me?.id || userId;
+  }
 
   try {
-    const res = await fetchWrapper.get(url, true, {
+    const res = await fetchWrapper.get(ApiRoutes.auth.user(userId), true, {
       headers: { Cookie: (await cookies()).toString() || "" },
       cache: "no-store",
     });
     if (!res.ok) {
       return null;
     }
-    const user: User = await res.json();
-    return { ...user, favoritesCount: 0, favoredCount: 0, createdCount: 0 };
+    const user: User & {
+      stats: {
+        createdPlans: number;
+        givenLikes: number;
+        receivedLikes: number;
+      };
+    } = await res.json();
+    console.log(user);
+    return {
+      ...user,
+      favoritesCount: user.stats.givenLikes,
+      favoredCount: user.stats.receivedLikes,
+      createdCount: user.stats.createdPlans,
+    };
   } catch (_) {
     return null;
   }
