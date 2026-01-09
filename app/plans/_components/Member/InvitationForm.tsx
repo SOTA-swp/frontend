@@ -11,6 +11,7 @@ import { sendInvitation } from "../../actions";
 import { Plan } from "@/types/plan";
 import TextField from "@/components/TextField";
 import CommonButton from "@/components/CommonButton";
+import { usePathname } from "next/navigation";
 
 interface InvitationFormProps {
   planId: Plan["id"];
@@ -28,10 +29,11 @@ function InvitationForm({ planId }: InvitationFormProps) {
       email: "",
     },
   }); // 招待用
+  const path = usePathname();
 
   const onSubmit = async (data: InvitationFormData) => {
     const toastId = toast.loading("招待を送信中...");
-    const { ok, message } = await sendInvitation(data, planId);
+    const { ok, message } = await sendInvitation(data, planId, path);
 
     if (!ok) {
       toast.error(`${message}`, { id: toastId });

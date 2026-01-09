@@ -4,6 +4,8 @@ import ModalTitle from "@/components/modal/ModalTitle";
 import Popover from "@/components/popover/Popover";
 import InvitationForm from "./InvitationForm";
 import { usePlanStore } from "../../_store/hook";
+import MemberList from "./MemberList";
+import { Suspense } from "react";
 
 interface MemberPopoverProps {
   open: boolean;
@@ -18,8 +20,11 @@ function MemberPopover({ handleClose, ...props }: MemberPopoverProps) {
     <Popover {...props} onClose={handleClose}>
       <ModalContent closeModal={handleClose}>
         <ModalTitle>メンバー</ModalTitle>
-        <div className="px-6">
+        <div className="flex flex-col px-6 gap-6">
           <InvitationForm planId={planId} />
+          <Suspense fallback={<div>Loading...</div>}>
+            <MemberList planId={planId} />
+          </Suspense>
         </div>
       </ModalContent>
     </Popover>

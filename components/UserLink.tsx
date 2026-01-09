@@ -3,7 +3,6 @@ import React from "react";
 import CommonText from "./CommonText";
 import { MdChevronRight } from "react-icons/md";
 import clsx from "clsx";
-import { getFirstChar } from "@/utils/removeEmoji";
 import Link from "next/link";
 import PATH from "@/consts/PATH";
 import UserIcon from "./UserIcon";
@@ -54,7 +53,11 @@ function UserLink({
     );
   }
 
-  return <button {...props} className={commonStyle}></button>;
+  return (
+    <button {...props} className={commonStyle}>
+      {content}
+    </button>
+  );
 }
 
 export default UserLink;

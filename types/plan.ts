@@ -1,6 +1,6 @@
 import z from "zod";
 import { UserMinimal } from "./user";
-import { PlanRole } from "@/app/plans/_consts/planRole";
+import { PlanRole } from "@/consts/PLAN_ROLE";
 
 export const PlanSchema = z.object({
   id: z.string(),
