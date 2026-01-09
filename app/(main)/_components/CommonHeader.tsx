@@ -9,7 +9,13 @@ import LAYER from "@/consts/LAYER";
 import clsx from "clsx";
 import HEADER_HEIGHT from "../_consts/HEADER_HIGHT";
 import { useAppStore } from "@/store/AppStoreProvider";
-import { MdAdd, MdSearch, MdNotifications, MdLogout } from "react-icons/md";
+import {
+  MdAdd,
+  MdSearch,
+  MdNotifications,
+  MdLogout,
+  MdLogin,
+} from "react-icons/md";
 import PATH from "@/consts/PATH";
 import usePopover from "@/components/popover/usePopover";
 import AddPlanModal from "./AddPlanModal";
@@ -17,6 +23,7 @@ import NotificationPopover from "./notification/NotificationPopover";
 import Indicator from "@/components/Indicator";
 import { ApiRoutes } from "api-contract";
 import useSWR from "swr";
+import Link from "next/link";
 
 const getUnreadNotificationCount = async (): Promise<number> => {
   const res = await fetch(ApiRoutes.notification.unread, {
@@ -58,7 +65,8 @@ function CommonHeader() {
     key: string;
     icon: ReactNode;
     title: string;
-    login: boolean; // ログインしているときのみ表示するかどうか
+    login: boolean; // ログインしているとき表示するかどうか
+    logout: boolean; // ログアウトしているとき表示するかどうか
     onClick?: MouseEventHandler;
     href?: string;
   }
@@ -68,13 +76,15 @@ function CommonHeader() {
       icon: <MdAdd />,
       title: "計画追加",
       login: true,
+      logout: false,
       onClick: handleOpenAddPlanModal,
     },
     {
       key: "search",
       icon: <MdSearch />,
       title: "検索ページ",
-      login: false,
+      login: true,
+      logout: true,
       href: PATH.SEARCH,
     },
     {
@@ -82,6 +92,7 @@ function CommonHeader() {
       icon: <MdNotifications />,
       title: "通知一覧",
       login: true,
+      logout: false,
       onClick: notificationsOpen,
     },
     {
@@ -89,7 +100,16 @@ function CommonHeader() {
       icon: <MdLogout />,
       title: "ログアウト",
       login: true,
+      logout: false,
       onClick: logout,
+    },
+    {
+      key: "login",
+      icon: <MdLogin />,
+      title: "ログイン",
+      login: false,
+      logout: true,
+      href: PATH.LOGIN,
     },
   ];
 
@@ -128,13 +148,15 @@ function CommonHeader() {
         <motion.div
           className="relative pl-8 pr-16 cursor-pointer select-none h-full group"
           whileHover={"hover"}>
-          <button className="relative h-full flex items-center z-10">
+          <Link
+            href={PATH.TOP}
+            className="relative h-full flex items-center z-10">
             <CommonText
               level="h2"
               className={`text-primary group-hover:text-paper transition-colors`}>
               {PROJECT_NAME}
             </CommonText>
-          </button>
+          </Link>
 
           {/* カーテン */}
           <motion.div
@@ -165,9 +187,10 @@ function CommonHeader() {
         </motion.div>
 
         <ul className="flex items-center gap-8 pr-6">
-          {items.map(
-            ({ key, onClick, href, icon, login, title }) =>
-              (!login || isLoggedIn) && (
+          {items.map(({ key, onClick, href, icon, login, logout, title }) => {
+            const visible = (login && isLoggedIn) || (logout && !isLoggedIn);
+            return (
+              visible && (
                 <li key={key} className="relative">
                   <IconButton
                     onClick={onClick}
@@ -184,10 +207,11 @@ function CommonHeader() {
                   </AnimatePresence>
                 </li>
               )
-          )}
+            );
+          })}
           {isLoggedIn && (
             <li className="flex items-center">
-              <UserLink userData={userData} />
+              <UserLink userData={{ ...userData, id: "me" }} />
             </li>
           )}
         </ul>
