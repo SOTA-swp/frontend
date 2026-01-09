@@ -8,8 +8,6 @@ import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { Plan, PlanWithDetails } from "@/types/plan";
 import { getMe } from "@/lib/api/auth";
-import { fetchUserById } from "@/lib/api/users";
-import { getLike } from "@/lib/api/likes";
 import { PlanRole } from "@/consts/PLAN_ROLE";
 
 // ユーザーデータを取得する関数
@@ -33,43 +31,49 @@ const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {
 
 // プランデータを取得する関数
 const getPlans = async (
-  userId: User["id"]
+  userId: User["id"],
+  type: "joined" | "liked"
 ): Promise<PlanWithDetails[] | null> => {
   try {
     const me = await getMe();
     const isMe = userId === "me" || (me && me.id === userId);
-    // TODO: 他のユーザーのプラン取得APIができたらそちらを使う↓
-    const url = isMe ? ApiRoutes.auth.plans : ApiRoutes.auth.userplan(userId);
+
+    const url = (() => {
+      if (type === "joined") {
+        return isMe ? ApiRoutes.auth.plans : ApiRoutes.auth.userplan(userId);
+      } else {
+        return ApiRoutes.auth.userlike(me?.id || "");
+      }
+    })();
     const res = await fetchWrapper.get(url, true, {
       headers: { Cookie: (await cookies()).toString() || "" },
       next: { revalidate: 10 },
     });
+
     if (!res.ok) {
       return null;
     }
 
-    const plans: (Plan & { role: PlanRole })[] = await res.json();
-    return Promise.all(
-      plans.map(async (plan) => {
-        const creator = me || (await fetchUserById(plan.creatorId));
-        const likes = await getLike(plan.id);
-        if (!creator || !likes) {
-          return null;
-        }
-        return {
-          planData: {
-            ...plan,
-            favorites: likes?.count || 0,
-            hasLiked: likes?.hasLiked || false,
-          },
-          creatorData: creator,
-        };
-      })
-    ).then((results) =>
-      results.filter(
-        (item): item is Exclude<typeof item, null> => item !== null
-      )
-    );
+    const plans: (Plan & {
+      role: PlanRole;
+      creator: Pick<User, "id" | "username">;
+      _count: { members: number; likes: number };
+      hasLiked: boolean;
+    })[] = await res.json();
+
+    return plans.map((plan) => ({
+      planData: {
+        ...plan,
+        favorites: plan._count.likes,
+        hasLiked: plan.hasLiked,
+        role: plan.role,
+      },
+      creatorData: {
+        id: plan.creator.id,
+        username: plan.creator.username,
+        email: "",
+      },
+    }));
   } catch (_) {
     return null;
   }
@@ -93,14 +97,14 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
       <Suspense fallback={<div>Loading plans...</div>}>
         <PlanView
           viewId={MAIN_PAGE_IDs.PLANS}
-          plans={getPlans(userId)}
+          plans={getPlans(userId, "joined")}
           userId={userId}
         />
       </Suspense>
       <Suspense fallback={<div>Loading favorite plans...</div>}>
         <PlanView
           viewId={MAIN_PAGE_IDs.FAVORITES}
-          plans={getPlans(userId)}
+          plans={getPlans(userId, "liked")}
           userId={userId}
         />
       </Suspense>
