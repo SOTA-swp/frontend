@@ -10,6 +10,8 @@ export const LocationDataSchema = z.object({
   thumbnail: z.url(),
   created_at: z.iso.datetime(),
   updated_at: z.iso.datetime(),
+  x: z.number().default(0), 
+  y: z.number().default(0),
 });
 
 // TODO: planIDとかいらんのか？
@@ -28,5 +30,7 @@ export const createMockLocation = (
   thumbnail: `/mock/img/mock_Location.jpg`,
   created_at: "2025-11-09T12:00:00.000Z",
   updated_at: "2025-11-09T12:00:00.000Z",
+  x: 100 + (num * 220), // カードの幅分くらいずらすイメージ
+  y: 100 + (num * 50),
   ...props,
 });
