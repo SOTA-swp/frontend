@@ -52,12 +52,15 @@ const getPlans = async (
   try {
     const me = await getMe();
     const isMe = userId === "me" || (me && me.id === userId);
+    if (isMe) {
+      userId = me?.id || userId;
+    }
 
     const url = (() => {
       if (type === "joined") {
         return isMe ? ApiRoutes.auth.plans : ApiRoutes.auth.userplan(userId);
       } else {
-        return ApiRoutes.auth.userlike(me?.id || "");
+        return ApiRoutes.auth.userlike(userId);
       }
     })();
     const res = await fetchWrapper.get(url, true, {
