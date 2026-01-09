@@ -4,7 +4,7 @@ import CommonText from "../../../components/CommonText";
 import PROJECT_NAME from "@/consts/PROJECT_NAME";
 import IconButton from "../../../components/IconButton";
 import UserLink from "../../../components/UserLink";
-import { motion, Variants } from "motion/react";
+import { AnimatePresence, motion, Variants } from "motion/react";
 import LAYER from "@/consts/LAYER";
 import clsx from "clsx";
 import HEADER_HEIGHT from "../_consts/HEADER_HIGHT";
@@ -14,6 +14,20 @@ import PATH from "@/consts/PATH";
 import usePopover from "@/components/popover/usePopover";
 import AddPlanModal from "./AddPlanModal";
 import NotificationPopover from "./notification/NotificationPopover";
+import Indicator from "@/components/Indicator";
+import { ApiRoutes } from "api-contract";
+import useSWR from "swr";
+
+const getUnreadNotificationCount = async (): Promise<number> => {
+  const res = await fetch(ApiRoutes.notification.unread, {
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    return 0;
+  }
+  const data: { count: number } = await res.json();
+  return data.count;
+};
 
 const curtainVariants: Variants = {
   hover: {
@@ -28,6 +42,11 @@ function CommonHeader() {
   const [scrolled, setScrolled] = React.useState(false);
   const { handleOpen: notificationsOpen, ...notificationsProps } = usePopover(); // 通知用
   const openModal = useAppStore((state) => state.openModal);
+  const { data: unreadCount } = useSWR(
+    ApiRoutes.notification.unread,
+    getUnreadNotificationCount,
+    { refreshInterval: 10000 }
+  );
 
   const handleOpenAddPlanModal: MouseEventHandler = () => {
     openModal(<AddPlanModal />);
@@ -149,7 +168,7 @@ function CommonHeader() {
           {items.map(
             ({ key, onClick, href, icon, login, title }) =>
               (!login || isLoggedIn) && (
-                <li key={key}>
+                <li key={key} className="relative">
                   <IconButton
                     onClick={onClick}
                     href={href}
@@ -158,6 +177,11 @@ function CommonHeader() {
                     color={"gray"}
                     title={title}
                   />
+                  <AnimatePresence>
+                    {key === "notifications" && (unreadCount || 0) > 0 && (
+                      <Indicator value={unreadCount} />
+                    )}
+                  </AnimatePresence>
                 </li>
               )
           )}
