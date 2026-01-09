@@ -13,7 +13,7 @@ import {
   EditUserFormSchema,
 } from "./_types";
 import { revalidatePath } from "next/cache";
-import { PLAN_ROLE } from "../plans/_consts/planRole";
+import { PLAN_ROLE } from "../../consts/PLAN_ROLE";
 import z from "zod";
 import {
   EditPlanFormData,

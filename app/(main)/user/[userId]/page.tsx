@@ -10,7 +10,7 @@ import { Plan, PlanWithDetails } from "@/types/plan";
 import { getMe } from "@/lib/api/auth";
 import { fetchUserById } from "@/lib/api/users";
 import { getLike } from "@/lib/api/likes";
-import { PlanRole } from "@/app/plans/_consts/planRole";
+import { PlanRole } from "@/consts/PLAN_ROLE";
 
 // ユーザーデータを取得する関数
 const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {

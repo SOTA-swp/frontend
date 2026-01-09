@@ -20,7 +20,7 @@ import IconButton from "../../../components/IconButton";
 import { startTransition, useOptimistic } from "react";
 import { addLike, removeLike } from "@/lib/api/likes";
 import { usePathname, useRouter } from "next/navigation";
-import { PLAN_ROLE } from "@/app/plans/_consts/planRole";
+import { PLAN_ROLE } from "@/consts/PLAN_ROLE";
 import PATH from "@/consts/PATH";
 import { useOpenPlanCardStore } from "../_store/OpenPlanCardStoreProvider";
 import { getHueFromString } from "@/utils/color";
