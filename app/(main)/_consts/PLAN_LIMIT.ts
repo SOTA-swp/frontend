@@ -1,1 +1,1 @@
-export const PLAN_LIMIT = 12;
+export const SEARCH_LIMIT = 12;

@@ -2,7 +2,7 @@
 
 import { createMockPlan, PlanWithDetails } from "@/types/plan";
 import { createMockUser, User } from "@/types/user";
-import { PLAN_LIMIT } from "./_consts/PLAN_LIMIT";
+import { SEARCH_LIMIT } from "./_consts/PLAN_LIMIT";
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
 import { cookies } from "next/headers";
@@ -14,11 +14,7 @@ import {
 } from "./_types";
 import { revalidatePath } from "next/cache";
 import { PLAN_ROLE } from "../../consts/PLAN_ROLE";
-import z from "zod";
-import {
-  EditPlanFormData,
-  EditPlanFormSchema,
-} from "../plans/_types/EditPlanFormData";
+import { EditPlanFormSchema } from "../plans/_types/EditPlanFormData";
 
 // TODO: 実際のAPIが完成したら置き換える
 export async function getUserData(userId: string): Promise<
@@ -48,7 +44,7 @@ export async function getUserData(userId: string): Promise<
 export async function getPlans(
   q: string,
   page: number,
-  limit: number = PLAN_LIMIT
+  limit: number = SEARCH_LIMIT
 ): Promise<{ size: number; planData: PlanWithDetails[] }> {
   await new Promise((resolve) => setTimeout(resolve, 1000));
 

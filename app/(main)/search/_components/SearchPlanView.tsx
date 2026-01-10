@@ -6,13 +6,55 @@ import {
   MdLocalFireDepartment,
 } from "react-icons/md";
 import PlanBlock from "../../_components/PlanBlock";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlanWithDetails } from "@/types/plan";
 import PlanCard from "@/app/(main)/_components/PlanCard";
 import CommonButton from "@/components/CommonButton";
-import { getPlans } from "../../actions";
 import { useSearchParams } from "next/navigation";
-import { PLAN_LIMIT } from "../../_consts/PLAN_LIMIT";
+import { Pagination } from "../_types/pagination";
+import { fetchWrapper } from "@/utils/fetchWrapper";
+import { ApiRoutes } from "api-contract";
+import { SEARCH_LIMIT } from "../../_consts/PLAN_LIMIT";
+import { formatPlanData } from "../../_util/formatPlanData";
+
+interface SearchResults {
+  plans: PlanWithDetails[];
+  pagination: Pagination;
+}
+
+export const searchPlans = async (
+  q: string,
+  page: number,
+  sort: "popular" | "new" = "popular",
+  limit: number = SEARCH_LIMIT
+): Promise<SearchResults> => {
+  const isSever = typeof window === "undefined";
+
+  const params = new URLSearchParams({
+    q,
+    page: page.toString(),
+    limit: limit.toString(),
+    sort,
+  }).toString();
+  const res = await fetchWrapper.get(
+    `${ApiRoutes.plan.create}?${params}`,
+    isSever,
+    {
+      next: { revalidate: 60 },
+    }
+  );
+  if (!res.ok) {
+    throw new Error("Failed to fetch plan info");
+  }
+  const data = await res.json();
+  const { plans, pagination } = data;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const formatPlans = plans.map((plan: any) => formatPlanData(plan));
+  const planData = await Promise.all(formatPlans);
+  console.log(planData);
+  return { plans: planData, pagination };
+};
 
 function MoreButton({
   maxSize,
@@ -34,33 +76,44 @@ function MoreButton({
   ) : null;
 }
 
-function SearchPlanView({
-  initialPlans,
-}: {
-  initialPlans: {
-    popularPlans: { size: number; planData: PlanWithDetails[] };
-    newPlans: { size: number; planData: PlanWithDetails[] };
-  };
-}) {
+function SearchPlanView() {
   const params = useSearchParams();
   const q = params.get("q") || "";
+  const [popularPlansPagination, setPopularPlansPagination] =
+    useState<Pagination | null>(null);
+  const [newPlansPagination, setNewPlansPagination] =
+    useState<Pagination | null>(null);
 
-  const [popularPlans, setPopularPlans] = useState(
-    initialPlans ? initialPlans.popularPlans.planData : []
-  );
-  const [newPlans, setNewPlans] = useState(
-    initialPlans ? initialPlans.newPlans.planData : []
-  );
+  const [popularPlans, setPopularPlans] = useState<PlanWithDetails[]>([]);
+  const [newPlans, setNewPlans] = useState<PlanWithDetails[]>([]);
 
   const handleLoadingMorePopular = async () => {
-    const morePlans = await getPlans(q, popularPlans.length / PLAN_LIMIT);
-    setPopularPlans((prev) => [...prev, ...morePlans.planData]);
+    if (!popularPlansPagination) return;
+    const { page: currentPage } = popularPlansPagination;
+    const res = await searchPlans(q, currentPage + 1, "popular");
+    setPopularPlansPagination(res.pagination);
+    setPopularPlans((prev) => [...prev, ...res.plans]);
   };
 
   const handleLoadingMoreNew = async () => {
-    const morePlans = await getPlans(q, newPlans.length / PLAN_LIMIT);
-    setNewPlans((prev) => [...prev, ...morePlans.planData]);
+    if (!newPlansPagination) return;
+    const { page: currentPage } = newPlansPagination;
+    const res = await searchPlans(q, currentPage + 1, "new");
+    setNewPlansPagination(res.pagination);
+    setNewPlans((prev) => [...prev, ...res.plans]);
   };
+
+  useEffect(() => {
+    const fetchInitialPlans = async () => {
+      const popularRes = await searchPlans(q, 0, "popular");
+      const newRes = await searchPlans(q, 0, "new");
+      setPopularPlans(popularRes.plans);
+      setPopularPlansPagination(popularRes.pagination);
+      setNewPlans(newRes.plans);
+      setNewPlansPagination(newRes.pagination);
+    };
+    fetchInitialPlans();
+  }, [q]);
 
   return (
     <section className="mt-16 flex flex-col gap-16">
@@ -69,7 +122,7 @@ function SearchPlanView({
         title="人気"
         moreButton={
           <MoreButton
-            maxSize={initialPlans.popularPlans.size}
+            maxSize={popularPlansPagination?.total || 0}
             currentSize={popularPlans.length}
             onClick={handleLoadingMorePopular}
           />
@@ -90,7 +143,7 @@ function SearchPlanView({
         title="新着"
         moreButton={
           <MoreButton
-            maxSize={initialPlans.newPlans.size}
+            maxSize={newPlansPagination?.total || 0}
             currentSize={newPlans.length}
             onClick={handleLoadingMoreNew}
           />
