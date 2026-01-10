@@ -21,6 +21,7 @@ export const NodeDataSchema = z.object({
     .min(0)
     .max(60 * 24),
   locationId: z.string(),
+  encodedPolyline: z.string().optional(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
 });

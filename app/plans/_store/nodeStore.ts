@@ -432,14 +432,14 @@ export const createNodeSlice: StateCreator<
               if (toLocationNodeInfo) {
                 const { parentId, location } = toLocationNodeInfo;
       
-                const durationMinutes = Math.ceil(segment.durationSeconds / 60);
-                const newMoveNode = createNode(NODE_TYPES.MOVE, {
-                  planId,
-                  durationMinutes,
-                  // 名前を「〇〇への移動」のようにするとより分かりやすいかも
-                  name: `${Math.ceil(segment.durationSeconds / 60)}分移動`,
-                });
-      
+                          const durationMinutes = Math.ceil(segment.durationSeconds / 60);
+                          const newMoveNode = createNode(NODE_TYPES.MOVE, {
+                            planId,
+                            durationMinutes,
+                            // 名前を「〇〇への移動」のようにするとより分かりやすいかも
+                            name: `${Math.ceil(segment.durationSeconds / 60)}分移動`,
+                            encodedPolyline: segment.encodedPolyline,
+                          });      
                 yNodes.set(newMoveNode.id, newMoveNode);
       
                 let parentArray = yStructure.get(parentId);
