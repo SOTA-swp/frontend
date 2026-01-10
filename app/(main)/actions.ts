@@ -1,6 +1,6 @@
 "use server";
 
-import { createMockPlan, PlanWithDetails } from "@/types/plan";
+import { createMockPlan, Plan, PlanWithDetails } from "@/types/plan";
 import { createMockUser, User } from "@/types/user";
 import { SEARCH_LIMIT } from "./_consts/PLAN_LIMIT";
 import { fetchWrapper } from "@/utils/fetchWrapper";
@@ -82,11 +82,7 @@ export async function createPlan(
   try {
     const result = AddPlanFormSchema.safeParse(data);
     if (!result.success) {
-      return {
-        ok: false,
-        newPlan: null,
-        message: failedMessage(result.error.message),
-      };
+      throw new Error(result.error.message);
     }
     const cookie = (await cookies()).toString();
     const res = await fetchWrapper.post(ApiRoutes.plan.create, data, true, {
@@ -96,6 +92,10 @@ export async function createPlan(
       },
     });
 
+    if (!res.ok) {
+      throw new Error(res.statusText || "不明なエラー");
+    }
+
     const ok = res.ok;
     const newPlan = await res.json();
     const message = ok
@@ -103,7 +103,40 @@ export async function createPlan(
       : failedMessage(res.statusText || "不明なエラー");
     return { ok, newPlan, message };
   } catch (e) {
-    return { ok: false, newPlan: null, message: failedMessage(String(e)) };
+    throw new Error(String(e));
+  }
+}
+
+interface ImportPlanResult {
+  newPlan: Pick<
+    Plan,
+    "id" | "title" | "description" | "isPublic" | "createdAt" | "creatorId"
+  > | null;
+  message: string;
+}
+
+export async function importPlan(planId: string): Promise<ImportPlanResult> {
+  try {
+    const cookie = (await cookies()).toString();
+    const res = await fetchWrapper.post(
+      ApiRoutes.plan.import(planId),
+      {},
+      true,
+      {
+        credentials: "include",
+        headers: {
+          Cookie: cookie,
+        },
+      }
+    );
+    if (!res.ok) {
+      throw new Error(res.statusText || "不明なエラー");
+    }
+    const newPlan = await res.json();
+    const message = "計画をインポートしました！";
+    return { newPlan, message };
+  } catch (e) {
+    throw new Error(String(e));
   }
 }
 

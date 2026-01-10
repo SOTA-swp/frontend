@@ -13,7 +13,12 @@ import { AddPlanFormData, AddPlanFormSchema } from "../_types";
 import { toast } from "sonner";
 import { useAppStore } from "@/store/AppStoreProvider";
 
-function AddPlanModal() {
+interface AddPlanModalProps {
+  type?: "add" | "import";
+  initData?: Partial<AddPlanFormData>;
+}
+
+function AddPlanModal({ type, initData }: AddPlanModalProps) {
   const closeModal = useAppStore((state) => state.closeModal);
   const {
     register,
@@ -23,6 +28,7 @@ function AddPlanModal() {
     resolver: zodResolver(AddPlanFormSchema),
     mode: "onChange",
     defaultValues: {
+      ...initData,
       title: "",
       description: "",
     },
@@ -31,18 +37,28 @@ function AddPlanModal() {
 
   const onsubmit = async (data: AddPlanFormData) => {
     const toastId = toast.loading("計画を作成中...");
-    const { ok, message, newPlan } = await createPlan(data);
+    try {
+      const { ok, message, newPlan } = await createPlan(data);
 
-    if (!ok) {
-      toast.error(`計画の作成に失敗しました: ${message}`, {
-        id: toastId,
-      });
-      return;
+      if (!ok) {
+        toast.error(`計画の作成に失敗しました: ${message}`, {
+          id: toastId,
+        });
+        return;
+      }
+
+      toast.success("計画を作成しました！", { id: toastId });
+      router.push(PATH.PLAN_EDIT(newPlan?.id || ""));
+      closeModal();
+    } catch (e) {
+      toast.error(
+        `計画の作成に失敗しました: ${e instanceof Error ? e.message : "不明なエラー"}`,
+        {
+          id: toastId,
+        }
+      );
+      console.error(e);
     }
-
-    toast.success("計画を作成しました！", { id: toastId });
-    router.push(PATH.PLAN_EDIT(newPlan?.id || ""));
-    closeModal();
   };
 
   return (

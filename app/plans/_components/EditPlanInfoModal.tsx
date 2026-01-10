@@ -23,6 +23,8 @@ interface EditPlanInfoModalProps {
   planData?: EditPlanFormData | Promise<EditPlanFormData>;
   onEdit?: (data: EditPlanFormData) => void;
   path?: string;
+  disabledDirtyCheck?: boolean;
+  onClose?: () => void;
 }
 
 function EditPlanInfoModal({
@@ -30,6 +32,8 @@ function EditPlanInfoModal({
   planData,
   onEdit,
   path,
+  disabledDirtyCheck = false,
+  onClose: closeCallback,
 }: EditPlanInfoModalProps) {
   const closeModal = useAppStore((state) => state.closeModal);
   const [isLoading, setIsLoading] = useState(planData instanceof Promise);
@@ -86,12 +90,17 @@ function EditPlanInfoModal({
       return;
     }
     toast.success("計画情報を更新しました！", { id: toastId });
-    closeModal();
+    onClose();
   };
+
+  const onClose = () => {
+    closeCallback?.();
+    closeModal();
+  }
 
   return (
     <ModalContent
-      closeModal={closeModal}
+      closeModal={onClose}
       as={"form"}
       onSubmit={handleSubmit(onSubmit)}>
       <ModalTitle>基本情報を編集</ModalTitle>
@@ -164,7 +173,7 @@ function EditPlanInfoModal({
           type="button"
           modal
           variant="outline"
-          onClick={closeModal}
+          onClick={onClose}
           disabled={isLoading}>
           キャンセル
         </CommonButton>
@@ -173,7 +182,7 @@ function EditPlanInfoModal({
           modal
           disabled={
             isLoading ||
-            !isDirty ||
+            (!disabledDirtyCheck && !isDirty) ||
             isSubmitting ||
             isSubmitSuccessful ||
             Object.keys(errors).length > 0

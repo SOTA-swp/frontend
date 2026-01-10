@@ -17,7 +17,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import IconButton from "../../../components/IconButton";
-import { startTransition, useOptimistic } from "react";
+import { startTransition, useOptimistic, useState } from "react";
 import { addLike, removeLike } from "@/lib/api/likes";
 import { usePathname, useRouter } from "next/navigation";
 import { PLAN_ROLE } from "@/consts/PLAN_ROLE";
@@ -30,6 +30,8 @@ import { useAppStore } from "@/store/AppStoreProvider";
 import EditPlanInfoModal from "@/app/plans/_components/EditPlanInfoModal";
 import { EditPlanFormData } from "@/app/plans/_types/EditPlanFormData";
 import RemovePlanModal from "./RemovePlanModal";
+import { importPlan } from "../actions";
+import { toast } from "sonner";
 
 const MOTION_ELEMENTS = {
   CONTAINER: "container",
@@ -58,6 +60,8 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
       ...newData,
     })
   );
+  const [loading, setLoading] = useState(false);
+
   const wrapId = `${layoutId}-${planData.id}`;
   const open = useOpenPlanCardStore((state) => state.openPlanCardId === wrapId);
   const setOpenPlanCardId = useOpenPlanCardStore(
@@ -123,6 +127,44 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
         path={path}
       />
     );
+  };
+
+  const handleImportPlan = async () => {
+    if (loading) return;
+    setLoading(true);
+    const toastId = toast.loading("計画をインポート中...");
+    try {
+      const { message, newPlan } = await importPlan(planData.id);
+      if (!newPlan) {
+        throw new Error("Failed to import plan");
+      }
+
+      toast.success(message, { id: toastId });
+      const onClose = () => {
+        router.push(PATH.PLAN_EDIT(newPlan.id));
+      };
+
+      openModal(
+        <EditPlanInfoModal
+          planId={newPlan.id}
+          planData={{ ...newPlan }}
+          disabledDirtyCheck
+          onClose={onClose}
+        />
+      );
+    } catch (e) {
+      toast.error(
+        `計画のインポートに失敗しました: ${
+          e instanceof Error ? e.message : "不明なエラー"
+        }`,
+        {
+          id: toastId,
+        }
+      );
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handlePlanDelete = () => {
@@ -393,13 +435,18 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
                         </GrowIconButton>
                       )}
                       <div className="flex gap-2">
-                        <GrowIconButton icon={<MdDownload />} absolute>
+                        <GrowIconButton
+                          onClick={handleImportPlan}
+                          icon={<MdDownload />}
+                          disabled={loading}
+                          absolute>
                           計画をインポート
                         </GrowIconButton>
                         {role === PLAN_ROLE.OWNER && (
                           <GrowIconButton
                             onClick={handlePlanInfoEdit}
                             icon={<MdEditNote />}
+                            disabled={loading}
                             absolute>
                             基本情報を編集
                           </GrowIconButton>
@@ -409,6 +456,7 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
                           <GrowIconButton
                             onClick={handlePlanEdit}
                             icon={<MdEdit />}
+                            disabled={loading}
                             absolute>
                             計画を編集
                           </GrowIconButton>
