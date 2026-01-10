@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { Plan, PlanWithDetails } from "@/types/plan";
 import { getMe } from "@/lib/api/auth";
 import { PlanRole } from "@/consts/PLAN_ROLE";
+import { formatPlanData } from "../../_util/formatPlanData";
 
 // ユーザーデータを取得する関数
 const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {
@@ -71,26 +72,11 @@ const getPlans = async (
       return null;
     }
 
-    const plans: (Plan & {
-      role: PlanRole;
-      creator: Pick<User, "id" | "username">;
-      _count: { members: number; likes: number };
-      hasLiked: boolean;
-    })[] = await res.json();
+    const plans = await res.json();
 
-    return plans.map((plan) => ({
-      planData: {
-        ...plan,
-        favorites: plan._count.likes,
-        hasLiked: plan.hasLiked,
-        role: plan.role,
-      },
-      creatorData: {
-        id: plan.creator.id,
-        username: plan.creator.username,
-        email: "",
-      },
-    }));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const formatPlans = plans.map((plan: any) => formatPlanData(plan));
+    return Promise.all(formatPlans);
   } catch (_) {
     return null;
   }
