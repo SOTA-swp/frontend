@@ -51,6 +51,8 @@ function MapView() {
         defaultZoom={10}
         gestureHandling={"greedy"}
         disableDefaultUI={false}
+        mapTypeControl={false}
+        streetViewControl={false} // これを追加してペグマンアイコンを非表示にする
         mapTypeControlOptions={{ position: ControlPosition.BOTTOM_LEFT }}
         mapId={null}>
         {markerNodes.map((nodeId, i) => {

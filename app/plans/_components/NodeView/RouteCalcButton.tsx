@@ -86,7 +86,7 @@ function RouteCalcButton() {
       disabled={isCalculating}
       icon={<MdDirectionsCar />}
     >
-      移動時間を自動計算
+      移動時間、経路を自動計算
     </CommonButton>
   );
 }
