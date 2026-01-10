@@ -29,6 +29,7 @@ import ModalContent from "@/components/modal/ModalContent";
 import ModalTitle from "@/components/modal/ModalTitle";
 import ModalAction from "@/components/modal/ModalAction";
 import { toast } from "sonner";
+import ImageSelector from "../plans/_components/ImageSelector";
 
 export interface DevPageProps {
   a: undefined;
@@ -44,13 +45,17 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
   const setNodes = usePlanStore((state) => state.setNodes);
   const setStructure = usePlanStore((state) => state.setStructure);
   const setLocations = usePlanStore((state) => state.setLocations);
+  const addLocation = usePlanStore((state) => state.addLocation);
+  const [imageSelectorAnchor, setImageSelectorAnchor] =
+    React.useState<HTMLElement | null>(null);
 
   useEffect(() => {
     setLocations(MOCK_LOCATIONS);
+    MOCK_LOCATIONS.forEach((location) => addLocation(location));
 
     setNodes(MOCK_NODES);
     setStructure(MOCK_STRUCTURE);
-  }, [setStructure, setNodes, setLocations]);
+  }, [setStructure, setNodes, setLocations, addLocation]);
 
   const mockLocation = MOCK_LOCATIONS[0];
 
@@ -141,7 +146,8 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
               id="select"
               label="セレクター"
               error
-              helperText="ヘルパーテキスト">
+              helperText="ヘルパーテキスト"
+            >
               <SelectorItem value={0}>ほげほげ0</SelectorItem>
               <SelectorItem value={1}>ふがふが1</SelectorItem>
               <SelectorItem value={2}>ほげほげ2</SelectorItem>
@@ -212,7 +218,8 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
                       <CommonButton
                         modal
                         variant="outline"
-                        onClick={closeModal}>
+                        onClick={closeModal}
+                      >
                         キャンセル
                       </CommonButton>
                       <CommonButton
@@ -228,19 +235,22 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
                                 <CommonButton
                                   modal
                                   variant="outline"
-                                  onClick={closeModal}>
+                                  onClick={closeModal}
+                                >
                                   キャンセル
                                 </CommonButton>
                                 <CommonButton
                                   modal
                                   color="primary"
-                                  onClick={closeModal}>
+                                  onClick={closeModal}
+                                >
                                   確認
                                 </CommonButton>
                               </ModalAction>
                             </ModalContent>
                           )
-                        }>
+                        }
+                      >
                         複製
                       </CommonButton>
                       <CommonButton modal onClick={closeModal} color="primary">
@@ -249,7 +259,8 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
                     </ModalAction>
                   </ModalContent>
                 );
-              }}>
+              }}
+            >
               モーダル
             </CommonButton>
             <CommonButton
@@ -268,7 +279,8 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
                     </ModalAction>
                   </ModalContent>
                 );
-              }}>
+              }}
+            >
               エラーモーダル
             </CommonButton>
           </div>
@@ -282,12 +294,14 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
             <CommonButton
               onClick={() => {
                 toast.success("トースト通知だよ！");
-              }}>
+              }}
+            >
               トースト
             </CommonButton>
             <CommonButton
               onClick={() => toast.error("エラー通知だよ！")}
-              color="error">
+              color="error"
+            >
               エラートースト
             </CommonButton>
             <CommonButton onClick={() => toast.info("情報トーストだよ！")}>
@@ -295,7 +309,8 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
             </CommonButton>
             <CommonButton
               onClick={() => toast.warning("警告トーストだよ！")}
-              color="accent">
+              color="accent"
+            >
               警告トースト
             </CommonButton>
           </div>
@@ -307,6 +322,14 @@ const DevPage: React.FC<DevPageProps> = ({}) => {
 
       <div className="p-4">
         <LocationCard id={mockLocation.id} />
+        <button onClick={(e) => setImageSelectorAnchor(e.currentTarget)}>
+          Open ImageSelector
+        </button>
+        <ImageSelector
+          anchorEl={imageSelectorAnchor}
+          handleClose={() => setImageSelectorAnchor(null)}
+          name={`location-${mockLocation.id}-thumbnail`}
+        />
       </div>
     </div>
   );
