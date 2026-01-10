@@ -1,10 +1,13 @@
 import * as Y from "yjs";
-import { NodeData } from "@/types/node";
+import { NodeData, NODE_TYPES } from "@/types/node";
 import { StateCreator } from "zustand";
-import { PARENT_ID_ROOT } from "../_util/createNode";
+import { PARENT_ID_ROOT, createNode } from "../_util/createNode";
 import { PermissionStore } from "./permissionStore";
 import { YjsStore } from "./yjsStore";
-import { PLAN_NODES_KEY, PLAN_STRUCTURE_KEY } from "../_consts/yjsKeys";
+import { PLAN_NODES_KEY, PLAN_STRUCTURE_KEY, PLAN_LOCATIONS_KEY } from "../_consts/yjsKeys";
+import { LocationData } from "@/types/location";
+import { CalculateRouteResponse } from "@/types/route";
+import { PlanInfoStore } from "./planInfoStore";
 
 export interface NodeState {
   nodes: Record<NodeData["id"], NodeData>;
@@ -39,6 +42,11 @@ export interface NodeActions {
   // 折りたたまれたノードIDを管理する関数
   closeNode: (id: NodeData["id"]) => void;
   openNode: (id: NodeData["id"]) => void;
+
+  // 自動計算されたルートを適用する関数
+  applyAutoCalculatedRoutes: (
+    calculatedRoutes: CalculateRouteResponse
+  ) => void;
 }
 
 export type NodeStore = NodeState & NodeActions;
@@ -121,7 +129,7 @@ const isDescendantYjs = (
 };
 
 export const createNodeSlice: StateCreator<
-  NodeStore & PermissionStore & YjsStore,
+  NodeStore & PermissionStore & YjsStore & PlanInfoStore,
   [],
   [],
   NodeStore
@@ -342,6 +350,116 @@ export const createNodeSlice: StateCreator<
         yStructure.delete(delId);
       });
     });
+  },
+
+  applyAutoCalculatedRoutes: (calculatedRoutes) => {
+    const { ydoc, isReadOnly, planInfo } = get();
+    if (!ydoc || isReadOnly) return;
+
+    const yNodes = ydoc.getMap<NodeData>(PLAN_NODES_KEY);
+    const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
+    const yLocations = ydoc.getMap<LocationData>(PLAN_LOCATIONS_KEY);
+    const planId = planInfo.id;
+
+    ydoc.transact(() => {
+      // 既存の移動ノードを削除
+      const moveNodeIdsToDelete: { id: string; parentId: string }[] = [];
+      yNodes.forEach((node) => {
+        if (node.nodeType === NODE_TYPES.MOVE) {
+          const parentId = findParentIdInYjs(yStructure, node.id);
+          if (parentId) {
+            moveNodeIdsToDelete.push({ id: node.id, parentId });
+          }
+        }
+      });
+
+      moveNodeIdsToDelete.forEach(({ id, parentId }) => {
+        const parentArray = yStructure.get(parentId);
+        if (parentArray) {
+          const index = findIndexInYArray(parentArray, id);
+          if (index !== -1) {
+            parentArray.delete(index, 1);
+          }
+        }
+        yNodes.delete(id);
+        yStructure.delete(id);
+      });
+
+      // 現在のノード構造から、ロケーションノードのフラットなリストと親情報を取得
+      const flatLocationNodes: {
+        node: NodeData;
+        parentId: string;
+        order: number;
+        location: LocationData;
+      }[] = [];
+
+      const traverse = (currentParentId: string, visited: Set<string>) => {
+        if (visited.has(currentParentId)) return;
+        visited.add(currentParentId);
+
+        const children = yStructure.get(currentParentId)?.toArray() || [];
+        children.forEach((nodeId, order) => {
+          const node = yNodes.get(nodeId);
+          if (!node) return;
+
+          if (node.nodeType === NODE_TYPES.LOCATION) {
+            const location = yLocations.get(node.locationId);
+            // 座標情報がない(初期状態など)場合も、計算対象にはならないがリストには含めておかないと
+            // indexがずれる可能性がある。ただし、APIには有効な座標のみ送っているはずなので、
+            // APIのレスポンス(fromIndex)と整合性を取るためには、「APIに送ったリスト」と同じロジックで抽出する必要がある。
+            // ここでは「有効な座標を持つロケーション」のみを抽出する。
+            if (location && location.lat !== -1 && location.lng !== -1) {
+              flatLocationNodes.push({
+                node,
+                parentId: currentParentId,
+                order,
+                location,
+              });
+            }
+          } else if (node.nodeType === NODE_TYPES.PROCESS) {
+            traverse(nodeId, visited);
+          }
+        });
+      };
+      traverse(PARENT_ID_ROOT, new Set());
+
+            // 計算されたルートセグメントに基づいて移動ノードを挿入
+            // 逆順に挿入することで、同じ親に複数のMoveを追加する場合のインデックスずれを軽減
+            [...calculatedRoutes].reverse().forEach((segment) => {
+              // 到着地(toIndex)の情報を取得し、その「直前」に移動ノードを挿入する
+              const toLocationNodeInfo = flatLocationNodes[segment.toIndex];
+      
+              if (toLocationNodeInfo) {
+                const { parentId, location } = toLocationNodeInfo;
+      
+                const durationMinutes = Math.ceil(segment.durationSeconds / 60);
+                const newMoveNode = createNode(NODE_TYPES.MOVE, {
+                  planId,
+                  durationMinutes,
+                  // 名前を「〇〇への移動」のようにするとより分かりやすいかも
+                  name: `${Math.ceil(segment.durationSeconds / 60)}分移動`,
+                });
+      
+                yNodes.set(newMoveNode.id, newMoveNode);
+      
+                let parentArray = yStructure.get(parentId);
+                if (!parentArray) {
+                  parentArray = new Y.Array();
+                  yStructure.set(parentId, parentArray);
+                }
+      
+                // 現在のLocationノードのインデックスを再取得して確実にする
+                const currentIndex = findIndexInYArray(
+                  parentArray,
+                  toLocationNodeInfo.node.id
+                );
+      
+                if (currentIndex !== -1) {
+                  // 直前に挿入するので currentIndex の位置に insert
+                  parentArray.insert(currentIndex, [newMoveNode.id]);
+                }
+              }
+            });    });
   },
 
   setEditFieldId: (nodeId) => set({ editFieldId: nodeId }),
