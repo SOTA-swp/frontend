@@ -6,6 +6,8 @@ import InvitationForm from "./InvitationForm";
 import { usePlanStore } from "../../_store/hook";
 import MemberList from "./MemberList";
 import { Suspense } from "react";
+import ModalAction from "@/components/modal/ModalAction";
+import CommonButton from "@/components/CommonButton";
 
 interface MemberPopoverProps {
   open: boolean;
@@ -26,6 +28,11 @@ function MemberPopover({ handleClose, ...props }: MemberPopoverProps) {
             <MemberList planId={planId} />
           </Suspense>
         </div>
+        <ModalAction>
+          <CommonButton onClick={handleClose} variant={"outline"} modal>
+            閉じる
+          </CommonButton>
+        </ModalAction>
       </ModalContent>
     </Popover>
   );

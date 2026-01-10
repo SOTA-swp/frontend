@@ -42,10 +42,14 @@ function MemberList({ planId }: MemberListProps) {
   const { active, invited: invitedMembers } = data;
 
   const owner = active.find((member) => member.role === PLAN_ROLE.OWNER);
-  const me = active.find((member) => member.id === myData?.id);
+  const me = active.find(
+    (member) => member.id === myData?.id && member.role !== PLAN_ROLE.OWNER
+  );
   const others = active.filter(
     (member) => [owner?.id, me?.id].includes(member.id) === false
   );
+
+  console.log(owner, me, others);
 
   const activeMembers = [owner, me, ...others].filter(
     (member): member is Member => member !== undefined

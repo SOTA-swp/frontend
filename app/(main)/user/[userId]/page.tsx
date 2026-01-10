@@ -32,7 +32,6 @@ const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {
         receivedLikes: number;
       };
     } = await res.json();
-    console.log(user);
     return {
       ...user,
       favoritesCount: user.stats.givenLikes,
