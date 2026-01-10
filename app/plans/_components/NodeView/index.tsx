@@ -50,14 +50,16 @@ function NodeView() {
   return (
     <ViewWrapper
       overflow="auto"
-      outerElement={<NodeViewAddButton />}
+      outerElement={
+        <>
+          <div className="absolute bottom-0 left-0 flex gap-2 p-4">
+            <RouteCalcButton />
+            <TimeRecalcButton />
+          </div>
+          <NodeViewAddButton />
+        </>
+      }
       id={NODE_VIEW_ID}>
-      <div className="sticky top-0 z-10 flex justify-end p-4 pb-0 pointer-events-none">
-        <div className="pointer-events-auto flex gap-2">
-          <RouteCalcButton />
-          <TimeRecalcButton />
-        </div>
-      </div>
       <NodeThree />
     </ViewWrapper>
   );
