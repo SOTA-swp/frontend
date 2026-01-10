@@ -3,14 +3,21 @@ import { StateCreator } from "zustand";
 import { PermissionStore } from "./permissionStore";
 import { VIEW_MODE, ViewMode } from "../_consts/viewMode";
 
+export type PlanInfo = Pick<
+  Plan,
+  "id" | "title" | "description" | "isPublic" | "creatorId"
+>;
+
 export interface PlanStoreState {
-  planInfo: Plan;
+  planInfo: PlanInfo;
   viewMode: ViewMode;
 }
 
 export interface PlanActions {
   setPlanInfo: (planInfo: Partial<Plan>) => void;
-  updatePlanInfo: (updatedFields: Partial<Plan>) => void;
+  updatePlanInfo: (
+    updatedFields: Partial<Plan> | Promise<Partial<Plan>>
+  ) => void;
 
   setViewMode: (viewMode: ViewMode) => void;
 }
@@ -22,8 +29,6 @@ export const defaultStore: PlanStoreState = {
     id: "",
     title: "",
     description: "",
-    createdAt: "",
-    updatedAt: "",
     creatorId: "",
     isPublic: false,
   },
@@ -47,11 +52,23 @@ export const createPlanInfoSlice: StateCreator<
   },
 
   updatePlanInfo: (updatedFields) => {
+    if (updatedFields instanceof Promise) {
+      updatedFields.then((fields) => {
+        set((state) => {
+          if (isReadOnly(state)) return state;
+          return {
+            ...state,
+            planInfo: { ...state.planInfo, ...fields },
+          };
+        });
+      });
+      return;
+    }
     set((state) => {
       if (isReadOnly(state)) return state;
       return {
         ...state,
-        ...updatedFields,
+        planInfo: { ...state.planInfo, ...updatedFields },
       };
     });
   },

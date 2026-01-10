@@ -15,6 +15,7 @@ import EditPlanInfoModal from "./EditPlanInfoModal";
 import ExportModal from "@/app/plans/_components/ExportModal";
 import usePopover from "@/components/popover/usePopover";
 import MemberPopover from "./Member/MemberPopover";
+import { useEditPlanInfoModal } from "../_hooks/useEditPlanInfoModal";
 
 interface QuickMenuItem {
   id: string;
@@ -50,9 +51,9 @@ function QuickMenu() {
   const [open, setOpen] = useState(true);
   const [active, setActive] = useState(true);
   const isReadOnly = usePlanStore((state) => state.isReadOnly);
-  const planId = usePlanStore((state) => state.planInfo.id);
   const openModal = useAppStore((state) => state.openModal);
   const { handleOpen: memberPopoverOpen, ...memberPopoverProps } = usePopover();
+  const { handleOpenEditPlanInfoModal } = useEditPlanInfoModal();
 
   const items = useMemo<QuickMenuItem[]>(
     () => [
@@ -61,7 +62,7 @@ function QuickMenu() {
         icon: <MdEditNote />,
         label: "基本情報を編集",
         isEditOnly: true,
-        onClick: () => openModal(<EditPlanInfoModal planId={planId} />),
+        onClick: handleOpenEditPlanInfoModal,
       },
       {
         id: "export",
@@ -78,7 +79,7 @@ function QuickMenu() {
         onClick: memberPopoverOpen,
       },
     ],
-    [planId, openModal, memberPopoverOpen]
+    [openModal, memberPopoverOpen, handleOpenEditPlanInfoModal]
   );
 
   const handleToggleOpen = () => {
