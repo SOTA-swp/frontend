@@ -231,11 +231,25 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
           )
         : // 小さめのカード
           !open && (
-            <motion.button
-              onClick={handleOpen}
+            <motion.div
               layoutId={getId(MOTION_ELEMENTS.CONTAINER)}
-              whileHover={{ scale: 1.05 }}
-              className="relative flex w-62.5 h-20 bg-paper rounded-lg border border-border">
+              initial={"initial"}
+              whileHover={"hover"}
+              variants={{
+                hover: { scale: 1.05 },
+              }}
+              className="relative aspect-video flex flex-col items-center justify-center bg-paper rounded-lg  cursor-pointer">
+              {/* 開くための判定 */}
+              <button className="absolute inset-0 z-10" onClick={handleOpen} />
+
+              {/* いいね部分 */}
+              <motion.div
+                layoutId={getId(MOTION_ELEMENTS.FAVORITE)}
+                className="absolute -top-2 -right-2 z-10">
+                {likeContent}
+              </motion.div>
+
+              {/* 背景部分 */}
               <motion.div
                 layoutId={getId(MOTION_ELEMENTS.IMAGE)}
                 style={{ background: background }}
@@ -243,28 +257,28 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
               />
 
               {/* 文字部分 */}
-              <div className="relative z-10 w-[30%] flex items-center justify-center">
-                <motion.div
-                  layoutId={getId(MOTION_ELEMENTS.CHAR)}
-                  className="flex items-center justify-center text-2xl text-paper">
-                  {firstChar}
-                </motion.div>
-              </div>
+              <motion.div
+                layoutId={getId(MOTION_ELEMENTS.CHAR)}
+                className="flex-1 relative flex items-center justify-center text-3xl text-paper">
+                {firstChar}
+              </motion.div>
 
               {/* 詳細部分 */}
               <motion.div
+                onClick={handleOpen}
                 layoutId={getId(MOTION_ELEMENTS.INFO)}
-                className="relative z-10 flex-1 flex flex-col text-start px-2 justify-center w-[60%] h-full bg-paper rounded-r-lg rounded-l-none">
-                <p className="text-[12px] text-text-secondary truncate">
-                  {formatDataDisplay(planData.createdAt)}
-                </p>
-                <motion.h3
+                variants={{
+                  initial: { opacity: 0, height: 0 },
+                  hover: { opacity: 1, height: "" },
+                }}
+                className="self-stretch select-none">
+                <motion.p
                   layoutId={getId(MOTION_ELEMENTS.TITLE)}
-                  className="text-text-primary truncate mt-1">
+                  className="relative text-xs bg-paper text-left px-2 py-1 truncate text-text-secondary rounded-lg m-2 mt-0">
                   {title}
-                </motion.h3>
+                </motion.p>
               </motion.div>
-            </motion.button>
+            </motion.div>
           )}
 
       {/* 開いた時 */}

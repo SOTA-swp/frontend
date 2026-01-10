@@ -13,8 +13,7 @@ export default async function RootLayout({
     <div>
       <OpenPlanCardStoreProvider>
         <CommonHeader />
-        {/* TODO: オススメの計画を渡す(ここでやるべきかは要検討) */}
-        <Top data={(await getPlans("", 0, 10)).planData} />
+        <Top />
         <div className="flex p-4 gap-4">
           <Side />
           {children}

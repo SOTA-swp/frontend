@@ -13,7 +13,7 @@ function PlanBlock({
   children?: ReactNode;
 }) {
   return (
-    <div className="min-h-[500px]">
+    <div className="min-h-125">
       <SectionTitle color="gray" icon={icon}>
         {title}
       </SectionTitle>

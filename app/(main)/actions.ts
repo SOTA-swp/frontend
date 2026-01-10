@@ -356,3 +356,36 @@ export const searchPlans = async (
     currentPage += 1;
   }
 };
+
+export interface RecommendResult {
+  plans: PlanWithDetails[];
+}
+export const getRecommendedPlans = async (): Promise<RecommendResult> => {
+  try {
+    const cookie = (await cookies()).toString();
+    const res = await fetchWrapper.get(
+      `${ApiRoutes.plan.create}?sort=popular`,
+      true,
+      {
+        headers: { Cookie: cookie },
+        next: { revalidate: 300 },
+      }
+    );
+    if (!res.ok) {
+      throw new Error("Failed to fetch recommended plans");
+    }
+    const data = await res.json();
+    const { plans } = data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const formatPlansPromise = plans.map((plan: any) => formatPlanData(plan));
+    const formatPlans = await Promise.all(formatPlansPromise);
+    return {
+      plans: formatPlans,
+    };
+  } catch (e) {
+    throw new Error(
+      "Failed to fetch recommended plans" +
+        (e instanceof Error ? e.message : "")
+    );
+  }
+};
