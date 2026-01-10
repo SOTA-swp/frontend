@@ -15,6 +15,9 @@ import {
   MdNotifications,
   MdLogout,
   MdLogin,
+  MdDarkMode,
+  MdLightMode,
+  MdBrightnessAuto,
 } from "react-icons/md";
 import PATH from "@/consts/PATH";
 import usePopover from "@/components/popover/usePopover";
@@ -60,6 +63,8 @@ function CommonHeader() {
   };
 
   const isLoggedIn = !!userData;
+  const theme = useAppStore((state) => state.theme);
+  const cycleTheme = useAppStore((state) => state.cycleTheme);
 
   interface HeaderItem {
     key: string;
@@ -78,6 +83,21 @@ function CommonHeader() {
       login: true,
       logout: false,
       onClick: handleOpenAddPlanModal,
+    },
+    {
+      key: "theme",
+      icon:
+        theme === "light" ? (
+          <MdLightMode />
+        ) : theme === "dark" ? (
+          <MdDarkMode />
+        ) : (
+          <MdBrightnessAuto />
+        ),
+      title: "テーマ切替",
+      login: true,
+      logout: true,
+      onClick: cycleTheme,
     },
     {
       key: "search",

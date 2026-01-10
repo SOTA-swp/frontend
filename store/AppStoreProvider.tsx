@@ -17,9 +17,11 @@ export const AppStoreProvider = ({
 }: AppStoreProviderProps) => {
   const [store] = useState(() => createAppStore(initData));
   const refetch = store.getState().refetch;
+  const initTheme = store.getState().initTheme;
   useEffect(() => {
     refetch();
-  }, [refetch]);
+    initTheme();
+  }, [refetch, initTheme]);
 
   return (
     <AppStoreContext.Provider value={store}>
