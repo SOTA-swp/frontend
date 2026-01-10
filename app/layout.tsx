@@ -1,19 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Modal from "@/components/modal/Modal";
 import { AppStoreProvider } from "@/store/AppStoreProvider";
 import CustomToaster from "@/components/CustomToaster";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { fontVariables } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,8 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AppStoreProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-clip`}>
+        <body className={`${fontVariables} antialiased overflow-x-clip`}>
           {children}
           <Modal />
           <CustomToaster />
