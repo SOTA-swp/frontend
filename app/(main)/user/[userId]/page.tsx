@@ -6,9 +6,8 @@ import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
 import { Suspense } from "react";
 import { cookies } from "next/headers";
-import { Plan, PlanWithDetails } from "@/types/plan";
+import { PlanWithDetails } from "@/types/plan";
 import { getMe } from "@/lib/api/auth";
-import { PlanRole } from "@/consts/PLAN_ROLE";
 import { formatPlanData } from "../../_util/formatPlanData";
 
 // ユーザーデータを取得する関数

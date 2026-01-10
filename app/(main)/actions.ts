@@ -15,6 +15,9 @@ import {
 import { revalidatePath } from "next/cache";
 import { PLAN_ROLE } from "../../consts/PLAN_ROLE";
 import { EditPlanFormSchema } from "../plans/_types/EditPlanFormData";
+import { formatPlanData } from "./_util/formatPlanData";
+import { Pagination } from "./search/_types/pagination";
+import { SearchPageParams } from "./search/_types/searchParams";
 
 // TODO: 実際のAPIが完成したら置き換える
 export async function getUserData(userId: string): Promise<
@@ -298,3 +301,58 @@ export async function markNotificationRead(
     return { ok: false, message: failedMessage(String(e)) };
   }
 }
+
+export interface SearchResults {
+  plans: PlanWithDetails[];
+  pagination: Pagination;
+}
+export const searchPlans = async (
+  sort: "popular" | "new" = "popular",
+  params: SearchPageParams,
+  limit: number = SEARCH_LIMIT
+): Promise<SearchResults> => {
+  const cookie = (await cookies()).toString();
+
+  // API が 1 始まり前提なので 1 始まりに合わせる
+  let allPlanData: PlanWithDetails[] = [];
+  let currentPage = 1;
+  const targetPage = ((sort === "popular" ? params.pp : params.np) ?? 0) + 1;
+
+  while (true) {
+    const sendParams = new URLSearchParams({
+      q: params.q || "",
+      sort,
+      page: currentPage.toString(), // 1 始まり
+      limit: limit.toString(),
+    }).toString();
+    const res = await fetchWrapper.get(
+      `${ApiRoutes.plan.create}?${sendParams}`,
+      true,
+      {
+        headers: { Cookie: cookie },
+        next: { revalidate: 60 },
+      }
+    );
+    if (!res.ok) {
+      throw new Error("Failed to fetch plan info");
+    }
+
+    const data = await res.json();
+    const { plans, pagination } = data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const formatPlansPromise = plans.map((plan: any) => formatPlanData(plan));
+    const formatPlans = await Promise.all(formatPlansPromise);
+    allPlanData = [...allPlanData, ...formatPlans];
+
+    if (currentPage >= targetPage || currentPage >= pagination.totalPages) {
+      return {
+        plans: allPlanData,
+        pagination: {
+          ...pagination,
+          currentPage,
+        },
+      };
+    }
+    currentPage += 1;
+  }
+};
