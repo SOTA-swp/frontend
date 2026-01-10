@@ -21,6 +21,7 @@ export const NodeDataSchema = z.object({
     .min(0)
     .max(60 * 24),
   locationId: z.string(),
+  encodedPolyline: z.string().optional(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
 });
@@ -36,10 +37,11 @@ export const createMockNode = (
   planId: `mock-plan-id${num}`,
   nodeType: "process",
   name: `モックノード名前${num}`,
-  startTime: "09:30",
-  endTime: "10:00",
+  startTime: "2000-01-01T00:00:00.000Z",
+  endTime: "2000-01-01T00:00:00.000Z",
   durationMinutes: 60,
   locationId: `mock-location-id${num}`,
+  encodedPolyline: undefined,
   createdAt: "2025-11-30T12:00:00.000Z",
   updatedAt: "2025-11-30T12:00:00.000Z",
   ...props,

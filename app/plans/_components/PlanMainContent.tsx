@@ -27,7 +27,9 @@ function PlanMainContent({ readOnly = false, planId }: PlanMainContentProps) {
   }, [readOnly, setReadOnly]);
 
   return (
-    <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}>
+    <APIProvider
+      apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ""}
+      language="ja">
       {planId && <PlanCollaborator planId={planId} />}
       <div className="flex flex-col p-4 gap-4">
         <HomeButton />

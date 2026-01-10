@@ -17,7 +17,11 @@ function TimeContent({ id }: TimeContentProps) {
     field: keyof Pick<NodeData, "startTime" | "endTime" | "durationMinutes">,
     value: string | number
   ) => {
-    updateNode(id, { [field]: value });
+    if (field === "durationMinutes") {
+      updateNode(id, { [field]: Number(value) });
+    } else {
+      updateNode(id, { [field]: value });
+    }
   };
 
   return (
