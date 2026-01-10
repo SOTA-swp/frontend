@@ -54,12 +54,11 @@ export default function ImageSelector({
       <Popover
         anchorEl={anchorEl}
         onClose={handleClose}
-        placement="top-end"
-        flipEnabled={false}
+        placement="right-start"
         open={!!anchorEl}>
         <ModalContent closeModal={handleClose}>
           <ModalTitle>画像を選択</ModalTitle>
-          <div className="grid grid-cols-3 gap-4 pb-4">
+          <div className="grid grid-cols-3 gap-4 p-4">
             {IMAGES.map((src) => (
               <div
                 key={src}
