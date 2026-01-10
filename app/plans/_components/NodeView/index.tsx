@@ -9,6 +9,7 @@ import { NODE_TYPES, NodeType } from "@/types/node";
 import { NODE_TYPE_ITEMS } from "./NODE_ITEMS";
 import { useAddNode } from "../../_hooks/useAddNode";
 import RouteCalcButton from "./RouteCalcButton";
+import TimeRecalcButton from "./TimeRecalcButton";
 
 export const NODE_VIEW_ID = "node-view";
 
@@ -52,8 +53,9 @@ function NodeView() {
       outerElement={<NodeViewAddButton />}
       id={NODE_VIEW_ID}>
       <div className="sticky top-0 z-10 flex justify-end p-4 pb-0 pointer-events-none">
-        <div className="pointer-events-auto">
+        <div className="pointer-events-auto flex gap-2">
           <RouteCalcButton />
+          <TimeRecalcButton />
         </div>
       </div>
       <NodeThree />
