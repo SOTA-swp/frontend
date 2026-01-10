@@ -56,16 +56,14 @@ export default function ImageSelector({
         onClose={handleClose}
         placement="top-end"
         flipEnabled={false}
-        open={!!anchorEl}
-      >
-        <ModalTitle>画像を選択</ModalTitle>
-
+        open={!!anchorEl}>
         <ModalContent closeModal={handleClose}>
-          <div className="grid grid-cols-3 gap-4">
+          <ModalTitle>画像を選択</ModalTitle>
+          <div className="grid grid-cols-3 gap-4 pb-4">
             {IMAGES.map((src) => (
               <div
                 key={src}
-                className="cursor-pointer"
+                className="relative cursor-pointer aspect-video"
                 onClick={() => {
                   if (onSelect) {
                     onSelect(src);
@@ -76,14 +74,12 @@ export default function ImageSelector({
                     window.dispatchEvent(event);
                   }
                   handleClose();
-                }}
-              >
+                }}>
                 <Image
                   src={src}
+                  fill
                   alt="選択可能な画像"
-                  width={100}
-                  height={100}
-                  className="w-full h-auto rounded-lg object-cover"
+                  className="object-cover rounded-lg hover:scale-101 hover:shadow-md transition-all"
                 />
               </div>
             ))}

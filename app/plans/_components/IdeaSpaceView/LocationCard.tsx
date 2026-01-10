@@ -17,8 +17,8 @@ import Image from "next/image";
 import AddButton from "@/components/AddButton";
 import IconButton from "@/components/IconButton";
 import { useLocationSearch } from "../../_hooks/useLocationSearch";
-import React from "react";
 import ImageSelector from "../ImageSelector";
+import usePopover from "@/components/popover/usePopover";
 
 const MOTION_ELEMENTS = {
   ICON: "icon",
@@ -43,11 +43,10 @@ const inputAnimation = (delay: number): HTMLMotionProps<"div"> => ({
 });
 
 function LocationCard({ id }: LocationCardProps) {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
+  const { handleOpen: handleOpenImageSelector, ...imgSelectorProps } =
+    usePopover();
   const location = usePlanStore((state) => state.locations[id]);
   const updateLocation = usePlanStore((state) => state.updateLocation);
-  const setLocations = usePlanStore((state) => state.setLocations);
-  const locations = usePlanStore((state) => state.locations);
   const isExpanded = !usePlanStore((state) =>
     state.closedLocationIds.includes(id)
   );
@@ -81,6 +80,11 @@ function LocationCard({ id }: LocationCardProps) {
     closeLocation(id);
   };
 
+  const handleSelectImage = (src: string) => {
+    updateLocation(id, { thumbnail: src });
+    imgSelectorProps.handleClose();
+  };
+
   const getMotionId = (
     key: (typeof MOTION_ELEMENTS)[keyof typeof MOTION_ELEMENTS]
   ) => {
@@ -90,8 +94,7 @@ function LocationCard({ id }: LocationCardProps) {
   const icon = (
     <motion.div
       layoutId={getMotionId(MOTION_ELEMENTS.ICON)}
-      transition={commonTransition()}
-    >
+      transition={commonTransition()}>
       <EmojiIcon color="primary">
         {getFirstChar(location.title) || "✈️"}
       </EmojiIcon>
@@ -104,62 +107,49 @@ function LocationCard({ id }: LocationCardProps) {
         layout
         className={clsx(
           "relative w-sm flex flex-col rounded-lg overflow-hidden bg-paper gap-[25px] shadow-md hover:shadow-lg hover:scale-102 transition-all"
-        )}
-      >
+        )}>
         <AnimatePresence initial={false} mode="wait">
           {isExpanded && (
             <motion.div
               key="accordion"
               initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-            >
+              animate={{ opacity: 1, height: "auto" }}>
               <button
                 onClick={handleClose}
-                className="w-full h-4 flex justify-center p-5 border-b border-b-border hover:bg-text-secondary/10 transition-colors"
-              >
+                className="w-full h-4 flex justify-center p-5 border-b border-b-border hover:bg-text-secondary/10 transition-colors">
                 <motion.span
                   layoutId={getMotionId(MOTION_ELEMENTS.TOGGLE_BUTTON)}
-                  transition={commonTransition()}
-                >
+                  transition={commonTransition()}>
                   <MdArrowDropUp className="text-lg text-text-secondary" />
                 </motion.span>
               </button>
 
               <div className="relative flex flex-col gap-6 p-4">
-                <div
-                  className="relative w-full aspect-video cursor-pointer"
-                  onClick={(e) => setAnchorEl(e.currentTarget)}
-                >
-                  {/* TODO: サムネイル画像の追加を実装する */}
+                <div className="relative w-full aspect-video">
                   {location.thumbnail ? (
-                    <Image
-                      fill
-                      className="w-full h-full rounded-lg object-cover object-center pointer-events-none"
-                      src={location.thumbnail}
-                      alt={`${location.title}のサムネイル画像`}
-                    />
+                    <>
+                      <button
+                        className="absolute w-full h-full"
+                        onClick={handleOpenImageSelector}
+                      />
+                      <Image
+                        fill
+                        className="w-full h-full rounded-lg object-cover object-center pointer-events-none"
+                        src={location.thumbnail}
+                        alt={`${location.title}のサムネイル画像`}
+                      />
+                    </>
                   ) : (
-                    <div className="w-full h-full rounded-lg bg-gray-200 flex items-center justify-center text-gray-500">
+                    <AddButton
+                      className="w-full h-full"
+                      onClick={handleOpenImageSelector}>
                       サムネイルを追加
-                    </div>
+                    </AddButton>
                   )}
                   <ImageSelector
-                    anchorEl={anchorEl}
-                    handleClose={() => {
-                      console.log("ImageSelector handleClose");
-                      setAnchorEl(null);
-                    }}
+                    {...imgSelectorProps}
                     name={`location-${id}-thumbnail`}
-                    onSelect={(src) => {
-                      const updatedLocations = { ...locations };
-                      if (updatedLocations[id]) {
-                        updatedLocations[id] = {
-                          ...updatedLocations[id],
-                          thumbnail: src,
-                        };
-                      }
-                      setLocations(Object.values(updatedLocations));
-                    }}
+                    onSelect={handleSelectImage}
                   />
                 </div>
 
@@ -168,8 +158,7 @@ function LocationCard({ id }: LocationCardProps) {
                   <motion.div
                     layoutId={getMotionId(MOTION_ELEMENTS.TITLE)}
                     transition={commonTransition(45)}
-                    className="flex-2"
-                  >
+                    className="flex-2">
                     <TextField
                       ref={inputRef}
                       label="ロケーション名"
@@ -218,22 +207,19 @@ function LocationCard({ id }: LocationCardProps) {
             <motion.button
               key="header"
               className="flex items-center justify-between p-4"
-              onClick={handleOpen}
-            >
+              onClick={handleOpen}>
               <div className="flex items-center gap-4 min-w-0">
                 {icon}
                 <motion.p
                   layoutId={getMotionId(MOTION_ELEMENTS.TITLE)}
                   className="truncate"
-                  transition={commonTransition(35)}
-                >
+                  transition={commonTransition(35)}>
                   {removeEmoji(location.title)}
                 </motion.p>
               </div>
               <motion.div
                 layoutId={getMotionId(MOTION_ELEMENTS.TOGGLE_BUTTON)}
-                transition={commonTransition()}
-              >
+                transition={commonTransition()}>
                 <MdArrowDropDown className="text-lg text-text-secondary shrink-0" />
               </motion.div>
             </motion.button>
@@ -248,8 +234,7 @@ function LocationCard({ id }: LocationCardProps) {
             initial={{ opacity: 0, x: 20, rotate: 90 }}
             animate={{ opacity: 1, x: 0, rotate: 0 }}
             exit={{ opacity: 0, x: 20, rotate: 90 }}
-            transition={commonTransition()}
-          >
+            transition={commonTransition()}>
             <IconButton
               onClick={handleDelete}
               color={"error"}
