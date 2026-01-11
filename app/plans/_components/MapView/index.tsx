@@ -50,7 +50,7 @@ function MapView() {
     <ViewWrapper
       paper
       outerElement={<LocationSearchBox />}
-      panelProps={{ id: "map-view", minSize: 100 }}>
+      panelProps={{ id: "map-view-wrapper", minSize: 100 }}>
       <Map
         defaultCenter={position}
         defaultZoom={10}
