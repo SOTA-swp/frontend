@@ -73,10 +73,7 @@ function SearchPlanView({ popularPromise, newPromise }: SearchPlanViewProps) {
           />
         ))}
         {popularData.plans.length === 0 && (
-          <EmptyState
-            title="該当する計画が見つかりませんでした"
-            description="キーワードやフィルタを変えて再検索してください。"
-          />
+          <EmptyState title="人気の計画が見つかりませんでした" />
         )}
       </PlanBlock>
 
@@ -94,10 +91,7 @@ function SearchPlanView({ popularPromise, newPromise }: SearchPlanViewProps) {
           <PlanCard key={plan.planData.id} data={plan} layoutId="search-new" />
         ))}
         {newData.plans.length === 0 && (
-          <EmptyState
-            title="新着の計画が見つかりませんでした"
-            description="条件を少し緩めて検索するとヒットしやすくなります。"
-          />
+          <EmptyState title="新着の計画が見つかりませんでした" />
         )}
       </PlanBlock>
     </section>
