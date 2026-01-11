@@ -96,7 +96,7 @@ function LocationCard({ id }: LocationCardProps) {
       layoutId={getMotionId(MOTION_ELEMENTS.ICON)}
       transition={commonTransition()}>
       <EmojiIcon color="primary">
-        {getFirstChar(location.title) || "✈️"}
+        {getFirstChar(location.title) || ""}
       </EmojiIcon>
     </motion.div>
   );
@@ -106,7 +106,7 @@ function LocationCard({ id }: LocationCardProps) {
       <motion.div
         layout
         className={clsx(
-          "relative w-sm flex flex-col rounded-lg overflow-hidden bg-paper gap-[25px] shadow-md hover:shadow-lg hover:scale-102 transition-all"
+          "relative w-sm flex flex-col rounded-lg overflow-hidden bg-paper gap-6.25 shadow-md hover:shadow-lg hover:scale-102 transition-all"
         )}>
         <AnimatePresence initial={false} mode="wait">
           {isExpanded && (
@@ -166,7 +166,7 @@ function LocationCard({ id }: LocationCardProps) {
                       onChange={(e) =>
                         updateLocation(id, { title: e.target.value })
                       }
-                      placeholder="プレースホルダー"
+                      placeholder="観光地の名前を入力しよう！"
                       autoComplete="off"
                       fullWidth
                     />
@@ -180,7 +180,7 @@ function LocationCard({ id }: LocationCardProps) {
                     onChange={(e) =>
                       updateLocation(id, { address: e.target.value })
                     }
-                    placeholder="プレースホルダー"
+                    placeholder="住所を入力しよう！"
                     autoComplete="off"
                     fullWidth
                   />
@@ -193,7 +193,7 @@ function LocationCard({ id }: LocationCardProps) {
                     onChange={(e) =>
                       updateLocation(id, { description: e.target.value })
                     }
-                    placeholder="プレースホルダー"
+                    placeholder="おすすめの観光スポットやグルメなどを書いておこう！"
                     textarea
                     autoComplete="off"
                     fullWidth

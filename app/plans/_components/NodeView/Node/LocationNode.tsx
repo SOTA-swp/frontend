@@ -42,7 +42,7 @@ function LocationNode({ id, locationId, name }: LocationNodeProps) {
     return nameFirstChar || locationTitleFirstChar; // それ以外はカスタム名の最初の文字、なければロケーションのタイトルの最初の文字を使用
   })();
   const title = (() => {
-    if (isLocationMissing) return "ロケーションが見つかりません"; // ロケーションが見つからない場合のタイトル
+    if (isLocationMissing) return name || "ロケーションが見つかりません"; // ロケーションが見つからない場合のタイトル
     if (name) return removeEmoji(name); // カスタム名がある場合はそれをタイトルに
     if (!location.title) return "タイトル未設定"; // ロケーションのタイトルが空の場合
     return removeEmoji(location.title); // それ以外はロケーションのタイトルを表示
