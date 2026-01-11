@@ -14,7 +14,7 @@ function CustomToaster() {
       visibleToasts={5}
       style={{ zIndex: LAYER.TOASTER }}
       toastOptions={{
-        className: "!border",
+        className: "!border !bg-paper !text-text-primary",
         classNames: {
           success: "!border-primary",
           error: "!border-error",
