@@ -1,17 +1,18 @@
 "use client";
 import { User } from "@/types/user";
-import { MAIN_PAGE_IDs } from "../_consts/MAIN_PAGE_IDs";
+import { MAIN_PAGE_IDs } from "../../_consts/MAIN_PAGE_IDs";
 import { UserInfoBlock } from "@/components/UserInfoBlock";
 import PROJECT_NAME from "@/consts/PROJECT_NAME";
-import { VIEW_TOP_MARGIN } from "../_consts/HEADER_HIGHT";
+import { VIEW_TOP_MARGIN } from "../../_consts/HEADER_HIGHT";
 import { startTransition, use, useOptimistic, useRef } from "react";
-import MainViewController from "./MainViewController";
+import MainViewController from "../MainViewController";
 import { useAppStore } from "@/store/AppStoreProvider";
 import IconButton from "@/components/IconButton";
 import { MdEdit } from "react-icons/md";
-import UserEditModal from "./UserEditModal";
+import UserEditModal from "../UserEditModal";
 import UserIcon from "@/components/UserIcon";
 import { formatDataDisplay, subTimestamp } from "@/utils/data";
+import UserViewSkelton from "./UserViewSkelton";
 
 export type UserViewProps = {
   userData: Promise<
@@ -36,7 +37,9 @@ function UserView({ userData }: UserViewProps) {
   const openModal = useAppStore((state) => state.openModal);
 
   if (!userDataResolved) {
-    return null;
+    return (
+      <UserViewSkelton isLoading>このユーザーは存在しません。</UserViewSkelton>
+    );
   }
 
   const isMe = user?.id === userDataResolved.id;

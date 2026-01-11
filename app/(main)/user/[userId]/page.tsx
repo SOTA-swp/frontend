@@ -1,5 +1,5 @@
 import { MAIN_PAGE_IDs } from "../../_consts/MAIN_PAGE_IDs";
-import UserView, { UserViewProps } from "../../_components/UserView";
+import UserView, { UserViewProps } from "../../_components/UserView/UserView";
 import PlanView from "../../_components/PlanView";
 import { User } from "@/types/user";
 import { fetchWrapper } from "@/utils/fetchWrapper";
@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { PlanWithDetails } from "@/types/plan";
 import { getMe } from "@/lib/api/auth";
 import { formatPlanData } from "../../_util/formatPlanData";
+import UserViewSkelton from "../../_components/UserView/UserViewSkelton";
 
 // ユーザーデータを取得する関数
 const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {
@@ -91,7 +92,7 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
   return (
     <main className="relative flex-1 ">
       {/* TODO: スケルトンをちゃんと作る */}
-      <Suspense fallback={<div>Loading user data...</div>}>
+      <Suspense fallback={<UserViewSkelton isLoading />}>
         <UserView userData={getUserData(userId)} />
       </Suspense>
 
