@@ -1,6 +1,6 @@
 import { MAIN_PAGE_IDs } from "../../_consts/MAIN_PAGE_IDs";
 import UserView, { UserViewProps } from "../../_components/UserView/UserView";
-import PlanView from "../../_components/PlanView";
+import PlanView from "../../_components/PlanView/PlanView";
 import { User } from "@/types/user";
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
@@ -10,6 +10,7 @@ import { PlanWithDetails } from "@/types/plan";
 import { getMe } from "@/lib/api/auth";
 import { formatPlanData } from "../../_util/formatPlanData";
 import UserViewSkelton from "../../_components/UserView/UserViewSkelton";
+import PlanViewSkelton from "../../_components/PlanView/PlanViewSkelton";
 
 // ユーザーデータを取得する関数
 const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {
@@ -97,14 +98,14 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
       </Suspense>
 
       {/*  */}
-      <Suspense fallback={<div>Loading plans...</div>}>
+      <Suspense fallback={<PlanViewSkelton isLoading />}>
         <PlanView
           viewId={MAIN_PAGE_IDs.PLANS}
           plans={getPlans(userId, "joined")}
           userId={userId}
         />
       </Suspense>
-      <Suspense fallback={<div>Loading favorite plans...</div>}>
+      <Suspense fallback={<PlanViewSkelton isLoading />}>
         <PlanView
           viewId={MAIN_PAGE_IDs.FAVORITES}
           plans={getPlans(userId, "liked")}
