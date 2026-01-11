@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import NotificationList from "./NotificationList";
 import ModalAction from "@/components/modal/ModalAction";
 import CommonButton from "@/components/CommonButton";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface NotificationPopoverProps {
   open: boolean;
@@ -28,7 +29,7 @@ export default function NotificationPopover({
         flipEnabled={false}>
         <ModalContent closeModal={handleClose}>
           <ModalTitle>通知</ModalTitle>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <NotificationList />
           </Suspense>
           <ModalAction>

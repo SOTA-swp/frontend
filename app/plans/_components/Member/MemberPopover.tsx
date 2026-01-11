@@ -8,6 +8,7 @@ import MemberList from "./MemberList";
 import { Suspense } from "react";
 import ModalAction from "@/components/modal/ModalAction";
 import CommonButton from "@/components/CommonButton";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface MemberPopoverProps {
   open: boolean;
@@ -24,7 +25,7 @@ function MemberPopover({ handleClose, ...props }: MemberPopoverProps) {
         <ModalTitle>メンバー</ModalTitle>
         <div className="flex flex-col px-6 gap-6">
           <InvitationForm planId={planId} />
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <MemberList planId={planId} />
           </Suspense>
         </div>
