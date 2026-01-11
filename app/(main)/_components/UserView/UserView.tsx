@@ -11,7 +11,7 @@ import IconButton from "@/components/IconButton";
 import { MdEdit } from "react-icons/md";
 import UserEditModal from "../UserEditModal";
 import UserIcon from "@/components/UserIcon";
-import { formatDataDisplay, subTimestamp } from "@/utils/data";
+import { subTimestamp } from "@/utils/data";
 import UserViewSkelton from "./UserViewSkelton";
 
 export type UserViewProps = {
@@ -37,9 +37,7 @@ function UserView({ userData }: UserViewProps) {
   const openModal = useAppStore((state) => state.openModal);
 
   if (!userDataResolved) {
-    return (
-      <UserViewSkelton isLoading>このユーザーは存在しません。</UserViewSkelton>
-    );
+    return <UserViewSkelton>このユーザーは存在しません。</UserViewSkelton>;
   }
 
   const isMe = user?.id === userDataResolved.id;
