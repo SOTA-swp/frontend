@@ -8,6 +8,7 @@ import {
 import PlanBlock from "../../_components/PlanBlock";
 import PlanCard from "@/app/(main)/_components/PlanCard";
 import CommonButton from "@/components/CommonButton";
+import EmptyState from "@/components/EmptyState";
 import { use } from "react";
 import { SearchResults } from "../../actions";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -71,6 +72,12 @@ function SearchPlanView({ popularPromise, newPromise }: SearchPlanViewProps) {
             layoutId="search-popular"
           />
         ))}
+        {popularData.plans.length === 0 && (
+          <EmptyState
+            title="該当する計画が見つかりませんでした"
+            description="キーワードやフィルタを変えて再検索してください。"
+          />
+        )}
       </PlanBlock>
 
       <PlanBlock
@@ -86,6 +93,12 @@ function SearchPlanView({ popularPromise, newPromise }: SearchPlanViewProps) {
         {newData.plans.map((plan) => (
           <PlanCard key={plan.planData.id} data={plan} layoutId="search-new" />
         ))}
+        {newData.plans.length === 0 && (
+          <EmptyState
+            title="新着の計画が見つかりませんでした"
+            description="条件を少し緩めて検索するとヒットしやすくなります。"
+          />
+        )}
       </PlanBlock>
     </section>
   );

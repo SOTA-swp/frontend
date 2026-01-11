@@ -12,6 +12,8 @@ import PlanBlock from "../PlanBlock";
 import { User } from "@/types/user";
 import { useAppStore } from "@/store/AppStoreProvider";
 import AddPlanModal from "../AddPlanModal";
+import EmptyState from "@/components/EmptyState";
+import PlanViewSkelton from "./PlanViewSkelton";
 
 export interface PlanViewProps {
   viewId: (typeof MAIN_PAGE_IDs)["PLANS"] | (typeof MAIN_PAGE_IDs)["FAVORITES"];
@@ -32,7 +34,7 @@ function PlanView({ viewId, plans, userId }: PlanViewProps) {
   };
 
   if (!resolvedPlans) {
-    return null;
+    return <PlanViewSkelton />;
   }
 
   return (
@@ -62,9 +64,31 @@ function PlanView({ viewId, plans, userId }: PlanViewProps) {
             新規作成
           </AddButton>
         )}
+        {viewId === MAIN_PAGE_IDs.PLANS &&
+          resolvedPlans.length === 0 &&
+          !isMe && (
+            <EmptyState
+              icon={<MdAirplanemodeActive />}
+              title="表示できる計画がありません"
+              description="このユーザーはまだ計画を作成していません。"
+            />
+          )}
         {resolvedPlans.map((plan) => (
           <PlanCard key={plan.planData.id} data={plan} layoutId={viewId} />
         ))}
+        {resolvedPlans.length === 0 && viewId === MAIN_PAGE_IDs.FAVORITES && (
+          <EmptyState
+            icon={<MdFavorite />}
+            title={
+              isMe ? "いいねをしてみましょう！" : "表示できる計画がありません"
+            }
+            description={
+              isMe
+                ? "気に入った計画にいいねをして、ここで管理しましょう。"
+                : "このユーザーのお気に入りの計画はまだありません。"
+            }
+          />
+        )}
       </PlanBlock>
     </motion.section>
   );
