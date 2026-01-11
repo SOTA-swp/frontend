@@ -118,6 +118,7 @@ interface CommonButtonProps
     React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof CommonButtonStyles> {
   icon?: React.ReactNode;
+  iconPosition?: "left" | "right";
   color?: ComponentColor;
   fullWidth?: boolean;
   href?: string;
@@ -132,6 +133,7 @@ function CommonButton({
   fullWidth,
   href,
   icon,
+  iconPosition = "right",
   children,
   className,
   disabled,
@@ -140,6 +142,7 @@ function CommonButton({
   const commonClassName = cn(
     CommonButtonStyles({ size, variant, color, modal }),
     className,
+    iconPosition === "left" && icon && "flex-row-reverse",
     disabled &&
       "opacity-50! pointer-events-none! border! border-border! text-paper! bg-border! ",
     icon ? "justify-between" : "justify-center",

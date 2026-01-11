@@ -13,6 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           color="gray"
           size="md"
           icon={<MdKeyboardArrowLeft />}
+          iconPosition="left"
           href={PATH.TOP}>
           トップへ
         </CommonButton>
