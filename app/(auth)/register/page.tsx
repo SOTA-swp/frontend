@@ -1,5 +1,12 @@
 import CommonText from "@/components/CommonText";
 import RegisterForm from "./_component/RegisterForm";
+import PROJECT_NAME from "@/consts/PROJECT_NAME";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `アカウント作成 ${PROJECT_NAME}`,
+  description: `${PROJECT_NAME}のアカウント作成ページです。`,
+};
 
 const RegisterPage = () => {
   return (

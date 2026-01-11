@@ -11,6 +11,20 @@ import { getMe } from "@/lib/api/auth";
 import { formatPlanData } from "../../_util/formatPlanData";
 import UserViewSkelton from "../../_components/UserView/UserViewSkelton";
 import PlanViewSkelton from "../../_components/PlanView/PlanViewSkelton";
+import PROJECT_NAME from "@/consts/PROJECT_NAME";
+
+export async function generateMetadata({ params }: UserPageProps) {
+  const { userId } = await params;
+  const userData = await getUserData(userId);
+  const username = userData ? userData.username : "ユーザー";
+  return {
+    title:
+      userId === "me"
+        ? `マイページ ${PROJECT_NAME}`
+        : `${username}のプロフィール ${PROJECT_NAME}`,
+    description: `${username}さんのプロフィールページです。`,
+  };
+}
 
 // ユーザーデータを取得する関数
 const getUserData = async (userId: User["id"]): UserViewProps["userData"] => {

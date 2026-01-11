@@ -4,6 +4,16 @@ import PlanStoreProvider from "../_store/PlanStoreProvider";
 import { fetchWrapper } from "@/utils/fetchWrapper";
 import { ApiRoutes } from "api-contract";
 import { PlanInfo } from "../_store/planInfoStore";
+import PROJECT_NAME from "@/consts/PROJECT_NAME";
+
+export async function generateMetadata({ params }: PlanLayoutProps) {
+  const { planId } = await params;
+  const planInfo = await getPlanInfo(planId);
+  return {
+    title: `${planInfo.title} ${PROJECT_NAME}`,
+    description: `${planInfo.description}`,
+  };
+}
 
 async function getPlanInfo(planId: Plan["id"]): Promise<PlanInfo> {
   try {

@@ -4,6 +4,13 @@ import SearchPlanView from "./_components/SearchPlanView";
 import { searchPlans } from "../actions";
 import { SearchPageParams } from "./_types/searchParams";
 import PlanViewSkelton from "../_components/PlanView/PlanViewSkelton";
+import PROJECT_NAME from "@/consts/PROJECT_NAME";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `検索 ${PROJECT_NAME}`,
+  description: `${PROJECT_NAME}の検索ページです。`,
+};
 
 export interface SearchPageProps {
   searchParams: Promise<SearchPageParams>; // np: new page, pp: popular page
