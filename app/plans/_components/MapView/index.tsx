@@ -13,7 +13,7 @@ function MapView() {
   const nodes = usePlanStore((state) => state.nodes);
   const locations = usePlanStore((state) => state.locations);
   const flatNodes = useFlatNodes(structure);
-  
+
   // マーカー表示用（LOCATIONノードのみ抽出）
   const markerNodes = flatNodes.filter((id) => {
     const node = nodes[id];
@@ -23,7 +23,7 @@ function MapView() {
   });
 
   const position = { lat: 35.681236, lng: 139.767125 }; // 東京駅の座標
-  
+
   // パス生成（LOCATIONの座標 と MOVEのencodedPolyline を混在させる）
   const path = flatNodes
     .map((nodeId) => {
@@ -42,10 +42,15 @@ function MapView() {
       }
       return null;
     })
-    .filter((item): item is google.maps.LatLngLiteral | string => item !== null);
+    .filter(
+      (item): item is google.maps.LatLngLiteral | string => item !== null
+    );
 
   return (
-    <ViewWrapper paper outerElement={<LocationSearchBox />}>
+    <ViewWrapper
+      paper
+      outerElement={<LocationSearchBox />}
+      panelProps={{ id: "map-view", minSize: 100 }}>
       <Map
         defaultCenter={position}
         defaultZoom={10}

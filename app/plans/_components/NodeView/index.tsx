@@ -50,6 +50,7 @@ function NodeView() {
   return (
     <ViewWrapper
       overflow="auto"
+      panelProps={{ id: "node-view", minSize: 450 }}
       outerElement={
         <>
           <div className="absolute bottom-0 left-0 flex gap-2 p-4">

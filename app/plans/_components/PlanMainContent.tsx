@@ -13,6 +13,7 @@ import { APIProvider } from "@vis.gl/react-google-maps";
 import { usePlanStore } from "../_store/hook";
 import { PlanCollaborator } from "./PlanCollaborator";
 import ViewModeTab from "./ViewModeTab";
+import { Separator } from "react-resizable-panels";
 
 interface PlanMainContentProps {
   readOnly?: boolean;
@@ -41,6 +42,9 @@ function PlanMainContent({ readOnly = false, planId }: PlanMainContentProps) {
               {viewMode === VIEW_MODE.TIMELINE ? (
                 <ViewGroupWrapper key="timeline" viewMode={VIEW_MODE.TIMELINE}>
                   <NodeView />
+                  <Separator className="h-full w-2 flex items-center">
+                    <div className="flex-1 h-[40%] bg-primary rounded-full" />
+                  </Separator>
                   <MapView />
                 </ViewGroupWrapper>
               ) : (
