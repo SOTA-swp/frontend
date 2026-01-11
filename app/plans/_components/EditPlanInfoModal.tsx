@@ -24,7 +24,6 @@ interface EditPlanInfoModalProps {
   onEdit?: (data: EditPlanFormData) => void;
   path?: string;
   disabledDirtyCheck?: boolean;
-  onClose?: () => void;
 }
 
 function EditPlanInfoModal({
@@ -33,7 +32,6 @@ function EditPlanInfoModal({
   onEdit,
   path,
   disabledDirtyCheck = false,
-  onClose: closeCallback,
 }: EditPlanInfoModalProps) {
   const closeModal = useAppStore((state) => state.closeModal);
   const [isLoading, setIsLoading] = useState(planData instanceof Promise);
@@ -90,13 +88,12 @@ function EditPlanInfoModal({
       return;
     }
     toast.success("計画情報を更新しました！", { id: toastId });
-    onClose();
+    onClose?.();
   };
 
   const onClose = () => {
-    closeCallback?.();
     closeModal();
-  }
+  };
 
   return (
     <ModalContent

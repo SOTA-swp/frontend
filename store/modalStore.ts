@@ -3,11 +3,11 @@ import { StateCreator } from "zustand";
 
 export interface ModalStoreState {
   isModalOpen: boolean;
-  modalPayloadQueue: ReactNode[];
+  modalPayloadQueue: { content: ReactNode; closeCallback?: () => void }[];
 }
 
 export interface ModalStoreActions {
-  openModal: (content: ReactNode) => void;
+  openModal: (content: ReactNode, closeCallback?: () => void) => void;
   closeModal: () => void;
   shiftModalQueue: () => void;
 }
@@ -22,18 +22,26 @@ const defaultModalStore: ModalStoreState = {
 export const createModalStoreSlice: StateCreator<ModalStore> = (set) => {
   return {
     ...defaultModalStore,
-    openModal: (content) => {
+    openModal: (content, closeCallback) => {
       document.body.style.overflow = "hidden";
       set((state) => ({
         isModalOpen: true,
-        modalPayloadQueue: state.modalPayloadQueue
-          ? [...state.modalPayloadQueue, content]
-          : [content],
+        modalPayloadQueue: [
+          ...state.modalPayloadQueue,
+          { content, closeCallback },
+        ],
       }));
     },
     closeModal: () => {
       document.body.style.overflow = "";
-      set({ isModalOpen: false });
+      set((state) => {
+        const { modalPayloadQueue } = state;
+        if (modalPayloadQueue.length > 0) {
+          const currentModal = modalPayloadQueue[0];
+          currentModal.closeCallback?.();
+        }
+        return { isModalOpen: false };
+      });
     },
     shiftModalQueue: () => {
       set((state) => {

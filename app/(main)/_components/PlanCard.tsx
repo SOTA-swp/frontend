@@ -149,8 +149,8 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
           planId={newPlan.id}
           planData={{ ...newPlan }}
           disabledDirtyCheck
-          onClose={onClose}
-        />
+        />,
+        onClose
       );
     } catch (e) {
       toast.error(
