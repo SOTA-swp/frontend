@@ -31,7 +31,7 @@ function LocationSelector({ nodeId, onClose }: LocationSelectorProps) {
 
   return (
     <div className="w-xs max-h-75 overflow-y-auto bg-paper p-4 rounded-lg shadow-md">
-      <div className="sticky top-0 z-10 bg-white mb-2">
+      <div className="sticky top-0 z-10 bg-paper mb-2">
         <h4 className="text-lg mb-2">ロケーションを選択</h4>
         <hr className="border-border" />
       </div>
