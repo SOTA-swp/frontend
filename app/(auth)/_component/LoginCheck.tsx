@@ -12,7 +12,7 @@ function LoginCheck() {
 
   useEffect(() => {
     if (user) {
-      router.push(PATH.USER());
+      router.replace(PATH.USER());
     }
   }, [user, router, pathname]);
 
