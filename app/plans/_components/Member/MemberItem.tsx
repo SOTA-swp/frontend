@@ -21,9 +21,15 @@ function MemberItem({ member }: MemberItemProps) {
       />
       <div className="flex gap-2 items-start">
         {member.role === PLAN_ROLE.OWNER && (
-          <Chip variant={"outline"}>オーナー</Chip>
+          <Chip variant={"outline"} size={"xs"}>
+            オーナー
+          </Chip>
         )}
-        {isMe && <Chip variant={"outline"}>自分</Chip>}
+        {isMe && (
+          <Chip variant={"outline"} size={"xs"}>
+            自分
+          </Chip>
+        )}
       </div>
     </li>
   );
