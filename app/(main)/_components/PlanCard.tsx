@@ -409,7 +409,7 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
                     {title}
                   </motion.h3>
                   <p
-                    className="text-text-secondary max-h-20 overflow-auto pb-5 whitespace-pre"
+                    className="text-text-secondary max-h-20 overflow-auto pb-5 whitespace-pre-wrap"
                     style={{
                       maskImage:
                         "linear-gradient(to bottom, black 50%, transparent 100%)",

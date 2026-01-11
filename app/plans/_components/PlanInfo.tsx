@@ -15,11 +15,11 @@ function PlanInfo() {
   const { handleOpenEditPlanInfoModal } = useEditPlanInfoModal();
 
   return (
-    <div className="my-3 py-2 pl-4 max-w-300 border-l-2 border-accent">
+    <div className="my-3 py-2 pl-4 border-l-2 border-accent">
       <QuickMenu />
       <div className="flex items-center gap-6">
         <h2 className="text-2xl font-bold">{planTitle}</h2>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center mr-10">
           <Chip
             variant={"outline"}
             rounded
@@ -38,7 +38,13 @@ function PlanInfo() {
           )}
         </div>
       </div>
-      <p className="mt-1 text-text-secondary text-sm text-muted-foreground">
+      <p
+        className="mt-1 text-text-secondary text-sm text-muted-foreground whitespace-pre-wrap max-h-20 overflow-auto pb-5"
+        style={{
+          maskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 50%, transparent 100%)",
+        }}>
         {planDescription}
       </p>
     </div>
