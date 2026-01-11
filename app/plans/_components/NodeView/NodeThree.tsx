@@ -16,6 +16,7 @@ import { SortableContext } from "@dnd-kit/sortable";
 import { usePlanStore } from "../../_store/hook";
 import { PARENT_ID_ROOT } from "../../_util/createNode";
 import NullBox from "./NullBox";
+import { toast } from "sonner";
 
 function NodeThree() {
   const structure = usePlanStore(useShallow((state) => state.structure));
@@ -48,54 +49,58 @@ function NodeThree() {
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    setActiveId(null);
+    try {
+      const { active, over } = event;
+      setActiveId(null);
 
-    if (!active?.data?.current || !over?.data?.current) return;
+      if (!active?.data?.current || !over?.data?.current) return;
 
-    const activeIdStr = String(active.data.current.id);
-    const overData = over.data.current as unknown as OverData;
+      const activeIdStr = String(active.data.current.id);
+      const overData = over.data.current as unknown as OverData;
 
-    // ProcessNode (empty container) の場合はネスト
-    if (overData?.type === "process") {
-      const parentId = String(overData.id);
-      if (structure[parentId]?.includes(activeIdStr)) return;
-      setNestNode(parentId, activeIdStr);
-      return;
-    }
+      // ProcessNode (empty container) の場合はネスト
+      if (overData?.type === "process") {
+        const parentId = String(overData.id);
+        if (structure[parentId]?.includes(activeIdStr)) return;
+        setNestNode(parentId, activeIdStr);
+        return;
+      }
 
-    // AddNodeBar の挿入スロットにドロップした場合
-    if (overData?.type === "add-bar") {
-      const { parentId, order } = overData;
-      console.log("AddNodeBar drop:", {
-        parentId,
-        order,
-        activeIdStr,
-        moveNodeTo: !!moveNodeTo,
-      });
-      if (
-        typeof parentId === "string" &&
-        typeof order === "number" &&
-        moveNodeTo
-      ) {
-        moveNodeTo(parentId, activeIdStr, order);
-        console.log("moveNodeTo called");
-      } else {
-        console.warn("moveNodeTo not available or invalid data", {
+      // AddNodeBar の挿入スロットにドロップした場合
+      if (overData?.type === "add-bar") {
+        const { parentId, order } = overData;
+        console.log("AddNodeBar drop:", {
           parentId,
           order,
-          moveNodeTo,
+          activeIdStr,
+          moveNodeTo: !!moveNodeTo,
         });
+        if (
+          typeof parentId === "string" &&
+          typeof order === "number" &&
+          moveNodeTo
+        ) {
+          moveNodeTo(parentId, activeIdStr, order);
+          console.log("moveNodeTo called");
+        } else {
+          console.warn("moveNodeTo not available or invalid data", {
+            parentId,
+            order,
+            moveNodeTo,
+          });
+        }
+        return;
       }
-      return;
-    }
 
-    // 通常のノード上にドロップ（従来の入れ替え）
-    if (overData?.type === "node") {
-      const overIdStr = String(overData.id);
-      if (activeIdStr !== overIdStr) {
-        moveNodeInStructure(activeIdStr, overIdStr);
+      // 通常のノード上にドロップ（従来の入れ替え）
+      if (overData?.type === "node") {
+        const overIdStr = String(overData.id);
+        if (activeIdStr !== overIdStr) {
+          moveNodeInStructure(activeIdStr, overIdStr);
+        }
       }
+    } catch (e) {
+      toast.error((e as Error).message);
     }
   };
 
@@ -115,7 +120,7 @@ function NodeThree() {
                   id={nodeId}
                   parentId={PARENT_ID_ROOT}
                   order={i}
-                  depth={0}
+                  depth={1}
                   isLast={i === rootNodeIds.length - 1}
                 />
               ))}
@@ -124,7 +129,7 @@ function NodeThree() {
         </div>
       ) : (
         <div className="w-full h-full flex flex-col p-4 pr-0">
-          <NullBox id={PARENT_ID_ROOT} />
+          <NullBox id={PARENT_ID_ROOT} depth={0} />
         </div>
       )}
       <DragOverlay dropAnimation={null}>

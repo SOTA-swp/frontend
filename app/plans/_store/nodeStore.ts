@@ -13,6 +13,7 @@ import { LocationData } from "@/types/location";
 import { CalculateRouteResponse } from "@/types/route";
 import { PlanInfoStore } from "./planInfoStore";
 import { addMinutesToIso } from "@/utils/date";
+import { MAX_DEPTH } from "../_consts/node";
 
 export interface NodeState {
   nodes: Record<NodeData["id"], NodeData>;
@@ -140,6 +141,93 @@ const isDescendantYjs = (
   return foundRecursive;
 };
 
+/**
+ * ルートからの深さを返す（root 直下のノードが 0）
+ *
+ * @param yStructure
+ * @param nodeId
+ * @returns
+ */
+const getDepthFromRoot = (
+  yStructure: Y.Map<Y.Array<string>>,
+  nodeId: string
+): number => {
+  if (nodeId === PARENT_ID_ROOT) return -1;
+
+  let depth = 0;
+  let parentId = findParentIdInYjs(yStructure, nodeId);
+
+  while (parentId) {
+    if (parentId === PARENT_ID_ROOT) return depth;
+    depth += 1;
+    parentId = findParentIdInYjs(yStructure, parentId);
+  }
+
+  return depth;
+};
+
+/**
+ * 部分木内で最も深いプロセスノードの相対深さ（自身を 0 とした場合）を返す
+ *
+ * @param yStructure
+ * @param nodes
+ * @param nodeId
+ * @param currentDepth
+ * @returns
+ */
+const getMaxProcessDepthInSubtree = (
+  yStructure: Y.Map<Y.Array<string>>,
+  nodes: Record<string, NodeData>,
+  nodeId: string,
+  currentDepth: number = 0
+): number => {
+  const node = nodes[nodeId];
+  let maxDepth = node?.nodeType === NODE_TYPES.PROCESS ? currentDepth : -1;
+
+  const children = yStructure.get(nodeId);
+  if (children) {
+    children.forEach((childId) => {
+      const childMax = getMaxProcessDepthInSubtree(
+        yStructure,
+        nodes,
+        childId,
+        currentDepth + 1
+      );
+      if (childMax > maxDepth) maxDepth = childMax;
+    });
+  }
+
+  return maxDepth;
+};
+
+/**
+ * 最大深度を超えるかどうかを判定する
+ *
+ * @param yStructure
+ * @param nodes
+ * @param parentId
+ * @param childId
+ * @returns
+ */
+const wouldExceedMaxDepth = (
+  yStructure: Y.Map<Y.Array<string>>,
+  nodes: Record<string, NodeData>,
+  parentId: string,
+  childId: string
+): boolean => {
+  const deepestProcessDepth = getMaxProcessDepthInSubtree(
+    yStructure,
+    nodes,
+    childId
+  );
+  if (deepestProcessDepth === -1) return false;
+
+  const parentDepth = getDepthFromRoot(yStructure, parentId);
+  return parentDepth + 1 + deepestProcessDepth >= MAX_DEPTH;
+};
+
+const DEPTH_ERROR_MESSAGE = `${MAX_DEPTH}階層を超えるネストはできません。`;
+
 export const createNodeSlice: StateCreator<
   NodeStore & PermissionStore & YjsStore & PlanInfoStore,
   [],
@@ -162,7 +250,7 @@ export const createNodeSlice: StateCreator<
   setStructure: (structure) => set({ structure }),
 
   moveNode: (activeId, overId) => {
-    const { ydoc, isReadOnly } = get();
+    const { ydoc, isReadOnly, nodes } = get();
     if (!ydoc || isReadOnly) return;
 
     const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
@@ -175,6 +263,13 @@ export const createNodeSlice: StateCreator<
 
       if (!activeParentId || !overParentId) return;
       if (activeParentId === overId) return;
+
+      if (
+        activeParentId !== overParentId &&
+        wouldExceedMaxDepth(yStructure, nodes, overParentId, activeId)
+      ) {
+        throw new Error(`${MAX_DEPTH}階層を超えるネストはできません。`);
+      }
 
       const activeParentArray = yStructure.get(activeParentId);
       const overParentArray = yStructure.get(overParentId);
@@ -209,13 +304,17 @@ export const createNodeSlice: StateCreator<
   },
 
   moveNodeTo: (parentId, childId, order) => {
-    const { ydoc, isReadOnly } = get();
+    const { ydoc, isReadOnly, nodes } = get();
     if (!ydoc || isReadOnly) return;
 
     const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
 
     ydoc.transact(() => {
       if (parentId === childId) return;
+
+      if (wouldExceedMaxDepth(yStructure, nodes, parentId, childId)) {
+        throw new Error(DEPTH_ERROR_MESSAGE);
+      }
 
       // 古い親から削除
       const oldParentId = findParentIdInYjs(yStructure, childId);
@@ -283,7 +382,7 @@ export const createNodeSlice: StateCreator<
   },
 
   setNestNode: (parentId, childId) => {
-    const { ydoc, isReadOnly } = get();
+    const { ydoc, isReadOnly, nodes } = get();
     if (!ydoc || isReadOnly) return;
 
     const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
@@ -291,6 +390,9 @@ export const createNodeSlice: StateCreator<
     ydoc.transact(() => {
       if (parentId === childId) return;
       if (isDescendantYjs(yStructure, childId, parentId)) return;
+      if (wouldExceedMaxDepth(yStructure, nodes, parentId, childId)) {
+        throw new Error(`${MAX_DEPTH}階層を超えるネストはできません。`);
+      }
 
       const parentArray = yStructure.get(parentId);
       // すでに親子関係がある場合は何もしない
@@ -326,6 +428,13 @@ export const createNodeSlice: StateCreator<
 
     const yNodes = ydoc.getMap<NodeData>(PLAN_NODES_KEY);
     const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
+
+    if (
+      node.nodeType === NODE_TYPES.PROCESS &&
+      getDepthFromRoot(yStructure, parentId) + 1 >= MAX_DEPTH
+    ) {
+      throw new Error(DEPTH_ERROR_MESSAGE);
+    }
 
     ydoc.transact(() => {
       yNodes.set(node.id, node);

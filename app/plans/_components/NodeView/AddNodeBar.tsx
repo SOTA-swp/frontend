@@ -2,21 +2,24 @@
 import IconButton from "@/components/IconButton";
 import { NODE_TYPE_ITEMS } from "./NODE_ITEMS";
 import { motion } from "motion/react";
-import { NodeData, NodeType } from "@/types/node";
+import { NODE_TYPES, NodeData, NodeType } from "@/types/node";
 import { usePlanStore } from "@/app/plans/_store/hook";
 import { useAddNode } from "../../_hooks/useAddNode";
 import { useDroppable, useDndMonitor } from "@dnd-kit/core";
 import { useState } from "react";
+import { MAX_DEPTH } from "../../_consts/node";
 
 interface AddNodeBarProps {
   parentId: NodeData["id"];
   order: number;
+  depth: number;
   notAnimation?: boolean;
 }
 
 function AddNodeBar({
   parentId,
   order,
+  depth,
   notAnimation = false,
 }: AddNodeBarProps) {
   const isReadOnly = usePlanStore((state) => state.isReadOnly);
@@ -78,7 +81,7 @@ function AddNodeBar({
                 close: { width: 0 },
                 open: { width: "100%" },
               }}
-              className="border-primary border-dashed absolute left-0"
+              className="border-accent border-dashed absolute left-0"
             />
           )}
           <motion.div
@@ -89,26 +92,33 @@ function AddNodeBar({
               },
             }}
             className="absolute flex gap-6">
-            {Object.entries(NODE_TYPE_ITEMS).map(([type, { title, icon }]) => (
-              <motion.div
-                key={type}
-                variants={{
-                  close: { opacity: 0, x: -20, rotate: -90 },
-                  open: { opacity: 1, x: 0, rotate: 0 },
-                }}
-                transition={{ type: "spring", stiffness: 500, damping: 20 }}>
-                <IconButton
-                  onClick={() =>
-                    handleAddNode(type as NodeType, parentId, order)
-                  }
-                  title={`${title}を追加`}
-                  icon={icon}
-                  color={notAnimation ? "gray" : "primary"}
-                  variant={notAnimation ? "outline" : "contain"}
-                  size={"sm"}
-                />
-              </motion.div>
-            ))}
+            {Object.entries(NODE_TYPE_ITEMS).map(
+              ([type, { title, icon }]) =>
+                !(depth > MAX_DEPTH && type === NODE_TYPES.PROCESS) && (
+                  <motion.div
+                    key={type}
+                    variants={{
+                      close: { opacity: 0, x: -20, rotate: -90 },
+                      open: { opacity: 1, x: 0, rotate: 0 },
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 20,
+                    }}>
+                    <IconButton
+                      onClick={() =>
+                        handleAddNode(type as NodeType, parentId, order)
+                      }
+                      title={`${title}を追加`}
+                      icon={icon}
+                      color={notAnimation ? "gray" : "accent"}
+                      variant={notAnimation ? "outline" : "contain"}
+                      size={"sm"}
+                    />
+                  </motion.div>
+                )
+            )}
           </motion.div>
         </motion.div>
       )}

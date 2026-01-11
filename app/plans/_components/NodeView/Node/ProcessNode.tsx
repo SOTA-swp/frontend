@@ -19,6 +19,7 @@ import { usePlanStore } from "../../../_store/hook";
 import { useInlineEdit } from "@/app/plans/_hooks/useInlineEdit";
 import NullBox from "../NullBox";
 import { useState } from "react";
+import { MAX_DEPTH } from "@/app/plans/_consts/node";
 
 interface ProcessNodeProps extends NodeData {
   depth?: number;
@@ -122,24 +123,32 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
           }}
           className={clsx(
             "border border-primary rounded-xl bg-paper",
-            depth !== 0 && "rounded-r-none border-r-0"
+            depth !== 1 && "rounded-r-none border-r-0"
           )}>
           <SortableContext
             items={childrenNodes}
             strategy={verticalListSortingStrategy}
             disabled={!open}>
             <div className="flex flex-col p-4 pr-0 ">
-              {noneChildren && <NullBox id={id} isOver={isOver} />}
-              {childrenNodes?.map((childId, i) => (
-                <Node
-                  key={childId}
-                  id={childId}
-                  parentId={id}
-                  order={i}
-                  depth={depth + 1}
-                  isLast={i === childrenNodes.length - 1}
-                />
-              ))}
+              {depth > MAX_DEPTH ? (
+                <p className="text-error p-2">最大深度を超えています！</p>
+              ) : (
+                <>
+                  {noneChildren && (
+                    <NullBox id={id} isOver={isOver} depth={depth + 1} />
+                  )}
+                  {childrenNodes?.map((childId, i) => (
+                    <Node
+                      key={childId}
+                      id={childId}
+                      parentId={id}
+                      order={i}
+                      depth={depth + 1}
+                      isLast={i === childrenNodes.length - 1}
+                    />
+                  ))}
+                </>
+              )}
             </div>
           </SortableContext>
         </motion.div>

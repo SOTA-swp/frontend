@@ -3,6 +3,7 @@ import { createNode } from "../_util/createNode";
 import { usePlanStore } from "../_store/hook";
 import { scrollToId } from "@/utils/scroll";
 import { NODE_VIEW_ID } from "../_components/NodeView";
+import { toast } from "sonner";
 
 // createNodeを使うにしても、処理が重なるので共通化しておく
 export const useAddNode = (scroll: boolean = false) => {
@@ -14,12 +15,16 @@ export const useAddNode = (scroll: boolean = false) => {
     parentId?: NodeData["id"],
     order?: number
   ) => {
-    const newNode = createNode(
-      type,
-      type === NODE_TYPES.LOCATION ? { locationId } : {}
-    );
-    addNode(newNode, parentId, order);
-    if (scroll) scrollToId(NODE_VIEW_ID, newNode.id);
+    try {
+      const newNode = createNode(
+        type,
+        type === NODE_TYPES.LOCATION ? { locationId } : {}
+      );
+      addNode(newNode, parentId, order);
+      if (scroll) scrollToId(NODE_VIEW_ID, newNode.id);
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
   return { handleAddNode };
 };

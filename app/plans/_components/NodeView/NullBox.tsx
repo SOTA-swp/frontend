@@ -5,10 +5,11 @@ import { NodeData } from "@/types/node";
 
 interface NullBoxProps {
   id: NodeData["id"];
+  depth: number;
   isOver?: boolean;
 }
 
-function NullBox({ id, isOver = false }: NullBoxProps) {
+function NullBox({ id, depth, isOver = false }: NullBoxProps) {
   return (
     <div
       className={clsx(
@@ -21,7 +22,7 @@ function NullBox({ id, isOver = false }: NullBoxProps) {
           <MdArrowDownward />
         </span>
       </div>
-      <AddNodeBar parentId={id} order={0} notAnimation />
+      <AddNodeBar parentId={id} order={0} depth={depth} notAnimation />
     </div>
   );
 }

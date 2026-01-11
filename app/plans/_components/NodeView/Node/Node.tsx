@@ -91,7 +91,7 @@ function Node({
 
   return (
     <>
-      <AddNodeBar parentId={parentId} order={order} />
+      <AddNodeBar parentId={parentId} order={order} depth={depth} />
       <div
         id={id}
         ref={setNodeRef}
@@ -163,7 +163,9 @@ function Node({
           )}
         </AnimatePresence>
       </div>
-      {isLast && <AddNodeBar parentId={parentId} order={order + 1} />}
+      {isLast && (
+        <AddNodeBar parentId={parentId} order={order + 1} depth={depth} />
+      )}
     </>
   );
 }
