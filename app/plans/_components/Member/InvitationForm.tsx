@@ -12,6 +12,8 @@ import { Plan } from "@/types/plan";
 import TextField from "@/components/TextField";
 import CommonButton from "@/components/CommonButton";
 import { usePathname } from "next/navigation";
+import { useSWRConfig } from "swr";
+import { ApiRoutes } from "api-contract";
 
 interface InvitationFormProps {
   planId: Plan["id"];
@@ -30,6 +32,7 @@ function InvitationForm({ planId }: InvitationFormProps) {
     },
   }); // 招待用
   const path = usePathname();
+  const { mutate } = useSWRConfig();
 
   const onSubmit = async (data: InvitationFormData) => {
     const toastId = toast.loading("招待を送信中...");
@@ -41,6 +44,7 @@ function InvitationForm({ planId }: InvitationFormProps) {
     }
 
     toast.success("招待を送信しました！", { id: toastId });
+    mutate(ApiRoutes.plan.members(planId));
   };
 
   return (
