@@ -10,7 +10,7 @@ type VariantType = "contain" | "outline" | "text";
 // type color = "primary" | "gray" | "accent" | "error";
 
 const CommonButtonStyles = cva(
-  "relative flex items-center justify-between group active:scale-90 hover:scale-105 transition font-bold select-none",
+  "relative flex items-center justify-between group active:scale-95 hover:scale-105 transition font-bold select-none",
   {
     variants: {
       size: {
