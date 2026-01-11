@@ -13,7 +13,6 @@ import clsx from "clsx";
 import IconButton from "@/components/IconButton";
 import { AnimatePresence, motion } from "motion/react";
 import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { usePlanStore } from "../../../_store/hook";
 import AddNodeBar from "../AddNodeBar";
 import { NodeData } from "@/types/node";
@@ -42,20 +41,16 @@ function Node({
   const moveNodeStep = usePlanStore((state) => state.moveNodeStep);
   const isReadOnly = usePlanStore((state) => state.isReadOnly);
 
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id, data: { id, type: "node" }, disabled: isReadOnly });
+  const { attributes, listeners, setNodeRef, isDragging } = useSortable({
+    id,
+    data: { id, type: "node" },
+    disabled: isReadOnly,
+    transition: null,
+  });
 
   const style = {
-    transform: CSS.Translate.toString(transform),
-    transition,
+    opacity: isDragging ? 0.4 : 1,
     pointerEvents: isDragging ? "none" : "auto",
-    zIndex: isDragging ? 999 : undefined,
   } as React.CSSProperties;
 
   const isHovered = hoveredNodeId === id;
@@ -105,8 +100,7 @@ function Node({
         onMouseLeave={handleMouseLeave}
         className={clsx(
           "relative flex items-center gap-2 select-none",
-          isProcessNode && "items-start",
-          isDragging && "opacity-80"
+          isProcessNode && "items-start"
         )}>
         <span
           className={clsx(
@@ -120,7 +114,7 @@ function Node({
         </span>
         <span
           className={clsx(
-            "flex-1 p-2 pr-0 ",
+            "flex-1 p-2 pr-0",
             !isProcessNode &&
               "border border-r-0 rounded-l-full transition-colors",
             !isProcessNode && !isHovered && "border-transparent",

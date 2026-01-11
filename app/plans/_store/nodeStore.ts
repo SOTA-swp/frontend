@@ -4,7 +4,11 @@ import { StateCreator } from "zustand";
 import { PARENT_ID_ROOT, createNode } from "../_util/createNode";
 import { PermissionStore } from "./permissionStore";
 import { YjsStore } from "./yjsStore";
-import { PLAN_NODES_KEY, PLAN_STRUCTURE_KEY, PLAN_LOCATIONS_KEY } from "../_consts/yjsKeys";
+import {
+  PLAN_NODES_KEY,
+  PLAN_STRUCTURE_KEY,
+  PLAN_LOCATIONS_KEY,
+} from "../_consts/yjsKeys";
 import { LocationData } from "@/types/location";
 import { CalculateRouteResponse } from "@/types/route";
 import { PlanInfoStore } from "./planInfoStore";
@@ -27,6 +31,12 @@ export interface NodeActions {
   setStructure: (structure: Record<NodeData["id"], NodeData["id"][]>) => void;
   moveNode: (activeId: NodeData["id"], overId: NodeData["id"]) => void;
   moveNodeStep: (id: NodeData["id"], direction: "up" | "down") => void;
+  // 指定した親・順序へノードを移動する（AddNodeBar 用）
+  moveNodeTo: (
+    parentId: NodeData["id"],
+    childId: NodeData["id"],
+    order: number
+  ) => void;
   addNode: (node: NodeData, parentId?: NodeData["id"], order?: number) => void;
   updateNode: (id: string, updatedFields: Partial<NodeData>) => void;
   removeNode: (id: string) => void;
@@ -45,9 +55,7 @@ export interface NodeActions {
   openNode: (id: NodeData["id"]) => void;
 
   // 自動計算されたルートを適用する関数
-  applyAutoCalculatedRoutes: (
-    calculatedRoutes: CalculateRouteResponse
-  ) => void;
+  applyAutoCalculatedRoutes: (calculatedRoutes: CalculateRouteResponse) => void;
 
   // スケジュール時間を再計算する関数
   recalculateSchedule: () => void;
@@ -197,6 +205,38 @@ export const createNodeSlice: StateCreator<
           overParentArray.push([activeId]);
         }
       }
+    });
+  },
+
+  moveNodeTo: (parentId, childId, order) => {
+    const { ydoc, isReadOnly } = get();
+    if (!ydoc || isReadOnly) return;
+
+    const yStructure = ydoc.getMap<Y.Array<string>>(PLAN_STRUCTURE_KEY);
+
+    ydoc.transact(() => {
+      if (parentId === childId) return;
+
+      // 古い親から削除
+      const oldParentId = findParentIdInYjs(yStructure, childId);
+      if (oldParentId) {
+        const oldParentArray = yStructure.get(oldParentId);
+        if (oldParentArray) {
+          const index = findIndexInYArray(oldParentArray, childId);
+          if (index !== -1) oldParentArray.delete(index, 1);
+        }
+      }
+
+      // 新しい親の配列を準備
+      let newParentArray = yStructure.get(parentId);
+      if (!newParentArray) {
+        newParentArray = new Y.Array();
+        yStructure.set(parentId, newParentArray);
+      }
+
+      // order に挿入（範囲を安全にクランプ）
+      const targetIndex = Math.min(Math.max(order, 0), newParentArray.length);
+      newParentArray.insert(targetIndex, [childId]);
     });
   },
 
@@ -434,7 +474,7 @@ export const createNodeSlice: StateCreator<
         const toLocationNodeInfo = flatLocationNodes[segment.toIndex];
 
         if (toLocationNodeInfo) {
-          const { parentId, location } = toLocationNodeInfo;
+          const { parentId } = toLocationNodeInfo;
 
           const durationMinutes = Math.ceil(segment.durationSeconds / 60);
           const newMoveNode = createNode(NODE_TYPES.MOVE, {
@@ -493,10 +533,11 @@ export const createNodeSlice: StateCreator<
 
       // 既存データ移行のため、HH:mmなら固定日を付与するロジックを入れる。
 
-      let scheduleStartTime = firstNode.startTime || new Date("2000-01-01T09:00:00.000Z").toISOString();
+      let scheduleStartTime =
+        firstNode.startTime ||
+        new Date("2000-01-01T09:00:00.000Z").toISOString();
 
       if (scheduleStartTime.match(/^\d{2}:\d{2}$/)) {
-
         const [h, m] = scheduleStartTime.split(":").map(Number);
 
         const date = new Date("2000-01-01T00:00:00.000Z");
@@ -504,10 +545,7 @@ export const createNodeSlice: StateCreator<
         date.setHours(h, m, 0, 0);
 
         scheduleStartTime = date.toISOString();
-
       }
-
-
 
       // 再帰的に時間を計算して更新する関数
       // 戻り値: この階層の終了時刻

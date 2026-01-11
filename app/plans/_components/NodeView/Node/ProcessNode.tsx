@@ -14,10 +14,11 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useDroppable } from "@dnd-kit/core";
+import { useDroppable, useDndMonitor } from "@dnd-kit/core";
 import { usePlanStore } from "../../../_store/hook";
 import { useInlineEdit } from "@/app/plans/_hooks/useInlineEdit";
 import NullBox from "../NullBox";
+import { useState } from "react";
 
 interface ProcessNodeProps extends NodeData {
   depth?: number;
@@ -33,10 +34,26 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
     useInlineEdit();
 
   const noneChildren = childrenNodes.length === 0;
+  const [draggedNodeId, setDraggedNodeId] = useState<string | null>(null);
 
+  // 自分自身へのドロップを無効化
   const { setNodeRef: setDroppableRef, isOver } = useDroppable({
     id: `container-${id}`,
     data: { id, type: "process" },
+    disabled: draggedNodeId === id,
+  });
+
+  useDndMonitor({
+    onDragStart(event) {
+      const nodeId = event.active?.data?.current?.id;
+      if (nodeId) setDraggedNodeId(String(nodeId));
+    },
+    onDragEnd() {
+      setDraggedNodeId(null);
+    },
+    onDragCancel() {
+      setDraggedNodeId(null);
+    },
   });
 
   const handleNameChange = (value: string) => {
