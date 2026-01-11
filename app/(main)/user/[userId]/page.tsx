@@ -112,6 +112,9 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
           userId={userId}
         />
       </Suspense>
+
+      {/* スクロールできるように空白を挿入 */}
+      <div className="h-60" />
     </main>
   );
 };
