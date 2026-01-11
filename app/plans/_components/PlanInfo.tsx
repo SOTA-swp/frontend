@@ -23,8 +23,9 @@ function PlanInfo() {
           <Chip
             variant={"outline"}
             rounded
-            color={isPublic ? "primary" : "gray"}>
-            <p className="pr-1.5">・{isPublic ? "公開中" : "非公開"}</p>
+            color={isPublic ? "primary" : "gray"}
+            size={"sm"}>
+            ・{isPublic ? "公開中" : "非公開"}
           </Chip>
           {/* TODO: 編集モーダルを開く */}
           {!isReadOnly && (

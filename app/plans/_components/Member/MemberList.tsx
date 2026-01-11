@@ -7,6 +7,7 @@ import { PLAN_ROLE } from "../../../../consts/PLAN_ROLE";
 import { useAppStore } from "@/store/AppStoreProvider";
 import { Member } from "@/types/member";
 import MemberItem from "./MemberItem";
+import Chip from "@/components/Chip";
 
 const getMembers = async (
   planId: Plan["id"]
@@ -72,7 +73,11 @@ function MemberBlock({ title, members }: MemberBlockProps) {
   const nullContent = <p className="text-text-secondary">メンバーがいません</p>;
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="text-lg">{title}</h3>
+      <div className="flex">
+        <Chip color={"gray"} size={"sm"} rounded>
+          {title}
+        </Chip>
+      </div>
       {members.length === 0 ? (
         nullContent
       ) : (

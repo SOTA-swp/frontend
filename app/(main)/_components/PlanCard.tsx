@@ -395,7 +395,9 @@ function PlanCard({ variant = "default", data, layoutId }: PlanCardProps) {
                       </p>
                       <Chip
                         variant="outline"
-                        color={isPublic ? "primary" : "gray"}>
+                        color={isPublic ? "primary" : "gray"}
+                        rounded
+                        size="xs">
                         ・{isPublic ? "公開中" : "非公開"}
                       </Chip>
                     </div>
