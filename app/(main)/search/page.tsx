@@ -16,7 +16,13 @@ const SearchPage: React.FC<SearchPageProps> = async ({ searchParams }) => {
   return (
     <main className="flex-1">
       <SearchField />
-      <Suspense fallback={<PlanViewSkelton isLoading />}>
+      <Suspense
+        fallback={
+          <>
+            <PlanViewSkelton isLoading />
+            <PlanViewSkelton isLoading />
+          </>
+        }>
         <SearchPlanView
           popularPromise={popularPromise}
           newPromise={newPromise}
