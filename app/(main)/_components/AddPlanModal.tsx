@@ -14,11 +14,10 @@ import { toast } from "sonner";
 import { useAppStore } from "@/store/AppStoreProvider";
 
 interface AddPlanModalProps {
-  type?: "add" | "import";
   initData?: Partial<AddPlanFormData>;
 }
 
-function AddPlanModal({ type, initData }: AddPlanModalProps) {
+function AddPlanModal({ initData }: AddPlanModalProps) {
   const closeModal = useAppStore((state) => state.closeModal);
   const {
     register,
