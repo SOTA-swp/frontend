@@ -14,7 +14,10 @@ import {
 } from "./_types";
 import { revalidatePath } from "next/cache";
 import { PLAN_ROLE } from "../../consts/PLAN_ROLE";
-import { EditPlanFormSchema } from "../plans/_types/EditPlanFormData";
+import {
+  EditPlanFormData,
+  EditPlanFormSchema,
+} from "../plans/_types/EditPlanFormData";
 import { formatPlanData } from "./_util/formatPlanData";
 import { Pagination } from "./search/_types/pagination";
 import { SearchPageParams } from "./search/_types/searchParams";
@@ -146,7 +149,7 @@ interface EditPlanResult {
 }
 export async function editPlan(
   planId: string,
-  data: Partial<AddPlanFormData>,
+  data: Partial<EditPlanFormData>,
   path?: string
 ): Promise<EditPlanResult> {
   const failedMessage = (message: string) =>
