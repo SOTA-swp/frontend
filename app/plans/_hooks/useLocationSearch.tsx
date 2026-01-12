@@ -24,7 +24,6 @@ export const useLocationSearch = (
     const widget = new placesLib.Autocomplete(inputRef.current, {
       fields: ["place_id", "geometry", "name", "formatted_address"],
       types: ["establishment", "geocode"],
-      language: 'ja',
     });
 
     setAutocomplete(widget);
