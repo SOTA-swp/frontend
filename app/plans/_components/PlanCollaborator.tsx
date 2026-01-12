@@ -32,7 +32,7 @@ export const PlanCollaborator = ({ planId }: PlanCollaboratorProps) => {
     const ydoc = new Y.Doc();
     // TODO: 環境変数から取得するようにする
     const provider = new WebsocketProvider(
-      "wss://monorepo-b5st.onrender.com/ws/plan",
+      "wss://localhost/ws-proxy/ws/plan",
       planId,
       ydoc
     );
