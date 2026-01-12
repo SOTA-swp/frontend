@@ -50,6 +50,10 @@ function QuickMenu() {
   const isReadOnly = usePlanStore((state) => state.isReadOnly);
   const planId = usePlanStore((state) => state.planInfo.id);
   const openModal = useAppStore((state) => state.openModal);
+  const plan = usePlanStore((state) => state.planInfo);
+  const nodes = usePlanStore((state) => state.nodes);
+  const structure = usePlanStore((state) => state.structure);
+  const locations = usePlanStore((state) => state.locations);
 
   const items = useMemo<QuickMenuItem[]>(
     () => [
@@ -65,7 +69,15 @@ function QuickMenu() {
         icon: <MdUpload />,
         label: "エクスポート",
         isEditOnly: false,
-        onClick: () => openModal(<ExportModal />),
+        onClick: () =>
+          openModal(
+            <ExportModal
+              plan={plan}
+              nodes={nodes}
+              structure={structure}
+              locations={locations}
+            />
+          ),
       },
       {
         id: "group",
@@ -75,7 +87,7 @@ function QuickMenu() {
         onClick: () => {},
       },
     ],
-    [planId, openModal]
+    [planId, openModal, plan, nodes, structure, locations]
   );
 
   const handleToggleOpen = () => {

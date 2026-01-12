@@ -1,38 +1,75 @@
 "use client";
+
 import CommonButton from "@/components/CommonButton";
 import ModalAction from "@/components/modal/ModalAction";
 import ModalContent from "@/components/modal/ModalContent";
 import ModalTitle from "@/components/modal/ModalTitle";
 import { useAppStore } from "@/store/AppStoreProvider";
-import PDF from "@/app/plans/_components/PDF";
+import dynamic from "next/dynamic";
+import React from "react";
+import { Plan } from "@/types/plan";
+import { NodeData } from "@/types/node";
 
-function ExportModal() {
-    const closeModal = useAppStore((state) => state.closeModal);
+const PDF = dynamic(() => import("./PDF"), { ssr: false });
 
-    return (
-        <ModalContent
-            closeModal={closeModal}>
-            <ModalTitle>エクスポート</ModalTitle>
-            <div className="px-6 py-0 text-lg text-text-secondary">
-                <p>この計画をPDFにエクスポートします。</p>
-            </div>
-            <div className="flex justify-center py-2">
-                <PDF previewClassName="border border-border rounded-md w-fit">
-                    <div />
-                </PDF>
-            </div>
-                <ModalAction>
-                    <CommonButton type="button" modal variant="outline" onClick={closeModal}>
-                        キャンセル
-                    </CommonButton>
-                    <CommonButton type="submit" modal>
-                        エクスポート
-                    </CommonButton>
-                </ModalAction>
-            
-            
-        </ModalContent>
-    );
+interface ExportModalProps {
+  plan: Plan;
+  nodes: Record<NodeData["id"], NodeData>;
+  structure: Record<NodeData["id"], NodeData["id"][]>;
+  locations: Record<NodeData["id"], NodeData>;
 }
 
-export default ExportModal;
+export default function ExportModal({
+  plan,
+  nodes,
+  structure,
+  locations,
+}: ExportModalProps) {
+  const closeModal = useAppStore((state) => state.closeModal);
+
+  return (
+    <ModalContent closeModal={closeModal}>
+      <ModalTitle>エクスポート</ModalTitle>
+
+      <div className="px-6 py-0 text-lg text-text-secondary">
+        <p>この計画をPDFにエクスポートします。</p>
+      </div>
+
+      {/* プレビュー */}
+      <div className="flex justify-center py-2">
+        <PDF
+          planInfo={plan}
+          nodes={nodes}
+          structure={structure}
+          locations={locations}
+          previewClassName="border border-border rounded-md w-fit"
+        >
+          <></>
+        </PDF>
+      </div>
+
+      <ModalAction>
+        <CommonButton
+          type="button"
+          modal
+          variant="outline"
+          onClick={closeModal}
+        >
+          キャンセル
+        </CommonButton>
+
+        <PDF
+          planInfo={plan}
+          nodes={nodes}
+          structure={structure}
+          locations={locations}
+          previewClassName="hidden"
+        >
+          <CommonButton type="button" modal>
+            エクスポート
+          </CommonButton>
+        </PDF>
+      </ModalAction>
+    </ModalContent>
+  );
+}
