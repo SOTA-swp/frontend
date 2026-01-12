@@ -1,2 +1,2 @@
-type ComponentColor = "primary" | "gray" | "accent" | "error" | "inherit";
+type ComponentColor = "primary" | "gray" | "accent" | "error";
 export default ComponentColor;

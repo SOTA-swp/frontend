@@ -12,7 +12,7 @@ const logoStyle = cva("w-[1em] h-[1em]", {
       accent: "text-accent",
       error: "text-error",
       inherit: "text-inherit",
-    } satisfies Record<ComponentColor, string>,
+    } satisfies Record<ComponentColor | "inherit", string>,
     size: {
       xs: "text-xl",
       sm: "text-2xl",
