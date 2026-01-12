@@ -27,6 +27,7 @@ import Indicator from "@/components/Indicator";
 import { ApiRoutes } from "api-contract";
 import useSWR from "swr";
 import Link from "next/link";
+import Logo from "@/components/Logo/Logo";
 
 const getUnreadNotificationCount = async (): Promise<number> => {
   const res = await fetch(ApiRoutes.notification.unread, {
@@ -170,10 +171,9 @@ function CommonHeader() {
           whileHover={"hover"}>
           <Link
             href={PATH.TOP}
-            className="relative h-full flex items-center z-10">
-            <CommonText
-              level="h2"
-              className={`text-primary group-hover:text-paper transition-colors`}>
+            className="relative h-full flex gap-2 items-center z-10 text-start text-primary group-hover:text-paper ">
+            <Logo />
+            <CommonText level="h2" className={`transition-colors`}>
               {PROJECT_NAME}
             </CommonText>
           </Link>
