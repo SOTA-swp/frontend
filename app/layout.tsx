@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   title: PROJECT_NAME,
   description:
     "旅行計画を一緒に作ろう！共同編集型の旅行プラン作成サービスです。",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
