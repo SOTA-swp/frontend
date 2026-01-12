@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
       {
         source: "/ws-proxy/:path*",
         // WebSocketもHTTPと同じポート/ドメインで動くため、https指定でUpgradeヘッダーが転送されます
-        destination: "wss://monorepo-b5st.onrender.com/:path*", 
+        destination: "https://monorepo-b5st.onrender.com/:path*", 
       },
     ];
   },

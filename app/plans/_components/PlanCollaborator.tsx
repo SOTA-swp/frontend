@@ -30,9 +30,13 @@ export const PlanCollaborator = ({ planId }: PlanCollaboratorProps) => {
     if (!planId) return;
 
     const ydoc = new Y.Doc();
+
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const host = window.location.host; // "localhost:3000"
+    const wsUrl = `${protocol}//${host}/ws-proxy/ws/plan`;
     // TODO: 環境変数から取得するようにする
     const provider = new WebsocketProvider(
-      "wss://localhost/ws-proxy/ws/plan",
+      wsUrl,
       planId,
       ydoc
     );
