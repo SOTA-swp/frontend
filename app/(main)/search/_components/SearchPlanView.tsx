@@ -6,14 +6,13 @@ import {
   MdLocalFireDepartment,
 } from "react-icons/md";
 import PlanBlock from "../../_components/PlanBlock";
-import { useState } from "react";
-import { PlanWithDetailsType } from "@/types/plan";
-import PlanCard from "@/components/PlanCard";
+import PlanCard from "@/app/(main)/_components/PlanCard";
 import CommonButton from "@/components/CommonButton";
-import { getPlans } from "../../actions";
-import { useSearchParams } from "next/navigation";
-import { PLAN_LIMIT } from "../../_consts/PLAN_LIMIT";
-import { useOpenPlanCard } from "../../_store/openPlanCardStore";
+import EmptyState from "@/components/EmptyState";
+import { use } from "react";
+import { SearchResults } from "../../actions";
+import { useRouter, useSearchParams } from "next/navigation";
+import PATH from "@/consts/PATH";
 
 function MoreButton({
   maxSize,
@@ -35,41 +34,23 @@ function MoreButton({
   ) : null;
 }
 
-function SearchPlanView({
-  initialPlans,
-}: {
-  initialPlans: {
-    popularPlans: { size: number; planData: PlanWithDetailsType[] };
-    newPlans: { size: number; planData: PlanWithDetailsType[] };
-  };
-}) {
-  const params = useSearchParams();
-  const q = params.get("q") || "";
-  const { openPlanCardId, setOpenPlanCardId } = useOpenPlanCard();
+interface SearchPlanViewProps {
+  popularPromise: Promise<SearchResults>;
+  newPromise: Promise<SearchResults>;
+}
 
-  const [popularPlans, setPopularPlans] = useState(
-    initialPlans ? initialPlans.popularPlans.planData : []
-  );
-  const [newPlans, setNewPlans] = useState(
-    initialPlans ? initialPlans.newPlans.planData : []
-  );
+function SearchPlanView({ popularPromise, newPromise }: SearchPlanViewProps) {
+  const popularData = use(popularPromise);
+  const newData = use(newPromise);
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const handleLoadingMorePopular = async () => {
-    const morePlans = await getPlans(q, popularPlans.length / PLAN_LIMIT);
-    setPopularPlans((prev) => [...prev, ...morePlans.planData]);
-  };
-
-  const handleLoadingMoreNew = async () => {
-    const morePlans = await getPlans(q, newPlans.length / PLAN_LIMIT);
-    setNewPlans((prev) => [...prev, ...morePlans.planData]);
-  };
-
-  const handleOpenPlanCard = (planId: string) => {
-    setOpenPlanCardId(planId);
-  };
-
-  const handleClosePlanCard = () => {
-    setOpenPlanCardId(null);
+  const handleLoading = (type: "popular" | "new") => {
+    const query = type === "popular" ? "pp" : "np";
+    const currentPage = parseInt(searchParams.get(query) || "0", 10);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(query, (currentPage + 1).toString());
+    router.push(`${PATH.SEARCH}?${params.toString()}`, { scroll: false });
   };
 
   return (
@@ -79,24 +60,21 @@ function SearchPlanView({
         title="人気"
         moreButton={
           <MoreButton
-            maxSize={initialPlans.popularPlans.size}
-            currentSize={popularPlans.length}
-            onClick={handleLoadingMorePopular}
+            maxSize={popularData.pagination.total}
+            currentSize={popularData.plans.length}
+            onClick={() => handleLoading("popular")}
           />
         }>
-        {popularPlans.map((plan) => {
-          const wrapId = `search-popular-${plan.planData.id}`;
-          return (
-            <PlanCard
-              key={plan.planData.id}
-              data={plan}
-              layoutId="search-popular"
-              open={openPlanCardId === wrapId}
-              onOpen={() => handleOpenPlanCard(wrapId)}
-              onClose={handleClosePlanCard}
-            />
-          );
-        })}
+        {popularData.plans.map((plan) => (
+          <PlanCard
+            key={plan.planData.id}
+            data={plan}
+            layoutId="search-popular"
+          />
+        ))}
+        {popularData.plans.length === 0 && (
+          <EmptyState title="人気の計画が見つかりませんでした" />
+        )}
       </PlanBlock>
 
       <PlanBlock
@@ -104,24 +82,17 @@ function SearchPlanView({
         title="新着"
         moreButton={
           <MoreButton
-            maxSize={initialPlans.newPlans.size}
-            currentSize={newPlans.length}
-            onClick={handleLoadingMoreNew}
+            maxSize={popularData.pagination.total}
+            currentSize={newData.plans.length}
+            onClick={() => handleLoading("new")}
           />
         }>
-        {newPlans.map((plan) => {
-          const wrapId = `search-new-${plan.planData.id}`;
-          return (
-            <PlanCard
-              key={plan.planData.id}
-              data={plan}
-              layoutId="search-new"
-              open={openPlanCardId === wrapId}
-              onOpen={() => handleOpenPlanCard(wrapId)}
-              onClose={handleClosePlanCard}
-            />
-          );
-        })}
+        {newData.plans.map((plan) => (
+          <PlanCard key={plan.planData.id} data={plan} layoutId="search-new" />
+        ))}
+        {newData.plans.length === 0 && (
+          <EmptyState title="新着の計画が見つかりませんでした" />
+        )}
       </PlanBlock>
     </section>
   );

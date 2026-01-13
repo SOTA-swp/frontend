@@ -1,7 +1,12 @@
-import CommonButton from "@/components/CommonButton";
 import CommonText from "@/components/CommonText";
-import TextField from "@/components/TextField";
-import PATH from "@/consts/PATH";
+import LoginForm from "./_component/LoginForm";
+import { Metadata } from "next";
+import PROJECT_NAME from "@/consts/PROJECT_NAME";
+
+export const metadata: Metadata = {
+  title: `ログイン ${PROJECT_NAME}`,
+  description: `${PROJECT_NAME}のログインページです。`,
+};
 
 const LoginPage = () => {
   return (
@@ -12,40 +17,7 @@ const LoginPage = () => {
         </CommonText>
       </div>
 
-      <form className="flex flex-col gap-16 items-center">
-        <div className="flex flex-col items-center gap-16 w-[500px]">
-          <TextField
-            label="mail_address"
-            labelName="メールアドレス"
-            placeholder="メールアドレスを入力"
-            fullWidth
-          />
-          <TextField
-            label="password"
-            labelName="パスワード"
-            placeholder="パスワードを入力"
-            fullWidth
-          />
-        </div>
-        <div className="flex justify-center gap-80">
-          <CommonButton
-            variant="text"
-            color="primary"
-            size="xs"
-            href={PATH.REGISTER}
-          >
-            アカウント新規作成
-          </CommonButton>
-          <CommonButton
-            variant="contain"
-            color="primary"
-            size="lg"
-            type="submit"
-          >
-            ログイン
-          </CommonButton>
-        </div>
-      </form>
+      <LoginForm />
     </div>
   );
 };

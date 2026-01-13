@@ -1,10 +1,10 @@
 "use client";
-import LocationDataType from "@/types/location";
+import { LocationData } from "@/types/location";
 import { Marker, MarkerProps } from "@vis.gl/react-google-maps";
 
 interface LocationMarkerProps extends MarkerProps {
   order: number;
-  location: LocationDataType;
+  location: LocationData;
 }
 
 function LocationMarker({ order, location, ...props }: LocationMarkerProps) {

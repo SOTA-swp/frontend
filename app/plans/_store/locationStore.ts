@@ -1,19 +1,18 @@
-import LocationDataType from "@/types/location";
+import { LocationData } from "@/types/location";
 import { StateCreator } from "zustand";
 import { PermissionStore } from "./permissionStore";
+import { YjsStore } from "./yjsStore";
+import { PLAN_LOCATIONS_KEY } from "../_consts/yjsKeys";
 
 export interface LocationState {
-  locations: Record<string, LocationDataType>;
+  locations: Record<string, LocationData>;
   closedLocationIds: string[];
 }
 
 export interface LocationActions {
-  setLocations: (locationList: LocationDataType[]) => void;
-  addLocation: (location: LocationDataType) => void;
-  updateLocation: (
-    id: string,
-    updatedFields: Partial<LocationDataType>
-  ) => void;
+  setLocations: (locationList: LocationData[]) => void;
+  addLocation: (location: LocationData) => void;
+  updateLocation: (id: string, updatedFields: Partial<LocationData>) => void;
   removeLocation: (id: string) => void;
 
   closeLocation: (id: string) => void;
@@ -27,63 +26,63 @@ export const defaultLocationStore: LocationState = {
   closedLocationIds: [],
 };
 
-const isReadOnly = (state: LocationStore & PermissionStore) => state.isReadOnly;
-
 export const createLocationSlice: StateCreator<
-  LocationStore & PermissionStore,
+  LocationStore & PermissionStore & YjsStore,
   [],
   [],
   LocationStore
-> = (set) => ({
+> = (set, get) => ({
   ...defaultLocationStore,
+
   setLocations: (locationList) => {
-    const locationMap: Record<string, LocationDataType> = locationList.reduce(
+    const locationMap: Record<string, LocationData> = locationList.reduce(
       (acc, location) => {
         acc[location.id] = location;
         return acc;
       },
-      {} as Record<string, LocationDataType>
+      {} as Record<string, LocationData>
     );
     set({ locations: locationMap });
   },
+
   addLocation: (location) => {
-    set((state) => {
-      if (isReadOnly(state)) return state;
-      return {
-        locations: {
-          ...state.locations,
-          [location.id]: location,
-        },
-      };
+    const { ydoc, isReadOnly } = get();
+    if (!ydoc || isReadOnly) return;
+
+    const yLocations = ydoc.getMap<LocationData>(PLAN_LOCATIONS_KEY);
+    ydoc.transact(() => {
+      yLocations.set(location.id, location);
     });
   },
   updateLocation: (id, updatedFields) => {
-    set((state) => {
-      if (isReadOnly(state)) return state;
-      return {
-        locations: {
-          ...state.locations,
-          [id]: {
-            ...state.locations[id],
-            ...updatedFields,
-          },
-        },
-      };
+    const { ydoc, isReadOnly } = get();
+    if (!ydoc || isReadOnly) return;
+
+    const yLocations = ydoc.getMap<LocationData>(PLAN_LOCATIONS_KEY);
+    ydoc.transact(() => {
+      const current = yLocations.get(id);
+      if (current) {
+        yLocations.set(id, { ...current, ...updatedFields });
+      }
     });
   },
+
   removeLocation: (id) => {
-    set((state) => {
-      if (isReadOnly(state)) return state;
-      const newLocations = { ...state.locations };
-      delete newLocations[id];
-      return { locations: newLocations };
+    const { ydoc, isReadOnly } = get();
+    if (!ydoc || isReadOnly) return;
+
+    const yLocations = ydoc.getMap<LocationData>(PLAN_LOCATIONS_KEY);
+    ydoc.transact(() => {
+      yLocations.delete(id);
     });
   },
+
   closeLocation: (id) => {
     set((state) => ({
       closedLocationIds: [...state.closedLocationIds, id],
     }));
   },
+
   openLocation: (id) => {
     set((state) => ({
       closedLocationIds: state.closedLocationIds.filter(

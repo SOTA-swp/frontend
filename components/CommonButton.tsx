@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import ComponentColor from "@/types/componentColor";
-import ComponentSizeType from "@/types/componentSize";
+import ComponentSize from "@/types/componentSize";
 import { cva, VariantProps } from "class-variance-authority";
 import Link from "next/link";
 import React from "react";
@@ -10,17 +10,7 @@ type VariantType = "contain" | "outline" | "text";
 // type color = "primary" | "gray" | "accent" | "error";
 
 const CommonButtonStyles = cva(
-  `
-    relative
-    flex
-    items-center
-    justify-between
-    group
-    active:scale-90
-    hover:scale-105
-    transition
-    font-bold
-    `,
+  "relative flex items-center justify-between group active:scale-95 hover:scale-105 transition font-bold select-none",
   {
     variants: {
       size: {
@@ -29,19 +19,23 @@ const CommonButtonStyles = cva(
         md: "p-2 px-3 text-[14px] rounded-lg",
         lg: "p-2.5 px-3.5 text-[18px] rounded-lg",
         xl: "p-3 px-4 text-[20px] rounded-lg",
-      } satisfies Record<ComponentSizeType, string>,
+      } satisfies Record<ComponentSize, string>,
       variant: {
         contain: "bg-primary text-paper",
         outline:
           "border border-primary bg-paper text-primary hover:bg-primary hover:text-paper",
         text: " text-text-secondary hover:bg-primary/50 hover:text-primary",
-      },
+      } satisfies Record<VariantType, string>,
       color: {
         primary: "",
         gray: "",
         accent: "",
         error: "",
       } satisfies Record<ComponentColor, string>,
+      modal: {
+        true: "min-w-40",
+        false: "",
+      },
     },
 
     compoundVariants: [
@@ -114,16 +108,17 @@ const CommonButtonStyles = cva(
       size: "md",
       variant: "contain",
       color: "primary",
+      modal: false,
     },
   }
 );
 
 interface CommonButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof CommonButtonStyles> {
-  size?: ComponentSizeType;
-  variant?: VariantType;
   icon?: React.ReactNode;
+  iconPosition?: "left" | "right";
   color?: ComponentColor;
   fullWidth?: boolean;
   href?: string;
@@ -134,16 +129,22 @@ function CommonButton({
   size,
   variant,
   color,
+  modal,
   fullWidth,
   href,
   icon,
+  iconPosition = "right",
   children,
   className,
+  disabled,
   ...props
 }: CommonButtonProps) {
   const commonClassName = cn(
-    CommonButtonStyles({ size, variant, color }),
+    CommonButtonStyles({ size, variant, color, modal }),
     className,
+    iconPosition === "left" && icon && "flex-row-reverse",
+    disabled &&
+      "opacity-50! pointer-events-none! border! border-border! text-paper! bg-border! ",
     icon ? "justify-between" : "justify-center",
     fullWidth && "w-full"
   );
@@ -164,7 +165,7 @@ function CommonButton({
   }
 
   return (
-    <button {...props} className={commonClassName}>
+    <button {...props} disabled={disabled} className={commonClassName}>
       {content}
     </button>
   );

@@ -1,5 +1,5 @@
 import ComponentColor from "@/types/componentColor";
-import ComponentSizeType from "@/types/componentSize";
+import ComponentSize from "@/types/componentSize";
 import { cva, VariantProps } from "class-variance-authority";
 import React from "react";
 
@@ -19,7 +19,7 @@ const emojiIconStyles = cva(
         md: "h-9 w-9",
         lg: "h-10 w-10 text-lg",
         xl: "h-12 w-12 text-2xl",
-      } satisfies Record<ComponentSizeType, string>,
+      } satisfies Record<ComponentSize, string>,
     },
     defaultVariants: {
       color: "primary",

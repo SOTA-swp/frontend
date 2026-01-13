@@ -9,6 +9,7 @@ import { scrollToBottom } from "@/utils/scroll";
 import { NODE_VIEW_ID } from "../NodeView";
 import { createNode } from "../../_util/createNode";
 import { NODE_TYPES } from "@/types/node";
+import { toast } from "sonner";
 
 function LocationSearchBox() {
   const addLocation = usePlanStore((state) => state.addLocation);
@@ -16,19 +17,23 @@ function LocationSearchBox() {
   const isReadOnly = usePlanStore((state) => state.isReadOnly);
 
   const handleAddLocation = (result: LocationSearchResult) => {
-    if (isReadOnly) return;
-    const newLocation = createLocation({
-      title: result.name,
-      address: result.address,
-      lat: result.lat,
-      lng: result.lng,
-    });
-    const newLocationNode = createNode(NODE_TYPES.LOCATION, {
-      locationId: newLocation.id,
-    });
-    addLocation(newLocation);
-    addNode(newLocationNode);
-    scrollToBottom(NODE_VIEW_ID);
+    try {
+      if (isReadOnly) return;
+      const newLocation = createLocation({
+        title: result.name,
+        address: result.address,
+        lat: result.lat,
+        lng: result.lng,
+      });
+      const newLocationNode = createNode(NODE_TYPES.LOCATION, {
+        locationId: newLocation.id,
+      });
+      addLocation(newLocation);
+      addNode(newLocationNode);
+      scrollToBottom(NODE_VIEW_ID);
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
   const { inputRef } = useLocationSearch(handleAddLocation);

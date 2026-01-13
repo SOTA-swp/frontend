@@ -1,6 +1,6 @@
 "use client";
 
-import LocationDataType from "@/types/location";
+import { LocationData } from "@/types/location";
 import TextField from "@/components/TextField";
 import EmojiIcon from "@/components/EmojiIcon";
 import clsx from "clsx";
@@ -17,6 +17,8 @@ import Image from "next/image";
 import AddButton from "@/components/AddButton";
 import IconButton from "@/components/IconButton";
 import { useLocationSearch } from "../../_hooks/useLocationSearch";
+import ImageSelector from "../ImageSelector";
+import usePopover from "@/components/popover/usePopover";
 
 const MOTION_ELEMENTS = {
   ICON: "icon",
@@ -25,7 +27,7 @@ const MOTION_ELEMENTS = {
 } as const;
 
 type LocationCardProps = {
-  id: LocationDataType["id"];
+  id: LocationData["id"];
 };
 
 const commonTransition = (damping: number = 30): Transition => ({
@@ -41,6 +43,8 @@ const inputAnimation = (delay: number): HTMLMotionProps<"div"> => ({
 });
 
 function LocationCard({ id }: LocationCardProps) {
+  const { handleOpen: handleOpenImageSelector, ...imgSelectorProps } =
+    usePopover();
   const location = usePlanStore((state) => state.locations[id]);
   const updateLocation = usePlanStore((state) => state.updateLocation);
   const isExpanded = !usePlanStore((state) =>
@@ -76,6 +80,11 @@ function LocationCard({ id }: LocationCardProps) {
     closeLocation(id);
   };
 
+  const handleSelectImage = (src: string) => {
+    updateLocation(id, { thumbnail: src });
+    imgSelectorProps.handleClose();
+  };
+
   const getMotionId = (
     key: (typeof MOTION_ELEMENTS)[keyof typeof MOTION_ELEMENTS]
   ) => {
@@ -87,7 +96,7 @@ function LocationCard({ id }: LocationCardProps) {
       layoutId={getMotionId(MOTION_ELEMENTS.ICON)}
       transition={commonTransition()}>
       <EmojiIcon color="primary">
-        {getFirstChar(location.title) || "✈️"}
+        {getFirstChar(location.title) || ""}
       </EmojiIcon>
     </motion.div>
   );
@@ -97,7 +106,7 @@ function LocationCard({ id }: LocationCardProps) {
       <motion.div
         layout
         className={clsx(
-          "relative w-sm flex flex-col rounded-lg overflow-hidden bg-paper gap-[25px] shadow-md hover:shadow-lg hover:scale-102 transition-all"
+          "relative w-sm flex flex-col rounded-lg overflow-hidden bg-paper gap-6.25 shadow-md hover:shadow-lg hover:scale-102 transition-all"
         )}>
         <AnimatePresence initial={false} mode="wait">
           {isExpanded && (
@@ -117,19 +126,31 @@ function LocationCard({ id }: LocationCardProps) {
 
               <div className="relative flex flex-col gap-6 p-4">
                 <div className="relative w-full aspect-video">
-                  {/* TODO: サムネイル画像の追加を実装する */}
                   {location.thumbnail ? (
-                    <Image
-                      fill
-                      className="w-full h-full rounded-lg object-cover object-center"
-                      src={location.thumbnail}
-                      alt={`${location.title}のサムネイル画像`}
-                    />
+                    <>
+                      <button
+                        className="absolute w-full h-full"
+                        onClick={handleOpenImageSelector}
+                      />
+                      <Image
+                        fill
+                        className="w-full h-full rounded-lg object-cover object-center pointer-events-none"
+                        src={location.thumbnail}
+                        alt={`${location.title}のサムネイル画像`}
+                      />
+                    </>
                   ) : (
-                    <AddButton className="w-full h-full">
+                    <AddButton
+                      className="w-full h-full"
+                      onClick={handleOpenImageSelector}>
                       サムネイルを追加
                     </AddButton>
                   )}
+                  <ImageSelector
+                    {...imgSelectorProps}
+                    name={`location-${id}-thumbnail`}
+                    onSelect={handleSelectImage}
+                  />
                 </div>
 
                 <div className="flex items-center gap-4 pt-3">
@@ -145,7 +166,7 @@ function LocationCard({ id }: LocationCardProps) {
                       onChange={(e) =>
                         updateLocation(id, { title: e.target.value })
                       }
-                      placeholder="プレースホルダー"
+                      placeholder="観光地の名前を入力しよう！"
                       autoComplete="off"
                       fullWidth
                     />
@@ -159,7 +180,7 @@ function LocationCard({ id }: LocationCardProps) {
                     onChange={(e) =>
                       updateLocation(id, { address: e.target.value })
                     }
-                    placeholder="プレースホルダー"
+                    placeholder="住所を入力しよう！"
                     autoComplete="off"
                     fullWidth
                   />
@@ -172,7 +193,7 @@ function LocationCard({ id }: LocationCardProps) {
                     onChange={(e) =>
                       updateLocation(id, { description: e.target.value })
                     }
-                    placeholder="プレースホルダー"
+                    placeholder="おすすめの観光スポットやグルメなどを書いておこう！"
                     textarea
                     autoComplete="off"
                     fullWidth

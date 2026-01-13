@@ -1,6 +1,6 @@
 "use client";
 
-import NodeDataType from "@/types/node";
+import { NodeData } from "@/types/node";
 import EditElement from "./EditElement";
 import TextField from "@/components/TextField";
 import Node from "./Node";
@@ -14,12 +14,14 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useDroppable } from "@dnd-kit/core";
+import { useDroppable, useDndMonitor } from "@dnd-kit/core";
 import { usePlanStore } from "../../../_store/hook";
 import { useInlineEdit } from "@/app/plans/_hooks/useInlineEdit";
 import NullBox from "../NullBox";
+import { useState } from "react";
+import { MAX_DEPTH } from "@/app/plans/_consts/node";
 
-interface ProcessNodeProps extends NodeDataType {
+interface ProcessNodeProps extends NodeData {
   depth?: number;
 }
 
@@ -33,10 +35,26 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
     useInlineEdit();
 
   const noneChildren = childrenNodes.length === 0;
+  const [draggedNodeId, setDraggedNodeId] = useState<string | null>(null);
 
+  // 自分自身へのドロップを無効化
   const { setNodeRef: setDroppableRef, isOver } = useDroppable({
     id: `container-${id}`,
     data: { id, type: "process" },
+    disabled: draggedNodeId === id,
+  });
+
+  useDndMonitor({
+    onDragStart(event) {
+      const nodeId = event.active?.data?.current?.id;
+      if (nodeId) setDraggedNodeId(String(nodeId));
+    },
+    onDragEnd() {
+      setDraggedNodeId(null);
+    },
+    onDragCancel() {
+      setDraggedNodeId(null);
+    },
   });
 
   const handleNameChange = (value: string) => {
@@ -105,24 +123,32 @@ function ProcessNode({ id, name, depth = 0, ...props }: ProcessNodeProps) {
           }}
           className={clsx(
             "border border-primary rounded-xl bg-paper",
-            depth !== 0 && "rounded-r-none border-r-0"
+            depth !== 1 && "rounded-r-none border-r-0"
           )}>
           <SortableContext
             items={childrenNodes}
             strategy={verticalListSortingStrategy}
             disabled={!open}>
             <div className="flex flex-col p-4 pr-0 ">
-              {noneChildren && <NullBox id={id} isOver={isOver} />}
-              {childrenNodes?.map((childId, i) => (
-                <Node
-                  key={childId}
-                  id={childId}
-                  parentId={id}
-                  order={i}
-                  depth={depth + 1}
-                  isLast={i === childrenNodes.length - 1}
-                />
-              ))}
+              {depth > MAX_DEPTH ? (
+                <p className="text-error p-2">最大深度を超えています！</p>
+              ) : (
+                <>
+                  {noneChildren && (
+                    <NullBox id={id} isOver={isOver} depth={depth + 1} />
+                  )}
+                  {childrenNodes?.map((childId, i) => (
+                    <Node
+                      key={childId}
+                      id={childId}
+                      parentId={id}
+                      order={i}
+                      depth={depth + 1}
+                      isLast={i === childrenNodes.length - 1}
+                    />
+                  ))}
+                </>
+              )}
             </div>
           </SortableContext>
         </motion.div>

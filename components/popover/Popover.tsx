@@ -10,19 +10,23 @@ import {
 } from "@floating-ui/react";
 import { AnimatePresence, motion } from "motion/react";
 
+interface PopoverProps {
+  open?: boolean;
+  anchorEl?: HTMLElement | null;
+  placement?: Placement;
+  flipEnabled?: boolean;
+  onClose?: () => void;
+  children?: React.ReactNode;
+}
+
 function Popover({
   open,
   anchorEl,
   placement = "top",
+  flipEnabled = true,
   onClose,
   children,
-}: {
-  open?: boolean;
-  anchorEl?: HTMLElement | null;
-  placement?: Placement;
-  onClose?: () => void;
-  children?: React.ReactNode;
-}) {
+}: PopoverProps) {
   const { refs, floatingStyles } = useFloating({
     open,
     placement,
@@ -31,7 +35,7 @@ function Popover({
     elements: {
       reference: anchorEl || null,
     },
-    middleware: [offset(8), flip(), shift()],
+    middleware: [offset(8), flipEnabled && flip(), shift()],
   });
 
   const { setFloating } = refs;
@@ -50,7 +54,6 @@ function Popover({
               ref={setFloating}
               style={{ zIndex: LAYER.POPOVER + 1, ...floatingStyles }}>
               <motion.div
-                className="bg-white p-4 rounded-md shadow-md"
                 initial={{ opacity: 0, scale: 0.9, y: 5 }} // 少し下からふわっと出る感じ
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{

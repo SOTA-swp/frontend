@@ -1,22 +1,29 @@
-import UserType from "./user";
+import z from "zod";
+import { UserMinimal } from "./user";
+import { PlanRole } from "@/consts/PLAN_ROLE";
+
+export const PlanSchema = z.object({
+  id: z.string(),
+  creatorId: z.string(),
+  title: z
+    .string()
+    .min(1, "計画名は1文字以上入力してください")
+    .max(100, "計画名は100文字以下で入力してください"),
+  description: z.string().max(500, "説明は500文字以下で入力してください"),
+  isPublic: z.boolean(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
+});
 
 // TODO: サムネは？
-export default interface PlanType {
-  id: string;
-  creatorId: string;
-  title: string;
-  description: string;
-  isPublic: boolean;
-  createdAt: string;
-  updatedAt: string;
+export type Plan = z.infer<typeof PlanSchema>;
+
+export interface PlanWithDetails {
+  planData: Plan & { favorites: number; hasLiked: boolean; role: PlanRole };
+  creatorData: UserMinimal;
 }
 
-export interface PlanWithDetailsType {
-  planData: PlanType & { favorites: number };
-  creatorData: UserType;
-}
-
-export const createMockPlan = (num: number = 0): PlanType => ({
+export const createMockPlan = (num: number = 0): Plan => ({
   id: `mock-plan-id${num}`,
   creatorId: `mock-user-id${num}`,
   title: `モックプランタイトル${num}あああああああああああ`,

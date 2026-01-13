@@ -1,2 +1,2 @@
-const PROJECT_NAME = "Planning Tool";
+const PROJECT_NAME = "Trippy";
 export default PROJECT_NAME;

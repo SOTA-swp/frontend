@@ -1,32 +1,34 @@
-"use client";
 import Chip from "@/components/Chip";
-import PlanCard from "@/components/PlanCard";
-import { PlanWithDetailsType } from "@/types/plan";
-import { useOpenPlanCard } from "../_store/openPlanCardStore";
+import PlanCard from "@/app/(main)/_components/PlanCard";
+import { getRecommendedPlans } from "../actions";
+import { PlanWithDetails } from "@/types/plan";
 
-function Top({ data }: { data: PlanWithDetailsType[] }) {
-  const { openPlanCardId, setOpenPlanCardId } = useOpenPlanCard();
+async function Top() {
+  let plans: PlanWithDetails[] = [];
+  try {
+    plans = (await getRecommendedPlans()).plans;
+  } catch (e) {
+    console.error("Failed to fetch recommended plans:", e);
+    return null;
+  }
 
   return (
-    <div className="relative flex flex-col py-3">
+    <div className="relative flex flex-col py-3 ">
       <span className="relative flex ml-4 -mb-4 z-10">
-        <Chip color={"accent"}>オススメ！</Chip>
+        <Chip color={"accent"} size={"sm"}>
+          オススメ！
+        </Chip>
       </span>
-      <div className="flex gap-4 px-4 pt-8 pb-4 bg-primary/10 inset-shadow-sm overflow-x-auto">
-        {data.map((plan) => {
+      <div className="grid grid-flow-col auto-cols-[150px] gap-4 px-4 pt-8 pb-4 bg-primary/10 inset-shadow-sm overflow-x-auto overflow-y-clip">
+        {plans.map((plan) => {
           const wrapId = `top-${plan.planData.id}`;
-
           return (
-            <span key={wrapId} className="shrink-0">
-              <PlanCard
-                open={openPlanCardId === wrapId}
-                onOpen={() => setOpenPlanCardId(wrapId)}
-                onClose={() => setOpenPlanCardId(null)}
-                variant="mini"
-                data={plan}
-                layoutId={"top"}
-              />
-            </span>
+            <PlanCard
+              key={wrapId}
+              variant="mini"
+              data={plan}
+              layoutId={"top"}
+            />
           );
         })}
       </div>

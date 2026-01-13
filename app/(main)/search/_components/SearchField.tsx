@@ -31,7 +31,7 @@ function SearchField() {
     <form
       onSubmit={handleSubmit}
       ref={ref}
-      className="w-full max-w-[700px] flex items-center gap-2">
+      className="w-full max-w-175 flex items-center gap-2">
       <MainViewController
         ref={ref}
         viewId={SIDE_VIEWS.SEARCH}
@@ -51,6 +51,7 @@ function SearchField() {
         title="検索"
         icon={<MdSearch />}
         variant={"iconOnly"}
+        color={"gray"}
       />
     </form>
   );

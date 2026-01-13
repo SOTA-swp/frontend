@@ -1,7 +1,8 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import ComponentColor from "@/types/componentColor";
+import ComponentSize from "@/types/componentSize";
 
-const chipStyles = cva("px-2 py-1 text-xs flex whitespace-nowrap", {
+const chipStyles = cva("px-2 py-1 flex whitespace-nowrap", {
   variants: {
     variant: {
       outline: "border",
@@ -13,9 +14,16 @@ const chipStyles = cva("px-2 py-1 text-xs flex whitespace-nowrap", {
       accent: "",
       error: "",
     } satisfies Record<ComponentColor, string>,
+    size: {
+      xs: "text-xs",
+      sm: "text-sm",
+      md: "text-md",
+      lg: "text-lg",
+      xl: "text-xl",
+    } satisfies Record<ComponentSize, string>,
     rounded: {
       false: "rounded-md",
-      true: "rounded-full",
+      true: "rounded-full px-4",
     },
   },
 
@@ -65,6 +73,7 @@ const chipStyles = cva("px-2 py-1 text-xs flex whitespace-nowrap", {
   defaultVariants: {
     variant: "contain",
     color: "primary",
+    size: "md",
     rounded: false,
   },
 });
@@ -73,9 +82,16 @@ interface ChipProps extends VariantProps<typeof chipStyles> {
   children?: React.ReactNode;
 }
 
-function Chip({ children, variant, color, rounded, ...props }: ChipProps) {
+function Chip({
+  children,
+  variant,
+  color,
+  rounded,
+  size,
+  ...props
+}: ChipProps) {
   return (
-    <div {...props} className={chipStyles({ variant, color, rounded })}>
+    <div {...props} className={chipStyles({ variant, color, rounded, size })}>
       {children}
     </div>
   );
