@@ -1,0 +1,44 @@
+import { createMockNode } from "@/types/node";
+import { PARENT_ID_ROOT } from "../_util/createNode";
+
+export const MOCK_NODES = [
+  createMockNode(0, { id: "0" }),
+  createMockNode(1, { id: "1" }),
+  createMockNode(2, { id: "2" }),
+  createMockNode(3, { id: "3", nodeType: "move" }),
+  createMockNode(4, { id: "4", nodeType: "move" }),
+  createMockNode(5, { id: "5", nodeType: "move" }),
+  createMockNode(6, { id: "6", nodeType: "move" }),
+  createMockNode(7, { id: "7", nodeType: "move" }),
+  createMockNode(8, { id: "8", nodeType: "move" }),
+  createMockNode(9, { id: "9", nodeType: "location", locationId: "0" }),
+  createMockNode(10, { id: "10", nodeType: "location", locationId: "1" }),
+  createMockNode(11, { id: "11", nodeType: "location", locationId: "2" }),
+  createMockNode(12, { id: "12", nodeType: "location", locationId: "0" }),
+  createMockNode(13, { id: "13", nodeType: "location", locationId: "1" }),
+  createMockNode(14, { id: "14", nodeType: "location", locationId: "2" }),
+  createMockNode(15, { id: "15" }),
+  createMockNode(16, { id: "16", nodeType: "move" }),
+  createMockNode(17, { id: "17", nodeType: "move" }),
+  createMockNode(18, { id: "18", nodeType: "location", locationId: "0" }),
+  createMockNode(19, { id: "19", nodeType: "location", locationId: "1" }),
+];
+
+export const MOCK_STRUCTURE = {
+  [PARENT_ID_ROOT]: ["0"],
+  "0": ["1", "2", "3", "8", "9", "10"],
+  "1": ["4", "5", "11", "12"],
+  "2": ["6", "7", "13", "14", "15"],
+  "3": [],
+  "4": [],
+  "5": [],
+  "6": [],
+  "7": [],
+  "8": [],
+  "9": [],
+  "10": [],
+  "12": [],
+  "13": [],
+  "14": [],
+  "15": ["16", "17", "18", "19"],
+};

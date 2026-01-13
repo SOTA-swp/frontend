@@ -1,0 +1,91 @@
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import CommonButton from "@/components/CommonButton";
+import TextField from "@/components/TextField";
+import { RegisterFormData, RegisterFormSchema } from "../../_types";
+import { useRouter } from "next/navigation";
+import PATH from "@/consts/PATH";
+import { fetchWrapper } from "@/utils/fetchWrapper";
+import { ApiRoutes } from "api-contract";
+import { toast } from "sonner";
+
+function RegisterForm() {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(RegisterFormSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+    },
+  });
+  const router = useRouter();
+
+  const onSubmit = async (data: RegisterFormData) => {
+    const toastId = toast.loading("登録中...");
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // デモ用の遅延
+
+    const res = await fetchWrapper.post(ApiRoutes.auth.register, data);
+    if (!res.ok) {
+      const message = (await res.json())?.message || res.statusText;
+      toast.error(`登録に失敗しました: ${message}`, { id: toastId });
+      return;
+    }
+    toast.success("登録に成功しました！ ログインページへ移動します...", {
+      id: toastId,
+    });
+    router.push(PATH.LOGIN);
+  };
+
+  return (
+    <form
+      className="flex flex-col gap-16 items-center"
+      onSubmit={handleSubmit(onSubmit)}>
+      <div className="flex flex-col items-center gap-12 w-125">
+        <TextField
+          {...register("username")}
+          helperText={errors.username?.message}
+          error={!!errors.username}
+          label="name"
+          labelName="名前"
+          placeholder="名前を入力"
+          autoComplete="off"
+          fullWidth
+        />
+        <TextField
+          {...register("email")}
+          helperText={errors.email?.message}
+          error={!!errors.email}
+          label="email"
+          type="email"
+          labelName="メールアドレス"
+          placeholder="メールアドレスを入力"
+          fullWidth
+        />
+        <TextField
+          {...register("password")}
+          helperText={errors.password?.message}
+          error={!!errors.password}
+          label="password"
+          type="password"
+          labelName="パスワード"
+          placeholder="パスワードを入力"
+          autoComplete="off"
+          fullWidth
+        />
+      </div>
+      <div className="flex justify-center">
+        <CommonButton variant="contain" color="primary" size="lg" type="submit">
+          新規作成
+        </CommonButton>
+      </div>
+    </form>
+  );
+}
+
+export default RegisterForm;

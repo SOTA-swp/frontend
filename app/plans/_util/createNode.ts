@@ -1,0 +1,59 @@
+import { NodeData, NODE_TYPES } from "@/types/node";
+
+export const PARENT_ID_ROOT = "root";
+
+// planIdはpropsで渡す想定 (そもそもいらんのか？)
+export const createNode = (
+  nodeType: NodeData["nodeType"],
+  props?: Partial<NodeData>
+): NodeData => {
+  const id = window.crypto.randomUUID();
+
+  switch (nodeType) {
+    case NODE_TYPES.PROCESS: {
+      return {
+        id,
+        planId: "",
+        nodeType: NODE_TYPES.PROCESS,
+        name: "新しいプロセス",
+        startTime: "2000-01-01T00:00:00.000Z",
+        endTime: "2000-01-01T00:00:00.000Z",
+        durationMinutes: 60,
+        locationId: "",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        ...props,
+      };
+    }
+    case NODE_TYPES.LOCATION: {
+      return {
+        id,
+        planId: "",
+        nodeType: NODE_TYPES.LOCATION,
+        name: "",
+        startTime: "2000-01-01T00:00:00.000Z",
+        endTime: "2000-01-01T00:00:00.000Z",
+        durationMinutes: 60,
+        locationId: "",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        ...props,
+      };
+    }
+    case NODE_TYPES.MOVE: {
+      return {
+        id,
+        planId: "",
+        nodeType: NODE_TYPES.MOVE,
+        name: "",
+        startTime: "2000-01-01T00:00:00.000Z",
+        endTime: "2000-01-01T00:00:00.000Z",
+        durationMinutes: 60,
+        locationId: "",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        ...props,
+      };
+    }
+  }
+};
